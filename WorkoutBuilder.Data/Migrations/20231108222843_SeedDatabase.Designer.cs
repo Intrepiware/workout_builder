@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkoutBuilder.Data;
 
@@ -10,9 +11,11 @@ using WorkoutBuilder.Data;
 namespace WorkoutBuilder.Data.Migrations
 {
     [DbContext(typeof(WorkoutBuilderContext))]
-    partial class WorkoutBuilderContextModelSnapshot : ModelSnapshot
+    [Migration("20231108222843_SeedDatabase")]
+    partial class SeedDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,6 +49,7 @@ namespace WorkoutBuilder.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -87,6 +91,7 @@ namespace WorkoutBuilder.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StationTiming")

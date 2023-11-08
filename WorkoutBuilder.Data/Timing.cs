@@ -13,6 +13,6 @@ namespace WorkoutBuilder.Data
         public byte Stations { get; set; }
         [MaxLength(255)]
         public string StationTiming { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
     }
 }
