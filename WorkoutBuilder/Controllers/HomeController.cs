@@ -6,16 +6,12 @@ namespace WorkoutBuilder.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+        //public required ITestService TestService { protected get; init; }
 
         public IActionResult Index()
         {
-            return View();
+            //return Content(TestService.GetMessage());
+            return Ok();
         }
 
         public IActionResult Privacy()
