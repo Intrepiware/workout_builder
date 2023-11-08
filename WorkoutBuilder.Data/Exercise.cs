@@ -13,7 +13,7 @@ namespace WorkoutBuilder.Data
         [Required, MaxLength(255)]
         public string Equipment { get; set; }
         public long FocusId { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         public virtual Focus Focus { get; set; }
     }
