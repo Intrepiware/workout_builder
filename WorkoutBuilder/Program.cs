@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using WorkoutBuilder.Data;
+
 namespace WorkoutBuilder
 {
     public class Program
@@ -5,6 +8,8 @@ namespace WorkoutBuilder
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<WorkoutBuilderContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WorkoutBuilderConnection")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
