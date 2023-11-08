@@ -1,5 +1,8 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using WorkoutBuilder.Data;
+using WorkoutBuilder.IOC;
 
 namespace WorkoutBuilder
 {
@@ -13,7 +16,9 @@ namespace WorkoutBuilder
             .UseSqlServer(builder.Configuration.GetConnectionString("WorkoutBuilderConnection")));
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddMvc().AddControllersAsServices();
+            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacRegistrationModule()));
 
             var app = builder.Build();
 
