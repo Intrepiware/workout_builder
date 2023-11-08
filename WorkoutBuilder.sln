@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutBuilder", "WorkoutBuilder\WorkoutBuilder.csproj", "{5E1608D1-8B51-46C3-9A33-66E9049F105A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutBuilder.Data", "WorkoutBuilder.Data\WorkoutBuilder.Data.csproj", "{3FD9786F-99A0-4683-AE7C-0536612B2B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5E1608D1-8B51-46C3-9A33-66E9049F105A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E1608D1-8B51-46C3-9A33-66E9049F105A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E1608D1-8B51-46C3-9A33-66E9049F105A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FD9786F-99A0-4683-AE7C-0536612B2B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FD9786F-99A0-4683-AE7C-0536612B2B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FD9786F-99A0-4683-AE7C-0536612B2B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FD9786F-99A0-4683-AE7C-0536612B2B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
