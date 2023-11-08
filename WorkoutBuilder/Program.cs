@@ -9,7 +9,8 @@ namespace WorkoutBuilder
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<WorkoutBuilderContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WorkoutBuilderConnection")));
+            builder.Services.AddDbContext<WorkoutBuilderContext>(opt => opt.UseLazyLoadingProxies()
+            .UseSqlServer(builder.Configuration.GetConnectionString("WorkoutBuilderConnection")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
