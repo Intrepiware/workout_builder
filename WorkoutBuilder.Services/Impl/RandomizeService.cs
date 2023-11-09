@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WorkoutBuilder.Services.Impl
+﻿namespace WorkoutBuilder.Services.Impl
 {
     public class RandomizeService : IRandomize
     {
@@ -19,5 +13,7 @@ namespace WorkoutBuilder.Services.Impl
         });
 
         public T GetRandomItem<T>(IEnumerable<T> items) => items.OrderBy(x => _random.Value.NextDouble()).FirstOrDefault();
+
+        public double NextDouble() => _random.Value.NextDouble();
     }
 }

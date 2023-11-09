@@ -9,5 +9,6 @@ namespace WorkoutBuilder.Services
     public interface IRandomize
     {
         T GetRandomItem<T>(IEnumerable<T> items);
+        double NextDouble();
     }
 }

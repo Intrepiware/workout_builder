@@ -7,20 +7,20 @@ namespace WorkoutBuilder.Services.Impl
     {
         public required IRepository<Exercise> ExerciseRepository { protected get; init; }
         public required IRepository<Timing> TimingRepository { protected get; init; }
-        public required IRandomize RandomizationService { protected get; init; }
+        public required IRandomize Randomizer { protected get; init; }
         
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
-            var random = new Random();
             var timings = TimingRepository.GetAll().ToList();
             var exercises = ExerciseRepository.GetAll().ToList();
             var equipment = exercises.Select(x => x.Equipment).Distinct().ToList();
             var addedExerciseIds = new List<long>();
+            const int MaxIterations = 1000;
 
-            var timing = timings.FirstOrDefault(x => x.Name.ToLower() == request.Timing.ToLower());
-            timing ??= RandomizationService.GetRandomItem(timings);
+            var timing = timings.FirstOrDefault(x => x.Name.Equals(request.Timing, StringComparison.OrdinalIgnoreCase));
+            timing ??= Randomizer.GetRandomItem(timings);
 
-            var focus = request.Focus ?? RandomizationService.GetRandomItem(new[] { Models.Focus.Cardio, Models.Focus.Hybrid, Models.Focus.Strength });
+            var focus = request.Focus ?? Randomizer.GetRandomItem(new[] { Models.Focus.Cardio, Models.Focus.Hybrid, Models.Focus.Strength });
 
             double cardio = 0, strength = .8;
 
@@ -49,10 +49,10 @@ namespace WorkoutBuilder.Services.Impl
                 Exercises = new List<WorkoutGenerationExerciseModel>()
             };
 
-
-            while(output.Exercises.Count < output.Stations)
+            var iterations = 0;
+            while(output.Exercises.Count < output.Stations && iterations++ < MaxIterations)
             {
-                var rand = random.NextDouble();
+                var rand = Randomizer.NextDouble();
                 Models.Focus exerciseFocus;
                 if (rand < cardio)
                     exerciseFocus = Models.Focus.Cardio;
@@ -61,8 +61,8 @@ namespace WorkoutBuilder.Services.Impl
                 else
                     exerciseFocus = Models.Focus.Abs;
 
-                var exerciseEquipment = equipment.OrderBy(x => random.NextDouble()).First();
-                var exercise = RandomizationService.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && x.Equipment.ToLower() == exerciseEquipment.ToLower()));
+                var exerciseEquipment = Randomizer.GetRandomItem(equipment);
+                var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && x.Equipment.Equals(exerciseEquipment, StringComparison.OrdinalIgnoreCase)));
 
                 if(exercise != null && !addedExerciseIds.Contains(exercise.Id))
                 {

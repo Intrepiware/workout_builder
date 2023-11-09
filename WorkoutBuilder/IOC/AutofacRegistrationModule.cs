@@ -13,6 +13,7 @@ namespace WorkoutBuilder.IOC
         {
             // Services
             builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
+            builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
 
             // Repositories
             builder.RegisterType<WorkoutBuilderContext>().As<DbContext>().InstancePerLifetimeScope();
