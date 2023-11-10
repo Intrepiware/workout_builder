@@ -8,7 +8,7 @@ module.exports = {
         "home-index": "./src/home-index.tsx"
     },
     output: {
-        path: path.resolve(__dirname, "../dist"),
+        path: path.resolve(__dirname, "../../wwwroot/js/pages"),
         filename: "[name].js"
     },
     module: {
