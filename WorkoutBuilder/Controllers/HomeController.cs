@@ -15,13 +15,13 @@ namespace WorkoutBuilder.Controllers
 
         public IActionResult Index()
         {
-            var data = TimingRepository.GetAll().ToList();
-            return Json(data);
+            return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Timings()
         {
-            return View();
+            var timings = TimingRepository.GetAll().OrderBy(x => x.Name).ToList();
+            return Json(timings);
         }
 
         public IActionResult Workout(string? timing, string? focus)

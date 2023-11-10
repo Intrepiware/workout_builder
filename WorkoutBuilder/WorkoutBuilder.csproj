@@ -20,4 +20,8 @@
     <ProjectReference Include="..\WorkoutBuilder.Services\WorkoutBuilder.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ClientApp\src\" />
+  </ItemGroup>
+
 </Project>

@@ -41,7 +41,7 @@ namespace WorkoutBuilder.Services.Impl
 
             var output = new WorkoutGenerationResponseModel
             {
-                Focus = focus,
+                Focus = focus.ToString(),
                 Name = timing.Name,
                 Notes = timing.Notes,
                 Stations = timing.Stations,
