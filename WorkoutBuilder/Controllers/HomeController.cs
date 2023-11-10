@@ -15,8 +15,7 @@ namespace WorkoutBuilder.Controllers
 
         public IActionResult Index()
         {
-            var data = TimingRepository.GetAll().ToList();
-            return Json(data);
+            return View();
         }
 
         public IActionResult Privacy()
