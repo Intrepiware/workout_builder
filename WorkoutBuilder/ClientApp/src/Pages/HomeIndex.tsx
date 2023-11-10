@@ -13,11 +13,11 @@ function HomeIndex() {
   const [workout, setWorkout] = useState<Workout | null>(null);
 
   useEffect(() => {
-    fetch("/timings.json")
+    fetch("/Home/Timings")
       .then((res) => res.json())
       .then(
         (result) => {
-          setTimings(result);
+          setTimings(result.map((x) => x.name));
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow

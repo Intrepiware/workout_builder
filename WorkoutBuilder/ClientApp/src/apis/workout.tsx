@@ -21,7 +21,7 @@ export function getWorkout(
 ): Promise<Workout> {
   timing = encodeURIComponent(timing || "");
   focus = encodeURIComponent(focus || "");
-  return fetch(`/workout.json?timing=${timing}&focus=${focus}`).then((res) =>
+  return fetch(`/Home/Workout?timing=${timing}&focus=${focus}`).then((res) =>
     res.json()
   );
 }
