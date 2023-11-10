@@ -11,6 +11,10 @@ namespace WorkoutBuilder.IOC
     {
         protected override void Load(ContainerBuilder builder)
         {
+            // Services
+            builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
+            builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
+
             // Repositories
             builder.RegisterType<WorkoutBuilderContext>().As<DbContext>().InstancePerLifetimeScope();
             RegisterRepository<Exercise>(builder);
