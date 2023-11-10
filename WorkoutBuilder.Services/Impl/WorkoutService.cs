@@ -61,7 +61,12 @@ namespace WorkoutBuilder.Services.Impl
                 else
                     exerciseFocus = Models.Focus.Abs;
 
-                var exerciseEquipment = Randomizer.GetRandomItem(equipment);
+                // Don't use more than 15 different pieces of equipment per workout
+                var usedEquipment = output.Exercises.Select(x => x.Equipment).Distinct();
+                var exerciseEquipment = usedEquipment.Count() >= 15 ?
+                    Randomizer.GetRandomItem(usedEquipment) :
+                    Randomizer.GetRandomItem(equipment);
+
                 var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && x.Equipment.Equals(exerciseEquipment, StringComparison.OrdinalIgnoreCase)));
 
                 if(exercise != null && !addedExerciseIds.Contains(exercise.Id))

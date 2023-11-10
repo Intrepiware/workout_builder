@@ -74,7 +74,7 @@ namespace WorkoutBuilder.Services.Tests
             }
 
             [Test]
-            public void Should_Generated_Requested_Timing()
+            public void Should_Generate_Requested_Timing()
             {
                 var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var timingRepository = A.Fake<IRepository<Timing>>();
@@ -106,6 +106,41 @@ namespace WorkoutBuilder.Services.Tests
                 Assert.IsNotNull(result);
                 Assert.That(result.Name, Is.EqualTo("Second Workout"));
             }
+
+            [Test]
+            public void Should_Generate_NonExistent_Timing()
+            {
+                var exerciseRepository = A.Fake<IRepository<Exercise>>();
+                var timingRepository = A.Fake<IRepository<Timing>>();
+                var randomizer = A.Fake<IRandomize>();
+
+
+                A.CallTo(() => exerciseRepository.GetAll()).Returns(new List<Exercise>().AsQueryable());
+                A.CallTo(() => timingRepository.GetAll()).Returns(new List<Timing> {
+                    new Timing { Id = 1, Name = "First Workout", Stations = 1 },
+                    new Timing { Id = 2, Name = "Second Workout", Stations = 1 },
+                }.AsQueryable());
+
+                A.CallTo(() => randomizer.GetRandomItem<Timing>(null)).WithAnyArguments().Returns(new Timing { Id = 1, Name = "Random Workout", Stations = 3, StationTiming = string.Empty });
+                A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
+                A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
+                    .ReturnsNextFromSequence(new[]
+                    {
+                        new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
+                        new Exercise { Id = 2, Equipment = "Equipment 2", Name = "Exercise 2" },
+                        new Exercise { Id = 3, Equipment = "Equipment 3", Name = "Exercise 3" }
+                    });
+
+                A.CallTo(() => randomizer.NextDouble()).Returns(0);
+
+                var workoutService = new WorkoutService { ExerciseRepository = exerciseRepository, Randomizer = randomizer, TimingRepository = timingRepository };
+
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = "Non-Existent Workout" });
+
+                Assert.IsNotNull(result);
+                Assert.That(result.Name, Is.EqualTo("Random Workout"));
+            }
+
         }
 
         [TestFixture]
