@@ -4,7 +4,7 @@
     public class WorkoutGenerationResponseModel
     {
         public string Name { get; set; }
-        public Focus Focus { get; set; }
+        public string Focus { get; set; }
         public int Stations { get; set; }
         public string Timing { get; set; }
         public string? Notes { get; set; }

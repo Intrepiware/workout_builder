@@ -30,19 +30,19 @@ function HomeIndex() {
   }, []);
 
   useEffect(() => {
-    getWorkout("", "").then(
-      (result: Workout) => {
-        setWorkout(result);
-        setTiming(result.name);
-        setFocus(result.focus);
-      },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (error) => {
-        setError(error);
+    try {
+      const savedWorkout: Workout = JSON.parse(localStorage.getItem("workout"));
+      if (savedWorkout.version === "v1") {
+        setWorkout(savedWorkout);
+        setTiming(savedWorkout.name);
+        setFocus(savedWorkout.focus);
       }
-    );
+    } catch (err) {
+      console.error(
+        "An error occurred while loading/rendering the saved workout",
+        err
+      );
+    }
   }, []);
 
   const handleTimingChange = (item: string) => {
@@ -63,6 +63,7 @@ function HomeIndex() {
     getWorkout(timingParam, focusParam).then(
       (result: Workout) => {
         setWorkout(result);
+        localStorage.setItem("workout", JSON.stringify(result));
         setTiming(result.name);
         setFocus(result.focus);
       },

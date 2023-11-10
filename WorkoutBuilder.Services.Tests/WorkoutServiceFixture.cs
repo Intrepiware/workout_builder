@@ -70,7 +70,7 @@ namespace WorkoutBuilder.Services.Tests
                 var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Focus = focus });
 
                 Assert.IsNotNull(result);
-                Assert.That(result.Focus, Is.EqualTo(focus));
+                Assert.That(result.Focus, Is.EqualTo(focus.ToString()));
             }
 
             [Test]
