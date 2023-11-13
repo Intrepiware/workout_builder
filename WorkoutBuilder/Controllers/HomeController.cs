@@ -35,6 +35,16 @@ namespace WorkoutBuilder.Controllers
             return Json(result);
         }
 
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Contact(HomeContactRequestModel data)
+        {
+
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
