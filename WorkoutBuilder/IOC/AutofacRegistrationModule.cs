@@ -9,6 +9,14 @@ namespace WorkoutBuilder.IOC
 {
     public class AutofacRegistrationModule : Module
     {
+        public IConfiguration Configuration { get; }
+        
+        public AutofacRegistrationModule(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+
         protected override void Load(ContainerBuilder builder)
         {
             // Services

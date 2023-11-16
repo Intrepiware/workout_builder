@@ -16,9 +16,10 @@ namespace WorkoutBuilder
             .UseSqlServer(builder.Configuration.GetConnectionString("WorkoutBuilderConnection")));
 
             // Add services to the container.
+            IConfiguration configuration = builder.Configuration;
             builder.Services.AddMvc().AddControllersAsServices();
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacRegistrationModule()));
+                .ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacRegistrationModule(configuration)));
 
             var app = builder.Build();
 
