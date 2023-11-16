@@ -23,6 +23,16 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
 
+            if (Configuration["InjectionMode"] == "development")
+            {
+                builder.RegisterType<FakeEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+            }
+            else
+            {
+                builder.RegisterType<SmtpEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+            }
+
+
             // Repositories
             builder.RegisterType<WorkoutBuilderContext>().As<DbContext>().InstancePerLifetimeScope();
             RegisterRepository<Exercise>(builder);

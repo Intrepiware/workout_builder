@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using System.Diagnostics;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
@@ -9,15 +10,18 @@ namespace WorkoutBuilder.Controllers
 {
     public class HomeController : Controller
     {
-        public required IRepository<Exercise> ExerciseRepository { protected get; init; }
-        public required IRepository<Timing> TimingRepository { protected get; init; }
-        public required IWorkoutService WorkoutService { protected get; init; }
+        public IRepository<Exercise> ExerciseRepository { protected get; init; }
+        public IRepository<Timing> TimingRepository { protected get; init; }
+        public IWorkoutService WorkoutService { protected get; init; }
+        public IEmailService EmailService { protected get; init; }
+        public IConfiguration Configuration { protected get; init; }
 
         public IActionResult Index()
         {
             return View();
         }
 
+        [ResponseCache(Duration = 3600)]
         public IActionResult Timings()
         {
             var timings = TimingRepository.GetAll().OrderBy(x => x.Name).ToList();
@@ -43,7 +47,14 @@ namespace WorkoutBuilder.Controllers
         [HttpPost]
         public IActionResult Contact(HomeContactRequestModel data)
         {
-
+            var toEmail = Configuration["ContactFormToAddress"];
+            var body = @$"Name: {data.Name}
+Location: {data.Location}
+Email: {data.Email}
+Subject: {data.Subject}
+Message: {data.Message}";
+            EmailService.Send(toEmail, "Contact Form Submission", body);
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
