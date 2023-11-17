@@ -16,27 +16,33 @@
             <h1 class="title">@ViewData["Title"]</h1>
         </div>
     </section>
-
     <nav class="navbar is-link is-spaced" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a asp-action="Index" asp-controller="Home" class="navbar-item">
+                <a class="navbar-item" asp-controller="Home" asp-action="Index">
                     Home
                 </a>
 
-                <a asp-action="Contact" asp-controller="Home" class="navbar-item">
+                <a class="navbar-item" asp-controller="Home" asp-action="Contact">
                     Contact
                 </a>
-
             </div>
 
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary" onclick="alert('Coming soon!')">
+                        <a class="button is-primary" onclick="alert('Coming soon!')'">
                             <strong>Sign up</strong>
                         </a>
-                        <a class="button is-light" onclick="alert('Coming soon!')">
+                        <a class="button is-light" onclick="alert('Coming soon!')'">
                             Log in
                         </a>
                     </div>
@@ -44,6 +50,8 @@
             </div>
         </div>
     </nav>
+
+
     @RenderBody()
     <footer class="footer">
         <div class="content has-text-centered">
@@ -66,6 +74,7 @@
             <p class="is-size-7 is-italic">By accessing and using the workout routines posted on this website, you acknowledge and agree that you are doing so at your own risk. The owner of this website, its contributors, and anyone associated with it shall not be held liable for any injuries, damages, or deaths that may occur as a result of following these workouts. It is your responsibility to consult with a qualified professional before attempting any exercise routine and to ensure that you are physically capable of performing the exercises safely. By using this website, you waive any claims against the owner and hold them harmless from any and all liabilities.</p>
         </div>
     </footer>
+    <script src="~/js/pages/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
