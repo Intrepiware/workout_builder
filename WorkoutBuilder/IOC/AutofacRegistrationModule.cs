@@ -22,6 +22,7 @@ namespace WorkoutBuilder.IOC
             // Services
             builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
             if (Configuration["InjectionMode"] == "development")
             {
