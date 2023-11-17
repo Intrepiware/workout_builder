@@ -47,6 +47,9 @@ namespace WorkoutBuilder.Controllers
         [HttpPost]
         public IActionResult Contact(HomeContactRequestModel data)
         {
+            if (!ModelState.IsValid)
+                return View(data);
+
             var toEmail = Configuration["ContactFormToAddress"];
             var body = @$"Name: {data.Name}
 Location: {data.Location}
@@ -54,7 +57,9 @@ Email: {data.Email}
 Subject: {data.Subject}
 Message: {data.Message}";
             EmailService.Send(toEmail, "Contact Form Submission", body);
-            return View();
+            ViewBag.Success = "Thank you for your message, it has been sent successfully.";
+            ModelState.Clear();
+            return View(new HomeContactRequestModel());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
