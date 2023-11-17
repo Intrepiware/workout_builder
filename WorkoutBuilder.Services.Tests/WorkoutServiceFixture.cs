@@ -141,6 +141,41 @@ namespace WorkoutBuilder.Services.Tests
                 Assert.That(result.Name, Is.EqualTo("Random Workout"));
             }
 
+            [Test]
+            public void Should_Not_Repeat_Exercise()
+            {
+                var exerciseRepository = A.Fake<IRepository<Exercise>>();
+                var timingRepository = A.Fake<IRepository<Timing>>();
+                var randomizer = A.Fake<IRandomize>();
+
+
+                A.CallTo(() => exerciseRepository.GetAll()).Returns(new List<Exercise>().AsQueryable());
+                A.CallTo(() => timingRepository.GetAll()).Returns(new List<Timing>().AsQueryable());
+
+                A.CallTo(() => randomizer.GetRandomItem<Timing>(null)).WithAnyArguments().Returns(new Timing { Id = 1, Name = "Fake Timing", Stations = 2, StationTiming = string.Empty });
+                A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
+                A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
+                    .ReturnsNextFromSequence(new[]
+                    {
+                        new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
+                        new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
+                        new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
+                        new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
+                        new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
+                        new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
+                        new Exercise { Id = 2, Equipment = "Equipment 2", Name = "Exercise 2" }
+                    });
+
+                A.CallTo(() => randomizer.NextDouble()).Returns(0);
+
+                var workoutService = new WorkoutService { ExerciseRepository = exerciseRepository, Randomizer = randomizer, TimingRepository = timingRepository };
+
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel());
+
+                Assert.IsNotNull(result);
+                Assert.That(result.Exercises[0].Exercise, Is.EqualTo("Exercise 1"));
+                Assert.That(result.Exercises[1].Exercise, Is.EqualTo("Exercise 2"));
+            }
         }
 
         [TestFixture]

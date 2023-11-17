@@ -9,11 +9,30 @@ namespace WorkoutBuilder.IOC
 {
     public class AutofacRegistrationModule : Module
     {
+        public IConfiguration Configuration { get; }
+        
+        public AutofacRegistrationModule(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+
         protected override void Load(ContainerBuilder builder)
         {
             // Services
             builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+
+            if (Configuration["InjectionMode"] == "development")
+            {
+                builder.RegisterType<FakeEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+            }
+            else
+            {
+                builder.RegisterType<SmtpEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+            }
+
 
             // Repositories
             builder.RegisterType<WorkoutBuilderContext>().As<DbContext>().InstancePerLifetimeScope();
