@@ -3,7 +3,7 @@ using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Services.Impl
 {
-    public class GeneralWorkoutGenerator : IWorkoutService
+    public class GeneralWorkoutGenerator : IWorkoutGenerator
     {
         public required IRepository<Exercise> ExerciseRepository { protected get; init; }
         public required IRandomize Randomizer { protected get; init; }

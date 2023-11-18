@@ -3,7 +3,7 @@ using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Services.Impl.Workout_Generators
 {
-    public class MiamiNightsWorkoutGenerator : IWorkoutService
+    public class MiamiNightsWorkoutGenerator : IWorkoutGenerator
     {
         public required IRandomize Randomizer { init; protected get; }
         public required IRepository<Exercise> ExerciseRepository { init; protected get; }
@@ -11,7 +11,10 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
             var exercises = ExerciseRepository.GetAll().ToList();
-            var equipment = exercises.Select(x => x.Equipment).Where(x => !x.Equals("bodyweight", StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
+            var equipment = exercises.Select(x => x.Equipment)
+                                    .Where(x => !x.Equals("bodyweight", StringComparison.OrdinalIgnoreCase))
+                                    .Distinct()
+                                    .ToList();
             var addedExerciseIds = new List<long>();
             const int MaxIterations = 1000;
 

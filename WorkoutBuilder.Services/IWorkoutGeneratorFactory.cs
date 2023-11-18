@@ -6,6 +6,6 @@ namespace WorkoutBuilder.Services
     public interface IWorkoutGeneratorFactory
     {
         Timing GetTiming(string timingName);
-        IWorkoutService GetGenerator(Timing timing);
+        IWorkoutGenerator GetGenerator(Timing timing);
     }
 }

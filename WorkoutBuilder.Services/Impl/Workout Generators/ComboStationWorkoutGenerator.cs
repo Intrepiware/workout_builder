@@ -3,7 +3,7 @@ using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Services.Impl.Workout_Generators
 {
-    public class TwentyTwoExerciseGenerator : IWorkoutService
+    public class ComboStationWorkoutGenerator : IWorkoutGenerator
     {
         public required IRandomize Randomizer { init; protected get; }
         public required IRepository<Exercise> ExerciseRepository { init; protected get; }
@@ -54,8 +54,9 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
                 var exercise1 = GetNext(exercises, exerciseEquipment, cardio, strength);
                 if (exercise1 == null) 
                     continue;
-                // The second exercise should use the same equipment or bodyweight
-                var exercise2 = GetNext(exercises, new[] { exercise1.Equipment, "bodyweight" }, cardio, strength);
+                // The second exercise should use the same equipment or bodyweight, with a strong preference for the same equipment
+                var nextEquipment = Randomizer.NextDouble() < .8 ? new[] { exercise1.Equipment } : new[] { "bodyweight" };
+                var exercise2 = GetNext(exercises, nextEquipment, cardio, strength);
 
 
                 // Include in the workout if the two exercises are different, and they aren't already in the workout

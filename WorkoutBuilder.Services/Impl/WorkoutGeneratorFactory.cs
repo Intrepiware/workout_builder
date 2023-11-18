@@ -1,6 +1,5 @@
 ﻿using WorkoutBuilder.Data;
 using WorkoutBuilder.Services.Impl.Workout_Generators;
-using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Services.Impl
 {
@@ -20,7 +19,7 @@ namespace WorkoutBuilder.Services.Impl
             return timing;
         }
 
-        public IWorkoutService GetGenerator(Timing timing)
+        public IWorkoutGenerator GetGenerator(Timing timing)
         {
             var defaultGenerator = new GeneralWorkoutGenerator { ExerciseRepository = ExerciseRepository, Randomizer = Randomizer };
             if (string.IsNullOrEmpty(timing.CustomGenerator))
@@ -30,8 +29,8 @@ namespace WorkoutBuilder.Services.Impl
             {
                 case nameof(MiamiNightsWorkoutGenerator):
                     return new MiamiNightsWorkoutGenerator { ExerciseRepository = ExerciseRepository, Randomizer = Randomizer };
-                case nameof(TwentyTwoExerciseGenerator):
-                    return new TwentyTwoExerciseGenerator { ExerciseRepository = ExerciseRepository, Randomizer = Randomizer };
+                case nameof(ComboStationWorkoutGenerator):
+                    return new ComboStationWorkoutGenerator { ExerciseRepository = ExerciseRepository, Randomizer = Randomizer };
                 default:
                     return defaultGenerator;
             }
