@@ -13,7 +13,7 @@
 
     public class WorkoutGenerationExerciseModel
     {
-        public int Station { get; set; }
+        public string Station { get; set; }
         public string Exercise { get; set; }
         public string Focus { get; set; }
         public string Equipment { get; set; }

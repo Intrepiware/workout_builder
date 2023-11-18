@@ -3,23 +3,19 @@ using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Services.Impl
 {
-    public class WorkoutService : IWorkoutService
+    public class GeneralWorkoutGenerator : IWorkoutService
     {
         public required IRepository<Exercise> ExerciseRepository { protected get; init; }
-        public required IRepository<Timing> TimingRepository { protected get; init; }
         public required IRandomize Randomizer { protected get; init; }
         
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
-            var timings = TimingRepository.GetAll().ToList();
             var exercises = ExerciseRepository.GetAll().ToList();
             var equipment = exercises.Select(x => x.Equipment).Distinct().ToList();
             var addedExerciseIds = new List<long>();
             const int MaxIterations = 1000;
-
-            var timing = timings.FirstOrDefault(x => x.Name.Equals(request.Timing, StringComparison.OrdinalIgnoreCase));
-            timing ??= Randomizer.GetRandomItem(timings);
-
+            
+            var timing = request.Timing;
             var focus = request.Focus ?? Randomizer.GetRandomItem(new[] { Models.Focus.Cardio, Models.Focus.Hybrid, Models.Focus.Strength });
 
             double cardio = 0, strength = .8;
@@ -77,7 +73,7 @@ namespace WorkoutBuilder.Services.Impl
                         Exercise = exercise.Name,
                         Focus = exerciseFocus.ToString(),
                         Notes = exercise.Notes,
-                        Station = output.Exercises.Count + 1
+                        Station = $"{output.Exercises.Count + 1}"
                     });
                     addedExerciseIds.Add(exercise.Id);
                 }

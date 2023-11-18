@@ -12,7 +12,7 @@ namespace WorkoutBuilder.Controllers
     {
         public IRepository<Exercise> ExerciseRepository { protected get; init; }
         public IRepository<Timing> TimingRepository { protected get; init; }
-        public IWorkoutService WorkoutService { protected get; init; }
+        public IWorkoutGeneratorFactory WorkoutGeneratorFactory { protected get; init; }
         public IEmailService EmailService { protected get; init; }
         public IConfiguration Configuration { protected get; init; }
 
@@ -34,7 +34,9 @@ namespace WorkoutBuilder.Controllers
             if (Enum.TryParse<Services.Models.Focus>(focus, true, out var parsedFocus))
                 requestedFocus = parsedFocus;
 
-            var result = WorkoutService.Generate(new WorkoutGenerationRequestModel { Focus = requestedFocus, Timing = timing });
+            var workoutTiming = WorkoutGeneratorFactory.GetTiming(timing);
+            var result = WorkoutGeneratorFactory.GetGenerator(workoutTiming)
+                            .Generate(new WorkoutGenerationRequestModel { Timing = workoutTiming, Focus = requestedFocus });
 
             return Json(result);
         }
