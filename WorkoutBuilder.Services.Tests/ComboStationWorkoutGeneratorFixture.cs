@@ -25,7 +25,7 @@ namespace WorkoutBuilder.Services.Tests
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
                         new Exercise { Id = 2, Equipment = "Equipment 1", Name = "Exercise 2" },
                         new Exercise { Id = 3, Equipment = "Equipment 2", Name = "Exercise 3" },
-                        new Exercise { Id = 4, Equipment = "Equipment 2", Name = "Exercise 3" }
+                        new Exercise { Id = 4, Equipment = "Equipment 2", Name = "Exercise 4" }
                     });
 
                 A.CallTo(() => randomizer.NextDouble()).Returns(0);
