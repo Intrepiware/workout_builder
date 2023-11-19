@@ -154,6 +154,9 @@ function HomeIndex() {
                 <strong>Timing:</strong> {workout.timing}
               </p>
             )}
+            {workout?.notes && (
+              <p className="is-italic">Note: {workout.notes}</p>
+            )}
           </div>
         </div>
       </section>

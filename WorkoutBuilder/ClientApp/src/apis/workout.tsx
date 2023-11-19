@@ -9,7 +9,7 @@ export interface Workout {
 }
 
 export interface Exercise {
-  station: number;
+  station: string;
   exercise: string;
   focus: string;
   equipment: string;

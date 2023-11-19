@@ -14,5 +14,6 @@ namespace WorkoutBuilder.Data
         [MaxLength(255)]
         public string StationTiming { get; set; }
         public string? Notes { get; set; }
+        public string? CustomGenerator { get; set; }
     }
 }
