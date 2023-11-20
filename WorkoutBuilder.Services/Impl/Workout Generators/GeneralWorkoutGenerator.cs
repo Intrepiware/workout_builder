@@ -11,7 +11,7 @@ namespace WorkoutBuilder.Services.Impl
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
             var exercises = ExerciseRepository.GetAll().ToList();
-            var equipment = exercises.Select(x => x.Equipment).Distinct().ToList();
+            var allEquipment = exercises.Select(x => x.Equipment).Distinct().ToList();
             var addedExerciseIds = new List<long>();
             const int MaxIterations = 1000;
             
@@ -23,7 +23,7 @@ namespace WorkoutBuilder.Services.Impl
             switch(request.Focus)
             {
                 case Models.Focus.Strength:
-                    cardio = 0.2;
+                    cardio = 0;
                     break;
                 case Models.Focus.Hybrid:
                     cardio = 0.4;
@@ -59,13 +59,10 @@ namespace WorkoutBuilder.Services.Impl
 
                 // Don't use more than 15 different pieces of equipment per workout
                 var usedEquipment = output.Exercises.Select(x => x.Equipment).Distinct();
-                var exerciseEquipment = usedEquipment.Count() >= 15 ?
-                    Randomizer.GetRandomItem(usedEquipment) :
-                    Randomizer.GetRandomItem(equipment);
+                var allowedEquipment = usedEquipment.Count() >= 15 ? usedEquipment.ToList() : allEquipment.ToList();
+                var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus));
 
-                var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && x.Equipment.Equals(exerciseEquipment, StringComparison.OrdinalIgnoreCase)));
-
-                if(exercise != null && !addedExerciseIds.Contains(exercise.Id))
+                if(exercise != null && allowedEquipment.Contains(exercise.Equipment) && !addedExerciseIds.Contains(exercise.Id))
                 {
                     output.Exercises.Add(new WorkoutGenerationExerciseModel
                     {
