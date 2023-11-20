@@ -5,8 +5,8 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
 {
     public class MiamiNightsWorkoutGenerator : IWorkoutGenerator
     {
-        public required IRandomize Randomizer { init; protected get; }
-        public required IRepository<Exercise> ExerciseRepository { init; protected get; }
+        public IRandomize Randomizer { init; protected get; }
+        public IRepository<Exercise> ExerciseRepository { init; protected get; }
 
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
@@ -37,9 +37,8 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
             {
                 var rand = Randomizer.NextDouble();
                 var exerciseFocus = (rand < .8) ? Models.Focus.Cardio : Models.Focus.Abs;
-                var exerciseEquipment = Randomizer.GetRandomItem(equipment);
 
-                var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && x.Equipment.Equals(exerciseEquipment, StringComparison.OrdinalIgnoreCase)));
+                var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && !x.Equipment.Equals("bodyweight", StringComparison.OrdinalIgnoreCase)));
 
                 if (exercise != null && !addedExercises.Any(x => x.Id == exercise.Id))
                     addedExercises.Add(exercise);
@@ -50,16 +49,15 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
             {
                 var rand = Randomizer.NextDouble();
                 var exerciseFocus = (rand < .8) ? Models.Focus.Strength : Models.Focus.Abs;
-                var exerciseEquipment = Randomizer.GetRandomItem(equipment);
 
-                var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && x.Equipment.Equals(exerciseEquipment, StringComparison.OrdinalIgnoreCase)));
+                var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && !x.Equipment.Equals("bodyweight", StringComparison.OrdinalIgnoreCase)));
 
                 if (exercise != null && !addedExercises.Any(x => x.Id == exercise.Id))
                     addedExercises.Add(exercise);
             }
 
             // Finally add 4 bodyweight stations
-            while(addedExercises.Count < 12 && iterations++ < MaxIterations)
+            while (addedExercises.Count < 12 && iterations++ < MaxIterations)
             {
                 var rand = Randomizer.NextDouble();
                 var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.Equipment.Equals("bodyweight", StringComparison.OrdinalIgnoreCase)));
@@ -78,6 +76,5 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
 
             return output;
         }
-
     }
 }

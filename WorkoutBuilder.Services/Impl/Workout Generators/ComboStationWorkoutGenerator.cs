@@ -5,12 +5,13 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
 {
     public class ComboStationWorkoutGenerator : IWorkoutGenerator
     {
-        public required IRandomize Randomizer { init; protected get; }
-        public required IRepository<Exercise> ExerciseRepository { init; protected get; }
+        public IRandomize Randomizer { init; protected get; }
+        public IRepository<Exercise> ExerciseRepository { init; protected get; }
+
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
             var exercises = ExerciseRepository.GetAll().ToList();
-            var equipment = exercises.Select(x => x.Equipment).Distinct().ToList();
+            var allEquipment = exercises.Select(x => x.Equipment).Distinct().ToList();
             var addedExerciseIds = new List<long>();
             const int MaxIterations = 1000;
 
@@ -24,14 +25,15 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
                 case Models.Focus.Strength:
                     cardio = 0.2;
                     break;
+
                 case Models.Focus.Hybrid:
                     cardio = 0.4;
                     break;
+
                 case Models.Focus.Cardio:
                 default:
                     cardio = 0.6;
                     break;
-
             }
 
             var output = new WorkoutGenerationResponseModel
@@ -49,19 +51,19 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
             {
                 // Don't use more than 15 different pieces of equipment per workout
                 var usedEquipment = output.Exercises.Select(x => x.Equipment).Distinct();
-                var exerciseEquipment = usedEquipment.Count() >= 15 ? usedEquipment : equipment;
+                var allowedEquipment = usedEquipment.Count() >= 15 ? usedEquipment : allEquipment;
 
-                var exercise1 = GetNext(exercises, exerciseEquipment, cardio, strength);
-                if (exercise1 == null) 
+                var exercise1 = GetNext(exercises, null, cardio, strength);
+                if (exercise1 == null || !allowedEquipment.Contains(exercise1.Equipment))
                     continue;
-                // The second exercise should use the same equipment or bodyweight, with a strong preference for the same equipment
-                var nextEquipment = Randomizer.NextDouble() < .8 ? new[] { exercise1.Equipment } : new[] { "bodyweight" };
-                var exercise2 = GetNext(exercises, nextEquipment, cardio, strength);
 
+                // The second exercise should use the same equipment or bodyweight, with a strong preference for the same equipment
+                var nextEquipment = Randomizer.NextDouble() < .8 ? exercise1.Equipment : "bodyweight";
+                var exercise2 = GetNext(exercises, nextEquipment, cardio, strength);
 
                 // Include in the workout if the two exercises are different, and they aren't already in the workout
                 if (exercise1 != null && exercise2 != null && exercise1.Id != exercise2.Id
-                    && !addedExerciseIds.Contains(exercise1.Id) && !addedExerciseIds.Contains(exercise2.Id))                    
+                    && !addedExerciseIds.Contains(exercise1.Id) && !addedExerciseIds.Contains(exercise2.Id))
                 {
                     var station = 1 + output.Exercises.Count / 2;
 
@@ -89,7 +91,7 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
             return output;
         }
 
-        private Exercise GetNext(IEnumerable<Exercise> exercises, IEnumerable<string> equipment, double cardio, double strength)
+        private Exercise GetNext(IEnumerable<Exercise> exercises, string equipmentItem, double cardio, double strength)
         {
             var rand = Randomizer.NextDouble();
             Models.Focus exerciseFocus;
@@ -100,8 +102,10 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
             else
                 exerciseFocus = Models.Focus.Abs;
 
-            var equipmentItem = Randomizer.GetRandomItem(equipment);
-            var exercise = Randomizer.GetRandomItem(exercises.Where(x => x.FocusId == (byte)exerciseFocus && x.Equipment.Equals(equipmentItem, StringComparison.OrdinalIgnoreCase)));
+            var filteredExercises = exercises.Where(x => x.FocusId == (byte)exerciseFocus
+                && (equipmentItem == null || x.Equipment.Equals(equipmentItem, StringComparison.OrdinalIgnoreCase)));
+
+            var exercise = Randomizer.GetRandomItem(filteredExercises);
             return exercise;
         }
     }

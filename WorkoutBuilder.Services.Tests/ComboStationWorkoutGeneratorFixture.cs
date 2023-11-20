@@ -14,19 +14,18 @@ namespace WorkoutBuilder.Services.Tests
             {
                 var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var randomizer = A.Fake<IRandomize>();
-
-
-                A.CallTo(() => exerciseRepository.GetAll()).Returns(new List<Exercise>().AsQueryable());
-
-                A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
-                A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
-                    .ReturnsNextFromSequence(new[]
+                var exercises = new[]
                     {
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
                         new Exercise { Id = 2, Equipment = "Equipment 1", Name = "Exercise 2" },
                         new Exercise { Id = 3, Equipment = "Equipment 2", Name = "Exercise 3" },
                         new Exercise { Id = 4, Equipment = "Equipment 2", Name = "Exercise 4" }
-                    });
+                    };
+
+                A.CallTo(() => exerciseRepository.GetAll()).Returns(exercises.AsQueryable());
+                A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
+                A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
+                    .ReturnsNextFromSequence(exercises);
 
                 A.CallTo(() => randomizer.NextDouble()).Returns(0);
 
@@ -43,28 +42,21 @@ namespace WorkoutBuilder.Services.Tests
                 Assert.That(result.Exercises[3].Station, Is.EqualTo("2B"));
             }
 
-
             [Test]
             public void Should_Not_Repeat_Exercise()
             {
                 var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var randomizer = A.Fake<IRandomize>();
-
-
-                A.CallTo(() => exerciseRepository.GetAll()).Returns(new List<Exercise>().AsQueryable());
-
-                A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
-                A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
-                    .ReturnsNextFromSequence(new[]
+                var exercises = new[]
                     {
                         // Pair should be included
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Exercise 1" },
                         new Exercise { Id = 2, Equipment = "Equipment 1", Name = "Exercise 2" },
-                        
+
                         // Pair should not be included
                         new Exercise { Id = 3, Equipment = "Equipment 1", Name = "Same exercise as below - should not be included" },
                         new Exercise { Id = 3, Equipment = "Equipment 1", Name = "Same exercise as above - should not be included" },
-                        
+
                         // Pair should not be included
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Same exercise as first - should not be included" },
                         new Exercise { Id = 4, Equipment = "Equipment 1", Name = "Exercise 4" },
@@ -72,11 +64,17 @@ namespace WorkoutBuilder.Services.Tests
                         // Pair should not be included
                         new Exercise { Id = 5, Equipment = "Equipment 1", Name = "Exercise 5" },
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Same exercise as first - should not be included" },
-                        
+
                         // Pair should be included
                         new Exercise { Id = 6, Equipment = "Equipment 1", Name = "Exercise 6" },
                         new Exercise { Id = 7, Equipment = "Equipment 1", Name = "Exercise 7" }
-                    });
+                    };
+
+                A.CallTo(() => exerciseRepository.GetAll()).Returns(exercises.AsQueryable());
+
+                A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
+                A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
+                    .ReturnsNextFromSequence(exercises);
 
                 A.CallTo(() => randomizer.NextDouble()).Returns(0);
 
@@ -98,7 +96,6 @@ namespace WorkoutBuilder.Services.Tests
         public class When_Insufficent_Exercises
         {
             [Test]
-            // Tests to make sure that the program does not get stuck in an infinite loop
             public void Should_Generate()
             {
                 var exerciseRepository = A.Fake<IRepository<Exercise>>();
