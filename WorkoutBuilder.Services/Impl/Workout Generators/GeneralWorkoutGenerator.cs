@@ -23,7 +23,7 @@ namespace WorkoutBuilder.Services.Impl
             switch(request.Focus)
             {
                 case Models.Focus.Strength:
-                    cardio = 0.2;
+                    cardio = 0;
                     break;
                 case Models.Focus.Hybrid:
                     cardio = 0.4;
