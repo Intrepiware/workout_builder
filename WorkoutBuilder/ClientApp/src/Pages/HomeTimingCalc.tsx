@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import React from "react";
+import { useState } from "react";
+import "./HomeTimingCalc.css";
 
 function HomeTimingCalc() {
   const emptyTiming = { stations: 0, work: 0, rest: 0, hydration: 0 };
@@ -33,95 +33,118 @@ function HomeTimingCalc() {
   };
 
   const calcTotalTime = () => {
-    let seconds = 0;
+    let total = 0,
+      rest = 0,
+      work = 0;
     timings.forEach((x) => {
-      seconds += x.stations * (x.rest + x.work);
-      if (x.hydration > 0) seconds += -x.rest + x.hydration;
+      total += x.stations * (x.rest + x.work);
+      work += x.stations * x.work;
+      rest += x.stations * x.rest;
+      if (x.hydration > 0) {
+        rest += -x.rest + x.hydration;
+        total += -x.rest + x.hydration;
+      }
     });
-    return new Date(seconds * 1000).toISOString().substring(14, 19);
+    // No rest on the very last station
+    rest -= timings[timings.length - 1].rest;
+    total -= timings[timings.length - 1].rest;
+    return {
+      rest: new Date(rest * 1000).toISOString().substring(14, 19),
+      work: new Date(work * 1000).toISOString().substring(14, 19),
+      total: new Date(total * 1000).toISOString().substring(14, 19),
+    };
   };
+
+  const { rest, work, total } = calcTotalTime();
 
   return (
     <section className="section">
-      <p>
-        <strong>Total Time:</strong> {calcTotalTime()}
-      </p>
-      <div className="table-container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Stations</th>
-              <th>Work</th>
-              <th>Rest</th>
-              <th>Hydration</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {timings.map((t, idx) => (
+      <div className="container is-max-desktop">
+        <p>
+          <strong>Total Work:</strong> {work}
+          &nbsp;&middot;&nbsp;
+          <strong>Total Rest:</strong> {rest}
+          &nbsp;&middot;&nbsp;
+          <strong>Total Time:</strong> {total}
+        </p>
+        <div className="table-container">
+          <table className="table">
+            <thead>
               <tr>
-                <td>
-                  <input
-                    className="input"
-                    type="text"
-                    data-row={idx}
-                    data-name="stations"
-                    onChange={onNumberFieldChange}
-                    value={t.stations}
-                  ></input>
-                </td>
-                <td>
-                  <input
-                    className="input"
-                    type="text"
-                    data-row={idx}
-                    data-name="work"
-                    onChange={onNumberFieldChange}
-                    value={t.work}
-                  ></input>
-                </td>
-                <td>
-                  <input
-                    className="input"
-                    type="text"
-                    data-row={idx}
-                    data-name="rest"
-                    onChange={onNumberFieldChange}
-                    value={t.rest}
-                  ></input>
-                </td>
-                <td>
-                  <input
-                    className="input"
-                    type="text"
-                    data-row={idx}
-                    data-name="hydration"
-                    onChange={onNumberFieldChange}
-                    value={t.hydration}
-                  ></input>
-                </td>
-                <td>
-                  <a
-                    className="button is-danger"
-                    onClick={() => remRow(idx)}
-                    href="javascript:void(0)"
-                  >
-                    <span className="material-symbols-outlined">remove</span>
-                  </a>
-                  {idx == timings.length - 1 && (
-                    <a
-                      className="button is-success"
-                      onClick={addRow}
-                      href="javascript:void(0)"
-                    >
-                      <span className="material-symbols-outlined">add</span>
-                    </a>
-                  )}
-                </td>
+                <th>Stations</th>
+                <th>Work</th>
+                <th>Rest</th>
+                <th>Hydration</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {timings.map((t, idx) => (
+                <tr key={idx}>
+                  <td>
+                    <input
+                      className="input"
+                      type="text"
+                      data-row={idx}
+                      data-name="stations"
+                      onChange={onNumberFieldChange}
+                      value={t.stations}
+                    ></input>
+                  </td>
+                  <td>
+                    <input
+                      className="input"
+                      type="text"
+                      data-row={idx}
+                      data-name="work"
+                      onChange={onNumberFieldChange}
+                      value={t.work}
+                    ></input>
+                  </td>
+                  <td>
+                    <input
+                      className="input"
+                      type="text"
+                      data-row={idx}
+                      data-name="rest"
+                      onChange={onNumberFieldChange}
+                      value={t.rest}
+                    ></input>
+                  </td>
+                  <td>
+                    <input
+                      className="input"
+                      type="text"
+                      data-row={idx}
+                      data-name="hydration"
+                      onChange={onNumberFieldChange}
+                      value={t.hydration}
+                    ></input>
+                  </td>
+                  <td>
+                    <button
+                      className="button is-danger"
+                      onClick={() => remRow(idx)}
+                    >
+                      <span className="icon is-small">
+                        <span className="material-symbols-outlined">
+                          remove
+                        </span>
+                      </span>
+                    </button>
+                    {idx == timings.length - 1 && (
+                      <button className="button is-success" onClick={addRow}>
+                        <span className="icon is-small">
+                          <span className="material-symbols-outlined">add</span>
+                        </span>
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );
