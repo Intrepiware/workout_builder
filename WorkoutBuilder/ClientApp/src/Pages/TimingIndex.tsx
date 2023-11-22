@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./HomeTimingCalc.css";
+import "./TimingIndex.css";
 
-function HomeTimingCalc() {
+function TimingIndex() {
   const emptyTiming = { stations: 0, work: 0, rest: 0, hydration: 0 };
   const [timings, setTimings] = useState([emptyTiming]);
 
@@ -60,13 +60,19 @@ function HomeTimingCalc() {
   return (
     <section className="section">
       <div className="container is-max-desktop">
-        <p>
-          <strong>Total Work:</strong> {work}
-          &nbsp;&middot;&nbsp;
-          <strong>Total Rest:</strong> {rest}
-          &nbsp;&middot;&nbsp;
-          <strong>Total Time:</strong> {total}
-        </p>
+        <div className="content">
+          <p>
+            This tool can be used to calculate the total work and rest time for
+            a workout. Use it to try new ideas for workout timings.
+          </p>
+          <p>
+            <strong>Total Work:</strong> {work}
+            &nbsp;&middot;&nbsp;
+            <strong>Total Rest:</strong> {rest}
+            &nbsp;&middot;&nbsp;
+            <strong>Total Time:</strong> {total}
+          </p>
+        </div>
         <div className="table-container">
           <table className="table">
             <thead>
@@ -150,4 +156,4 @@ function HomeTimingCalc() {
   );
 }
 
-export default HomeTimingCalc;
+export default TimingIndex;

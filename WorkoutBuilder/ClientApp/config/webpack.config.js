@@ -6,7 +6,7 @@ module.exports = {
   },
   entry: {
     "home-index": "./src/home-index.tsx",
-    "home-timingcalc": "./src/home-timingcalc.tsx",
+    "timing-index": "./src/timing-index.tsx",
     site: "./src/site.ts",
   },
   output: {

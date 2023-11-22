@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import HomeTimingCalc from "./Pages/HomeTimingCalc";
+import TimingIndex from "./Pages/TimingIndex";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <HomeTimingCalc />
+    <TimingIndex />
   </React.StrictMode>
 );
