@@ -8,7 +8,11 @@ function HomeIndex() {
   const [focus, setFocus] = useState("Hybrid");
   const [isFocusLocked, setIsFocusLocked] = useState(false);
   const [isTimingLocked, setIsTimingLocked] = useState(false);
+  const [isAdvancedModalShown, setIsAdvancedModalShown] = useState(false);
   const [timings, setTimings] = useState([]);
+  const [allEquipment, setAllEquipment] = useState([]);
+  const [selectedEquipment, setSelectedEquipment] = useState([]);
+  const [equipmentPreset, setEquipmentPreset] = useState("All");
   const [, setError] = useState(null);
   const [workout, setWorkout] = useState<Workout | null>(null);
 
@@ -30,6 +34,15 @@ function HomeIndex() {
   }, []);
 
   useEffect(() => {
+    fetch("/Home/Equipment")
+      .then((res) => res.json())
+      .then((result) => {
+        setAllEquipment(result);
+        setSelectedEquipment(result);
+      });
+  }, []);
+
+  useEffect(() => {
     try {
       const savedWorkout: Workout = JSON.parse(localStorage.getItem("workout"));
       if (savedWorkout.version === "v1") {
@@ -45,6 +58,53 @@ function HomeIndex() {
     }
   }, []);
 
+  useEffect(() => {
+    switch (equipmentPreset) {
+      case "None":
+        setSelectedEquipment([]);
+        break;
+      case "Bootcamp":
+        setSelectedEquipment([
+          "Bodyweight",
+          "Cones",
+          "Room to Run",
+          "Dumbbells",
+        ]);
+        break;
+      case "Calisthenics":
+        setSelectedEquipment([
+          "Bodyweight",
+          "Dip Bars",
+          "Plyo Box",
+          "Pull Up Bar",
+          "Step Riser",
+          "TRX",
+        ]);
+        break;
+      case "Just Weights":
+        setSelectedEquipment(["Dumbbells", "Olympic Barbell", "Small Barbell"]);
+        break;
+      case "Odd Object Training":
+        setSelectedEquipment([
+          "Kettlebell",
+          "Med Ball",
+          "Sandbell",
+          "Sandbag - Lg (84.4 lb)",
+          "Sandbag - Sm (61.2 lb)",
+          "Slamball",
+          "Sledge Hammer",
+          "Tire",
+          "Small Plates",
+          "Large Plates",
+        ]);
+        break;
+      case "All":
+      default:
+        setSelectedEquipment(allEquipment);
+        break;
+    }
+  }, [equipmentPreset]);
+
   const handleTimingChange = (item: string) => {
     setWorkout(null);
     setTiming(item);
@@ -57,10 +117,21 @@ function HomeIndex() {
     setIsFocusLocked(true);
   };
 
+  const handleEquipmentToggle = (label: string): void => {
+    const selected = [...selectedEquipment];
+    if (selected.includes(label)) {
+      selected.splice(selected.indexOf(label), 1);
+    } else {
+      selected.push(label);
+    }
+    setSelectedEquipment(selected);
+  };
+
   const getCustomizedWorkout = () => {
     const timingParam: string = isTimingLocked ? timing : "";
     const focusParam: string = isFocusLocked ? focus : "";
-    getWorkout(timingParam, focusParam).then(
+    const equipmentParam: string = selectedEquipment.join("|");
+    getWorkout(timingParam, focusParam, equipmentParam).then(
       (result: Workout) => {
         setWorkout(result);
         localStorage.setItem("workout", JSON.stringify(result));
@@ -84,6 +155,10 @@ function HomeIndex() {
     }
     return false;
   }
+
+  const toggleAdvancedOptions = () => {
+    setIsAdvancedModalShown((old) => !old);
+  };
 
   return (
     <>
@@ -157,6 +232,9 @@ function HomeIndex() {
             {workout?.notes && (
               <p className="is-italic">Note: {workout.notes}</p>
             )}
+            <p className="is-size-7 has-text-right">
+              <a onClick={toggleAdvancedOptions}>Advanced Options</a>
+            </p>
           </div>
         </div>
       </section>
@@ -193,7 +271,110 @@ function HomeIndex() {
           </table>
         </div>
       </section>
+
+      <div
+        className={`modal ${isAdvancedModalShown ? "is-active" : ""}`}
+        id="advanced-options"
+      >
+        <div className="modal-background"></div>
+        <div className="modal-content">
+          <div className="box">
+            <h3 className="title is-4 is-spaced">Advanced Options</h3>
+            <label className="label">Randomization</label>
+            <div className="field has-addons">
+              <p className="control">
+                <button className="button" disabled>
+                  <span className="icon is-small">
+                    <span className="material-symbols-outlined">exercise</span>
+                  </span>
+                  <span>By Equipment</span>
+                </button>
+              </p>
+              <p className="control">
+                <button className="button is-primary is-selected">
+                  <span className="material-symbols-outlined"> sprint </span>
+                  <span>&nbsp;By Exercise</span>
+                </button>
+              </p>
+            </div>
+            <div className="field">
+              <label className="label">Equipment Presets</label>
+              <div className="control">
+                <div className="select">
+                  <select
+                    value={equipmentPreset}
+                    onChange={(e) => setEquipmentPreset(e.target.value)}
+                  >
+                    <option>All</option>
+                    <option>None</option>
+                    <option>Bootcamp</option>
+                    <option>Calisthenics</option>
+                    <option>Just Weights</option>
+                    <option>Odd Object Training</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <label className="label">Available Equipment</label>
+            <div className="buttons">
+              <EquipmentButton
+                onClick={handleEquipmentToggle}
+                label="Bodyweight"
+                selectedEquipment={selectedEquipment}
+              ></EquipmentButton>
+              <EquipmentButton
+                onClick={handleEquipmentToggle}
+                label="Room to Run"
+                selectedEquipment={selectedEquipment}
+              ></EquipmentButton>
+              <EquipmentButton
+                onClick={handleEquipmentToggle}
+                label="Dumbbells"
+                selectedEquipment={selectedEquipment}
+              ></EquipmentButton>
+              {allEquipment
+                .filter(
+                  (x) => !["Bodyweight", "Room to Run", "Dumbbells"].includes(x)
+                )
+                .map((x) => (
+                  <EquipmentButton
+                    key={x}
+                    onClick={handleEquipmentToggle}
+                    label={x}
+                    selectedEquipment={selectedEquipment}
+                  ></EquipmentButton>
+                ))}
+            </div>
+          </div>
+        </div>
+        <button
+          className="modal-close is-large"
+          aria-label="close"
+          onClick={toggleAdvancedOptions}
+        ></button>
+      </div>
     </>
+  );
+}
+
+function EquipmentButton({
+  label,
+  selectedEquipment,
+  onClick,
+}: {
+  label: string;
+  selectedEquipment: string[];
+  onClick: (label: string) => void;
+}) {
+  return (
+    <button
+      className={`button ${
+        selectedEquipment.includes(label) ? "is-primary" : ""
+      }`}
+      onClick={() => onClick(label)}
+    >
+      {label}
+    </button>
   );
 }
 

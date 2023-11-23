@@ -28,7 +28,14 @@ namespace WorkoutBuilder.Controllers
             return Json(timings);
         }
 
-        public IActionResult Workout(string? timing, string? focus)
+        [ResponseCache(Duration = 3600)]
+        public IActionResult Equipment()
+        {
+            var equipment = ExerciseRepository.GetAll().Select(x => x.Equipment).Distinct().ToList();
+            return Json(equipment);
+        }
+
+        public IActionResult Workout(string? timing, string? focus, string equipment)
         {
             Services.Models.Focus? requestedFocus = null;
             if (Enum.TryParse<Services.Models.Focus>(focus, true, out var parsedFocus))
@@ -36,7 +43,7 @@ namespace WorkoutBuilder.Controllers
 
             var workoutTiming = WorkoutGeneratorFactory.GetTiming(timing);
             var result = WorkoutGeneratorFactory.GetGenerator(workoutTiming)
-                            .Generate(new WorkoutGenerationRequestModel { Timing = workoutTiming, Focus = requestedFocus });
+                            .Generate(new WorkoutGenerationRequestModel { Timing = workoutTiming, Focus = requestedFocus, Equipment = equipment?.Split('|').ToList() });
 
             return Json(result);
         }

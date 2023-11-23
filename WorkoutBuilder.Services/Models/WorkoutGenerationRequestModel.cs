@@ -12,5 +12,6 @@ namespace WorkoutBuilder.Services.Models
         public string? TimingName { get; set; }
         public Focus? Focus { get; set; }
         public Timing Timing { get; set; }
+        public List<string> Equipment { get; set; }
     }
 }

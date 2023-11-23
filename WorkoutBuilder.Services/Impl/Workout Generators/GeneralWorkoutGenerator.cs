@@ -10,7 +10,8 @@ namespace WorkoutBuilder.Services.Impl
         
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
-            var exercises = ExerciseRepository.GetAll().ToList();
+            var equipment = request.Equipment ?? new List<string>();
+            var exercises = ExerciseRepository.GetAll().Where(x => equipment.Contains(x.Equipment)).ToList();
             var allEquipment = exercises.Select(x => x.Equipment).Distinct().ToList();
             var addedExerciseIds = new List<long>();
             const int MaxIterations = 1000;
