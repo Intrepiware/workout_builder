@@ -76,12 +76,34 @@ function TimingIndex() {
         <div className="table-container">
           <table className="table">
             <thead>
-              <tr>
+              <tr className="is-hidden-touch">
                 <th>Stations</th>
                 <th>Work</th>
                 <th>Rest</th>
                 <th>Hydration</th>
                 <th></th>
+              </tr>
+              <tr className="is-hidden-desktop">
+                <th>
+                  <span className="material-symbols-outlined" title="Stations">
+                    location_on
+                  </span>
+                </th>
+                <th>
+                  <span className="material-symbols-outlined" title="Work">
+                    sprint
+                  </span>
+                </th>
+                <th>
+                  <span className="material-symbols-outlined" title="Rest">
+                    hotel
+                  </span>
+                </th>
+                <th>
+                  <span className="material-symbols-outlined" title="Hydration">
+                    water_drop
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
