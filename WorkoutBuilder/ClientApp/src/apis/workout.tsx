@@ -18,11 +18,14 @@ export interface Exercise {
 
 export function getWorkout(
   timing: null | string,
-  focus: null | string
+  focus: null | string,
+  equipment: null | string
 ): Promise<Workout> {
   timing = encodeURIComponent(timing || "");
   focus = encodeURIComponent(focus || "");
-  return fetch(`/Home/Workout?timing=${timing}&focus=${focus}`)
+  return fetch(
+    `/Home/Workout?timing=${timing}&focus=${focus}&equipment=${equipment}`
+  )
     .then((res) => res.json())
     .then((res) => {
       res.version = "v1";

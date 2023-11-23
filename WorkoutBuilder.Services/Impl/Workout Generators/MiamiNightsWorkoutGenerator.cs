@@ -10,8 +10,10 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
 
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
-            var exercises = ExerciseRepository.GetAll().ToList();
-            var equipment = exercises.Select(x => x.Equipment)
+            var equipment = request.Equipment ?? new List<string>();
+            var exercises = ExerciseRepository.GetAll().Where(x => equipment.Contains(x.Equipment)).ToList();
+
+            equipment = exercises.Select(x => x.Equipment)
                                     .Where(x => !x.Equals("bodyweight", StringComparison.OrdinalIgnoreCase))
                                     .Distinct()
                                     .ToList();

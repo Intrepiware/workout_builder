@@ -64,7 +64,12 @@ function HomeIndex() {
         setSelectedEquipment([]);
         break;
       case "Bootcamp":
-        setSelectedEquipment(["Bodyweight", "Room to Run", "Dumbbells"]);
+        setSelectedEquipment([
+          "Bodyweight",
+          "Cones",
+          "Room to Run",
+          "Dumbbells",
+        ]);
         break;
       case "Calisthenics":
         setSelectedEquipment([
@@ -112,7 +117,7 @@ function HomeIndex() {
     setIsFocusLocked(true);
   };
 
-  const handleEquipmentToggle = (label) => {
+  const handleEquipmentToggle = (label: string): void => {
     const selected = [...selectedEquipment];
     if (selected.includes(label)) {
       selected.splice(selected.indexOf(label), 1);
@@ -125,7 +130,8 @@ function HomeIndex() {
   const getCustomizedWorkout = () => {
     const timingParam: string = isTimingLocked ? timing : "";
     const focusParam: string = isFocusLocked ? focus : "";
-    getWorkout(timingParam, focusParam).then(
+    const equipmentParam: string = selectedEquipment.join("|");
+    getWorkout(timingParam, focusParam, equipmentParam).then(
       (result: Workout) => {
         setWorkout(result);
         localStorage.setItem("workout", JSON.stringify(result));
@@ -351,7 +357,15 @@ function HomeIndex() {
   );
 }
 
-function EquipmentButton({ label, selectedEquipment, onClick }) {
+function EquipmentButton({
+  label,
+  selectedEquipment,
+  onClick,
+}: {
+  label: string;
+  selectedEquipment: string[];
+  onClick: (label: string) => void;
+}) {
   return (
     <button
       className={`button ${
