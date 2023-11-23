@@ -28,6 +28,13 @@ namespace WorkoutBuilder.Controllers
             return Json(timings);
         }
 
+        [ResponseCache(Duration = 3600)]
+        public IActionResult Equipment()
+        {
+            var equipment = ExerciseRepository.GetAll().Select(x => x.Equipment).Distinct().ToList();
+            return Json(equipment);
+        }
+
         public IActionResult Workout(string? timing, string? focus)
         {
             Services.Models.Focus? requestedFocus = null;

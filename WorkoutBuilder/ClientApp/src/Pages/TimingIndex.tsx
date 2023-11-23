@@ -6,6 +6,7 @@ function TimingIndex() {
   const [timings, setTimings] = useState([emptyTiming]);
   const nextInput = useRef(null);
 
+  // Set input focus when the add/rem buttons are pressed
   useEffect(() => nextInput?.current?.focus(), [timings.length]);
 
   const regExNumber = new RegExp("^[0-9]*$");
