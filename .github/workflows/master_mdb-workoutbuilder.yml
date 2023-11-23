@@ -30,7 +30,7 @@ jobs:
       - name: npm deploy
         run: |
           npm deploy
-        working-directory: WorkoutBuilder/WorkoutBuilder/ClientApp
+        working-directory: WorkoutBuilder/ClientApp
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
