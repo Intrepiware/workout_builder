@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./TimingIndex.css";
 
 function TimingIndex() {
   const emptyTiming = { stations: 0, work: 0, rest: 0, hydration: 0 };
   const [timings, setTimings] = useState([emptyTiming]);
+  const nextInput = useRef(null);
+
+  useEffect(() => nextInput?.current?.focus(), [timings.length]);
 
   const regExNumber = new RegExp("^[0-9]*$");
   const onNumberFieldChange = (e) => {
@@ -117,6 +120,7 @@ function TimingIndex() {
                       data-name="stations"
                       onChange={onNumberFieldChange}
                       value={t.stations}
+                      ref={idx == timings.length - 1 ? nextInput : null}
                     ></input>
                   </td>
                   <td>
