@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Add a click event on each of them
     $navbarBurgers.forEach( el => {
-        console.log(el);
       el.addEventListener('click', () => {
   
         // Get the target from the "data-target" attribute

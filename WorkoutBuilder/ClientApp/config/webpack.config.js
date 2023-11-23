@@ -6,6 +6,7 @@ module.exports = {
   },
   entry: {
     "home-index": "./src/home-index.tsx",
+    "timing-index": "./src/timing-index.tsx",
     site: "./src/site.ts",
   },
   output: {
@@ -27,6 +28,14 @@ module.exports = {
         },
         test: /\.tsx?$/,
         exclude: /node_modules/,
+      },
+      {
+        rules: [
+          {
+            test: /\.css$/i,
+            use: ["style-loader", "css-loader"],
+          },
+        ],
       },
     ],
   },

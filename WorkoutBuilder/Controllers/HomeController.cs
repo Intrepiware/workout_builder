@@ -41,6 +41,11 @@ namespace WorkoutBuilder.Controllers
             return Json(result);
         }
 
+        public IActionResult TimingCalc()
+        {
+            return View();
+        }
+
         public IActionResult Contact()
         {
             return View();
