@@ -6,3 +6,7 @@ table.table td:last-child {
 td button {
     margin: 0px 2px;
 }
+
+table.table tr.is-hidden-desktop th {
+    text-align:center;
+}

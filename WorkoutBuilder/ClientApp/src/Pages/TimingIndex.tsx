@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./TimingIndex.css";
 
 function TimingIndex() {
   const emptyTiming = { stations: 0, work: 0, rest: 0, hydration: 0 };
   const [timings, setTimings] = useState([emptyTiming]);
+  const nextInput = useRef(null);
+
+  useEffect(() => nextInput?.current?.focus(), [timings.length]);
 
   const regExNumber = new RegExp("^[0-9]*$");
   const onNumberFieldChange = (e) => {
@@ -76,12 +79,34 @@ function TimingIndex() {
         <div className="table-container">
           <table className="table">
             <thead>
-              <tr>
+              <tr className="is-hidden-touch">
                 <th>Stations</th>
                 <th>Work</th>
                 <th>Rest</th>
                 <th>Hydration</th>
                 <th></th>
+              </tr>
+              <tr className="is-hidden-desktop">
+                <th>
+                  <span className="material-symbols-outlined" title="Stations">
+                    location_on
+                  </span>
+                </th>
+                <th>
+                  <span className="material-symbols-outlined" title="Work">
+                    sprint
+                  </span>
+                </th>
+                <th>
+                  <span className="material-symbols-outlined" title="Rest">
+                    hotel
+                  </span>
+                </th>
+                <th>
+                  <span className="material-symbols-outlined" title="Hydration">
+                    water_drop
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -95,6 +120,7 @@ function TimingIndex() {
                       data-name="stations"
                       onChange={onNumberFieldChange}
                       value={t.stations}
+                      ref={idx == timings.length - 1 ? nextInput : null}
                     ></input>
                   </td>
                   <td>
