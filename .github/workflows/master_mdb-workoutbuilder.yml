@@ -22,6 +22,16 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: true
 
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version:  ${{ env.NODE_VERSION }}
+
+      - name: npm deploy
+        run: |
+          npm deploy
+        working-directory: WorkoutBuilder/WorkoutBuilder/ClientApp
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
