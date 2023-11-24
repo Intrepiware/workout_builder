@@ -104,7 +104,7 @@ class Autocomplete extends Component<Props, State> {
         query,
       });
     } else {
-      if (e.nativeEvent.inputType === "deleteContentBackward") {
+      if ((e.nativeEvent as InputEvent).inputType === "deleteContentBackward") {
         this.setState({
           matches: [],
           query: "",

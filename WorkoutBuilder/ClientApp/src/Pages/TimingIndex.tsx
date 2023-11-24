@@ -1,10 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import "./TimingIndex.css";
 
+interface Timing {
+  stations: number;
+  work: number;
+  rest: number;
+  hydration: number;
+}
+
 function TimingIndex() {
-  const emptyTiming = { stations: 0, work: 0, rest: 0, hydration: 0 };
+  const emptyTiming: Timing = { stations: 0, work: 0, rest: 0, hydration: 0 };
   const [timings, setTimings] = useState([emptyTiming]);
-  const nextInput = useRef(null);
+  const nextInput = useRef<HTMLInputElement>(null);
 
   // Set input focus when the add/rem buttons are pressed
   useEffect(() => nextInput?.current?.focus(), [timings.length]);
@@ -17,9 +24,10 @@ function TimingIndex() {
         const newValue =
           e.target.value === "" ? "" : parseInt(e.target.value, 10);
 
-        const stateIndex: number = +e.target.dataset.row;
-        if (!isNaN(stateIndex) && e.target.dataset.name)
-          state[stateIndex][e.target.dataset.name] = newValue;
+        const stateIndex: number = parseInt(e.target.dataset.row || "", 10);
+        const propIndex: string = e.target.dataset.name || "";
+        if (stateIndex > -1 && !!propIndex)
+          state[stateIndex] = { ...state[stateIndex], [propIndex]: newValue };
         return state;
       });
     }
