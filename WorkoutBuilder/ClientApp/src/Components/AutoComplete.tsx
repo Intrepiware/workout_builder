@@ -1,4 +1,4 @@
-import React from "react";
+import { Component, KeyboardEvent } from "react";
 
 interface Props {
   value: string;
@@ -17,7 +17,7 @@ interface State {
   selected: boolean;
 }
 
-class Autocomplete extends React.Component<Props, State> {
+class Autocomplete extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -33,7 +33,7 @@ class Autocomplete extends React.Component<Props, State> {
     this.updateQuery = this.updateQuery.bind(this);
   }
 
-  handleKeyPress(event) {
+  handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     const { activeIndex, matches, query } = this.state;
 
     switch (event.which) {
@@ -72,7 +72,12 @@ class Autocomplete extends React.Component<Props, State> {
     }
   }
 
-  handleSelection(event, selection) {
+  handleSelection(
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    selection: string
+  ) {
+    debugger;
+    console.log(typeof event);
     event.preventDefault();
 
     this.setState({
@@ -84,7 +89,7 @@ class Autocomplete extends React.Component<Props, State> {
     this.props.onSelect(selection);
   }
 
-  updateQuery(e) {
+  updateQuery(e: React.ChangeEvent<HTMLInputElement>) {
     const { data } = this.props;
 
     if (!this.state.selected) {

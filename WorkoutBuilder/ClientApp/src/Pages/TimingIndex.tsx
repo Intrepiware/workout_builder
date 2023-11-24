@@ -10,13 +10,16 @@ function TimingIndex() {
   useEffect(() => nextInput?.current?.focus(), [timings.length]);
 
   const regExNumber = new RegExp("^[0-9]*$");
-  const onNumberFieldChange = (e) => {
+  const onNumberFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (regExNumber.test(e.target.value)) {
       setTimings((old) => {
         const state = [...old];
         const newValue =
           e.target.value === "" ? "" : parseInt(e.target.value, 10);
-        state[e.target.dataset.row][e.target.dataset.name] = newValue;
+
+        const stateIndex: number = +e.target.dataset.row;
+        if (!isNaN(stateIndex) && e.target.dataset.name)
+          state[stateIndex][e.target.dataset.name] = newValue;
         return state;
       });
     }

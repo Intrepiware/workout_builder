@@ -3,6 +3,15 @@ import Autocomplete from "../Components/AutoComplete";
 import { Workout, getWorkout } from "../apis/workout";
 import React from "react";
 
+interface Timing {
+  id: bigint;
+  name: string;
+  stations: number;
+  stationTiming: string | null;
+  notes: string | null;
+  customGenerator: string | null;
+}
+
 function HomeIndex() {
   const [timing, setTiming] = useState("");
   const [focus, setFocus] = useState("Hybrid");
@@ -20,7 +29,7 @@ function HomeIndex() {
     fetch("/Home/Timings")
       .then((res) => res.json())
       .then(
-        (result) => {
+        (result: Timing[]) => {
           setTimings(result.map((x) => x.name));
         },
         // Note: it's important to handle errors here
