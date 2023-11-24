@@ -76,8 +76,6 @@ class Autocomplete extends Component<Props, State> {
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     selection: string
   ) {
-    debugger;
-    console.log(typeof event);
     event.preventDefault();
 
     this.setState({
