@@ -21,7 +21,7 @@ namespace WorkoutBuilder.Services.Impl
 
             double cardio = 0, strength = .8;
 
-            switch(request.Focus)
+            switch(focus)
             {
                 case Models.Focus.Strength:
                     cardio = 0;

@@ -3,15 +3,24 @@ import Autocomplete from "../Components/AutoComplete";
 import { Workout, getWorkout } from "../apis/workout";
 import React from "react";
 
+interface Timing {
+  id: bigint;
+  name: string;
+  stations: number;
+  stationTiming: string | null;
+  notes: string | null;
+  customGenerator: string | null;
+}
+
 function HomeIndex() {
   const [timing, setTiming] = useState("");
   const [focus, setFocus] = useState("Hybrid");
   const [isFocusLocked, setIsFocusLocked] = useState(false);
   const [isTimingLocked, setIsTimingLocked] = useState(false);
   const [isAdvancedModalShown, setIsAdvancedModalShown] = useState(false);
-  const [timings, setTimings] = useState([]);
-  const [allEquipment, setAllEquipment] = useState([]);
-  const [selectedEquipment, setSelectedEquipment] = useState([]);
+  const [timings, setTimings] = useState<string[]>([]);
+  const [allEquipment, setAllEquipment] = useState<string[]>([]);
+  const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const [equipmentPreset, setEquipmentPreset] = useState("All");
   const [, setError] = useState(null);
   const [workout, setWorkout] = useState<Workout | null>(null);
@@ -20,7 +29,7 @@ function HomeIndex() {
     fetch("/Home/Timings")
       .then((res) => res.json())
       .then(
-        (result) => {
+        (result: Timing[]) => {
           setTimings(result.map((x) => x.name));
         },
         // Note: it's important to handle errors here
@@ -36,7 +45,7 @@ function HomeIndex() {
   useEffect(() => {
     fetch("/Home/Equipment")
       .then((res) => res.json())
-      .then((result) => {
+      .then((result: string[]) => {
         setAllEquipment(result);
         setSelectedEquipment(result);
       });
@@ -44,7 +53,9 @@ function HomeIndex() {
 
   useEffect(() => {
     try {
-      const savedWorkout: Workout = JSON.parse(localStorage.getItem("workout"));
+      const savedWorkout: Workout = JSON.parse(
+        localStorage.getItem("workout") || ""
+      );
       if (savedWorkout.version === "v1") {
         setWorkout(savedWorkout);
         setTiming(savedWorkout.name);
@@ -118,7 +129,7 @@ function HomeIndex() {
   };
 
   const handleEquipmentToggle = (label: string): void => {
-    const selected = [...selectedEquipment];
+    const selected: string[] = [...selectedEquipment];
     if (selected.includes(label)) {
       selected.splice(selected.indexOf(label), 1);
     } else {

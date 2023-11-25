@@ -21,7 +21,7 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
 
             double cardio = 0, strength = .8;
 
-            switch (request.Focus)
+            switch (focus)
             {
                 case Models.Focus.Strength:
                     cardio = 0;
@@ -44,7 +44,7 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
                 Notes = timing.Notes,
                 Stations = timing.Stations,
                 Timing = timing.StationTiming,
-                Exercises = new List<WorkoutGenerationExerciseModel>()
+                Exercises = new List<WorkoutGenerationExerciseModel>(),
             };
 
             var iterations = 0;
