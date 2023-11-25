@@ -89,7 +89,7 @@ function TimingIndex() {
           </p>
         </div>
         <div className="table-container">
-          <table className="table">
+          <table className="table is-narrow" id="timing">
             <thead>
               <tr className="is-hidden-touch">
                 <th>Stations</th>
@@ -167,7 +167,7 @@ function TimingIndex() {
                   </td>
                   <td>
                     <button
-                      className="button is-danger"
+                      className="button is-danger is-small is-responsive"
                       onClick={() => remRow(idx)}
                     >
                       <span className="icon is-small">
@@ -177,7 +177,10 @@ function TimingIndex() {
                       </span>
                     </button>
                     {idx == timings.length - 1 && (
-                      <button className="button is-success" onClick={addRow}>
+                      <button
+                        className="button is-success is-small is-responsive"
+                        onClick={addRow}
+                      >
                         <span className="icon is-small">
                           <span className="material-symbols-outlined">add</span>
                         </span>
