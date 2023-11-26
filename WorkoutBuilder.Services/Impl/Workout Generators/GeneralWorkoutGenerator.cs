@@ -5,8 +5,8 @@ namespace WorkoutBuilder.Services.Impl
 {
     public class GeneralWorkoutGenerator : IWorkoutGenerator
     {
-        public required IRepository<Exercise> ExerciseRepository { protected get; init; }
-        public required IRandomize Randomizer { protected get; init; }
+        public IRepository<Exercise> ExerciseRepository { protected get; init; }
+        public IRandomize Randomizer { protected get; init; }
         
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {
