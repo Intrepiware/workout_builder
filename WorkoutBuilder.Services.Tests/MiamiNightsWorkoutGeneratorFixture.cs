@@ -16,7 +16,6 @@ namespace WorkoutBuilder.Services.Tests
                 var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var randomizer = A.Fake<IRandomize>();
 
-
                 A.CallTo(() => exerciseRepository.GetAll()).Returns(new List<Exercise>().AsQueryable());
 
                 A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
@@ -34,13 +33,11 @@ namespace WorkoutBuilder.Services.Tests
                 Assert.That(result.Exercises.Count, Is.EqualTo(12));
             }
 
-
             [Test]
             public void Should_Not_Repeat_Exercise()
             {
                 var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var randomizer = A.Fake<IRandomize>();
-
 
                 A.CallTo(() => exerciseRepository.GetAll()).Returns(new List<Exercise>().AsQueryable());
 
@@ -53,7 +50,6 @@ namespace WorkoutBuilder.Services.Tests
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Duplicate - should not be included" },
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Duplicate - should not be included" },
                         new Exercise { Id = 1, Equipment = "Equipment 1", Name = "Duplicate - should not be included" }
-
                     };
                 exercises.AddRange(Enumerable.Range(2, 11).Select(x => new Exercise { Equipment = $"Equipment {x}", Id = x, Name = $"Exercise {x}" }));
                 A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
@@ -64,7 +60,7 @@ namespace WorkoutBuilder.Services.Tests
                 var workoutService = new MiamiNightsWorkoutGenerator { ExerciseRepository = exerciseRepository, Randomizer = randomizer };
 
                 var timing = new Timing { Id = 1, Name = "Fake Timing", Stations = 4, StationTiming = string.Empty };
-                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing });
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing, Equipment = new List<string> { "Equipment 1" } });
 
                 Assert.IsNotNull(result);
                 Assert.That(result.Exercises.Count, Is.EqualTo(12));
@@ -92,13 +88,13 @@ namespace WorkoutBuilder.Services.Tests
                 var workoutService = new MiamiNightsWorkoutGenerator { ExerciseRepository = exerciseRepository, Randomizer = randomizer };
 
                 var timing = new Timing { Id = 1, Name = "Fake Timing", Stations = 12, StationTiming = string.Empty };
-                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing });
+                var equipment = Enumerable.Range(1, 20).Select(x => $"Equipment {x}").Append("Bodyweight").ToList();
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing, Equipment = equipment });
 
                 Assert.That(result.Exercises.Count, Is.EqualTo(12));
                 Assert.That(result.Exercises.Where((x, i) => i < 4 && x.Focus == "Strength").Count(), Is.EqualTo(0), "The first four elements should be cardio or abs");
                 Assert.That(result.Exercises.Where((x, i) => i >= 4 && i < 8 && x.Focus == "Cardio").Count(), Is.EqualTo(0), "The middle four elements should be strength or abs");
                 Assert.That(result.Exercises.Where((x, i) => i >= 8 && x.Equipment != "Bodyweight").Count(), Is.EqualTo(0), "The last four elements should be bodyweight");
-
             }
         }
 

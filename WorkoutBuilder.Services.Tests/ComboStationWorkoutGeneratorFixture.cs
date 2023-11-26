@@ -32,7 +32,7 @@ namespace WorkoutBuilder.Services.Tests
                 var workoutService = new ComboStationWorkoutGenerator { ExerciseRepository = exerciseRepository, Randomizer = randomizer };
 
                 var timing = new Timing { Id = 1, Name = "Fake Timing", Stations = 4, StationTiming = string.Empty };
-                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing });
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing, Equipment = new List<string> { "Equipment 1", "Equipment 2" } });
 
                 Assert.IsNotNull(result);
                 Assert.That(result.Exercises.Count, Is.EqualTo(4));
@@ -81,7 +81,7 @@ namespace WorkoutBuilder.Services.Tests
                 var workoutService = new ComboStationWorkoutGenerator { ExerciseRepository = exerciseRepository, Randomizer = randomizer };
 
                 var timing = new Timing { Id = 1, Name = "Fake Timing", Stations = 4, StationTiming = string.Empty };
-                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing });
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing, Equipment = new List<string> { "Equipment 1" } });
 
                 Assert.IsNotNull(result);
                 Assert.That(result.Exercises.Count, Is.EqualTo(4));
