@@ -11,3 +11,15 @@ td button {
 table#timing tr.is-hidden-desktop th {
     text-align:center;
 }
+
+/* Hide spinner on number input */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

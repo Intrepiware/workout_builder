@@ -127,7 +127,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="stations"
                       onChange={onNumberFieldChange}
@@ -138,7 +138,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="work"
                       onChange={onNumberFieldChange}
@@ -148,7 +148,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="rest"
                       onChange={onNumberFieldChange}
@@ -158,7 +158,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="hydration"
                       onChange={onNumberFieldChange}
