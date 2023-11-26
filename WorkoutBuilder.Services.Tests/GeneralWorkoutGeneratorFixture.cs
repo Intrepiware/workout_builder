@@ -30,7 +30,11 @@ namespace WorkoutBuilder.Services.Tests
 
                 var workoutService = new GeneralWorkoutGenerator { ExerciseRepository = exerciseRepository, Randomizer = randomizer };
                 var timing = new Timing { Id = 1, Name = "Fake Timing", Stations = 3, StationTiming = string.Empty };
-                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing });
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel
+                {
+                    Timing = timing,
+                    Equipment = new List<string> { "Equipment 1", "Equipment 2", "Equipment 3" }
+                });
 
                 Assert.IsNotNull(result);
                 Assert.That(result.Exercises.Count, Is.EqualTo(3));
@@ -98,7 +102,7 @@ namespace WorkoutBuilder.Services.Tests
                 var workoutService = new GeneralWorkoutGenerator { ExerciseRepository = exerciseRepository, Randomizer = randomizer };
 
                 var timing = new Timing { Id = 1, Name = "Fake Timing", Stations = 2, StationTiming = string.Empty };
-                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing });
+                var result = workoutService.Generate(new Models.WorkoutGenerationRequestModel { Timing = timing, Equipment = new List<string> { "Equipment 1", "Equipment 2" } });
 
                 Assert.IsNotNull(result);
                 Assert.That(result.Exercises[0].Exercise, Is.EqualTo("Exercise 1"));
