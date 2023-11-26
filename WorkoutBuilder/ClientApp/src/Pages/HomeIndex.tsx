@@ -251,7 +251,7 @@ function HomeIndex() {
       </section>
       <section>
         <div className="container is-max-desktop">
-          <table className="table is-fullwidth">
+          <table className="table is-fullwidth is-narrow">
             <thead>
               <tr>
                 <th>Station</th>
