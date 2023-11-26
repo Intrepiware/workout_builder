@@ -16,21 +16,17 @@ function TimingIndex() {
   // Set input focus when the add/rem buttons are pressed
   useEffect(() => nextInput?.current?.focus(), [timings.length]);
 
-  const regExNumber = new RegExp("^[0-9]*$");
   const onNumberFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (regExNumber.test(e.target.value)) {
-      setTimings((old) => {
-        const state = [...old];
-        const newValue =
-          e.target.value === "" ? "" : parseInt(e.target.value, 10);
+    setTimings((old) => {
+      const state = [...old];
+      const newValue = "" + Number(e.target.value);
 
-        const stateIndex: number = parseInt(e.target.dataset.row || "", 10);
-        const propIndex: string = e.target.dataset.name || "";
-        if (stateIndex > -1 && !!propIndex)
-          state[stateIndex] = { ...state[stateIndex], [propIndex]: newValue };
-        return state;
-      });
-    }
+      const stateIndex: number = parseInt(e.target.dataset.row || "", 10);
+      const propIndex: string = e.target.dataset.name || "";
+      if (stateIndex > -1 && !!propIndex)
+        state[stateIndex] = { ...state[stateIndex], [propIndex]: newValue };
+      return state;
+    });
   };
 
   const addRow = () =>
@@ -48,27 +44,27 @@ function TimingIndex() {
   };
 
   const calcTotalTime = () => {
-    let total = 0,
-      rest = 0,
-      work = 0;
-    timings.forEach((x) => {
-      total += x.stations * (x.rest + x.work);
-      work += x.stations * x.work;
-      rest += x.stations * x.rest;
-      if (x.hydration > 0) {
-        rest += -x.rest + x.hydration;
-        total += -x.rest + x.hydration;
+    let rest: number = 0,
+      work: number = 0;
+    timings.forEach((x, idx) => {
+      work += x.stations * Number(x.work);
+      rest += x.stations * Number(x.rest);
+      const hydration = Number(x.hydration);
+      if (hydration > 0 && idx < timings.length - 1) {
+        rest += -x.rest + hydration;
       }
     });
     // No rest on the very last station
-    rest -= timings[timings.length - 1].rest;
-    total -= timings[timings.length - 1].rest;
+    rest -= timings[timings.length - 1].rest || 0;
     return {
-      rest: new Date(rest * 1000).toISOString().substring(14, 19),
-      work: new Date(work * 1000).toISOString().substring(14, 19),
-      total: new Date(total * 1000).toISOString().substring(14, 19),
+      rest: formatTime(rest),
+      work: formatTime(work),
+      total: formatTime(rest + work),
     };
   };
+
+  const formatTime = (v: number): string =>
+    new Date(v * 1000).toISOString().substring(14, 19);
 
   const { rest, work, total } = calcTotalTime();
 
@@ -127,7 +123,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="stations"
                       onChange={onNumberFieldChange}
@@ -138,7 +134,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="work"
                       onChange={onNumberFieldChange}
@@ -148,7 +144,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="rest"
                       onChange={onNumberFieldChange}
@@ -158,7 +154,7 @@ function TimingIndex() {
                   <td>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       data-row={idx}
                       data-name="hydration"
                       onChange={onNumberFieldChange}
