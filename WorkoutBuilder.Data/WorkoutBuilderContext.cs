@@ -10,6 +10,7 @@ namespace WorkoutBuilder.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("workouts");
             modelBuilder.Entity<Exercise>()
                 .HasOne(x => x.Focus);
         }
