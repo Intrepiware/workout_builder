@@ -32,5 +32,4 @@ _ReSharper*/
 packages/
 /Sql/Private/*
 /WorkoutBuilder/wwwroot/js/pages/*
-/WorkoutBuilder/Properties/PublishProfiles/*
 /WorkoutBuilder/Properties/ServiceDependencies/*
