@@ -1,6 +1,6 @@
 # Workout Builder
 
-**Working Example:** [https://mdb-workoutbuilder.azurewebsites.net/](https://mdb-workoutbuilder.azurewebsites.net/)
+**Working Example:** [https://workoutbuild.com](https://workoutbuild.com)
 
 ## Coding Patterns
 
