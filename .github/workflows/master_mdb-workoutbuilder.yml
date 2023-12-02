@@ -61,6 +61,12 @@ jobs:
         with:
           name: .net-app
       
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+          include-prerelease: true
+          
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -72,10 +78,4 @@ jobs:
 
 
       - name: Deploy to SmarterAsp.net
-        id: deploy-to-smarteraspnet
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'mdb-workoutbuilder'
-          slot-name: 'Production'
-          package: .
-          publish-profile: ${{ secrets.DEPLOYMENTPROFILE_SMARTERASPNET }}
+        run: dotnet publish WorkoutBuilder\WorkoutBuilder.csproj /p:PublishProfile=smarteraspnet_webdeploy /p:Password="FAKE-PASSWORD"
