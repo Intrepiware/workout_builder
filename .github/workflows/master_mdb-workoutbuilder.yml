@@ -69,3 +69,13 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2E4A5C03DDDA4ECC9358D3CAC44F36B2 }}
+
+
+      - name: Deploy to SmarterAsp.net
+        id: deploy-to-smarteraspnet
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'mdb-workoutbuilder'
+          slot-name: 'Production'
+          package: .
+          publish-profile: ${{ secrets.DEPLOYMENTPROFILE_SMARTERASPNET }}
