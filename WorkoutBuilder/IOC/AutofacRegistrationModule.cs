@@ -30,7 +30,7 @@ namespace WorkoutBuilder.IOC
             }
             else
             {
-                builder.RegisterType<SmtpEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+                builder.RegisterType<SendgridEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
             }
 
 
