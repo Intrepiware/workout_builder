@@ -19,13 +19,13 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: "6.0.x"
           include-prerelease: true
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version:  ${{ env.NODE_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: npm deploy
         run: |
@@ -49,23 +49,23 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment:
-      name: 'Production'
+      name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-      
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+
+      - name: Deploy to SmarterAsp.net
+        uses: ChristopheLav/iis-deploy@v1
         with:
-          app-name: 'mdb-workoutbuilder'
-          slot-name: 'Production'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2E4A5C03DDDA4ECC9358D3CAC44F36B2 }}
+          website-name: "mpdevlin-001-site1"
+          msdeploy-service-url: https://win8036.site4now.net:8172/msdeploy.axd?site=mpdevlin-001-site1
+          msdeploy-username: ${{ secrets.MSDEPLOY_USERNAME }}
+          msdeploy-password: '"${{ secrets.MSDEPLOY_PASSWORD }}"'
+          source-path: ${{ github.workspace }}\website\publish
