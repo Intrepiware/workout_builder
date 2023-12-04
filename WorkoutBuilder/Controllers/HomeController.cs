@@ -72,7 +72,7 @@ Location: {data.Location}
 Email: {data.Email}
 Subject: {data.Subject}
 Message: {data.Message}";
-            EmailService.Send(toEmail, "Contact Form Submission", body);
+            EmailService.Send(toEmail, "👉 Contact Form Submission", body);
             ViewBag.Success = "Thank you for your message, it has been sent successfully.";
             ModelState.Clear();
             MvcCaptcha.ResetCaptcha("ContactFormCaptcha");
