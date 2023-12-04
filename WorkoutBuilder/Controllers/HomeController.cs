@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BotDetect.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using System.Diagnostics;
 using WorkoutBuilder.Data;
@@ -59,6 +60,7 @@ namespace WorkoutBuilder.Controllers
         }
 
         [HttpPost]
+        [CaptchaValidationActionFilter("CaptchaCode", "ContactFormCaptcha", "Incorrect Captcha, please try again.")]
         public IActionResult Contact(HomeContactRequestModel data)
         {
             if (!ModelState.IsValid)
@@ -70,9 +72,10 @@ Location: {data.Location}
 Email: {data.Email}
 Subject: {data.Subject}
 Message: {data.Message}";
-            EmailService.Send(toEmail, "Contact Form Submission", body);
+            EmailService.Send(toEmail, "👉 Contact Form Submission", body);
             ViewBag.Success = "Thank you for your message, it has been sent successfully.";
             ModelState.Clear();
+            MvcCaptcha.ResetCaptcha("ContactFormCaptcha");
             return View(new HomeContactRequestModel());
         }
 

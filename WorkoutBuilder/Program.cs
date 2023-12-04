@@ -1,5 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BotDetect.Web;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.IOC;
@@ -21,6 +23,13 @@ namespace WorkoutBuilder
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacRegistrationModule(configuration)));
 
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+                options.Cookie.IsEssential = true;
+            });
+
+            builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -37,6 +46,10 @@ namespace WorkoutBuilder
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
+            app.UseCaptcha(configuration);
+
 
             app.MapControllerRoute(
                 name: "default",

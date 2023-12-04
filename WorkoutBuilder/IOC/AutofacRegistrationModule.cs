@@ -23,6 +23,7 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
             builder.RegisterType<GeneralWorkoutGenerator>().As<IWorkoutGenerator>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutGeneratorFactory>().As<IWorkoutGeneratorFactory>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
             if (Configuration["InjectionMode"] == "development")
             {
@@ -30,7 +31,7 @@ namespace WorkoutBuilder.IOC
             }
             else
             {
-                builder.RegisterType<SmtpEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+                builder.RegisterType<SendgridEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
             }
 
 

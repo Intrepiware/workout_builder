@@ -1,8 +1,14 @@
 ﻿@model HomeContactRequestModel;
+@addTagHelper "BotDetect.Web.Mvc.CaptchaTagHelper, BotDetect.Web.Mvc"
+
 @{
     ViewData["Title"] = "Contact";
 }
 
+@section header {
+    <link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl"
+          rel="stylesheet" type="text/css" />
+}
 
 <section class="section">
     <div class="container is-max-desktop">
@@ -33,7 +39,7 @@
                     <input class="input" name="location" type="text" placeholder="Anywhereville, TX" required asp-for="Location">
                 </div>
             </div>
-            <p class="help is-danger" >
+            <p class="help is-danger">
                 <span asp-validation-for="Location"></span>
             </p>
 
@@ -67,6 +73,21 @@
                 <span asp-validation-for="Message"></span>
             </p>
 
+            <div class="columns is-desktop">
+                <div class="column is-half">
+                    <div class="field">
+                        <label class="label" asp-for="CaptchaCode">Retype the code from the picture:</label>
+                        <captcha id="ContactFormCaptcha" user-input-id="CaptchaCode" />
+
+                        <div class="control">
+                            <input asp-for="CaptchaCode" class="input" required />
+                        </div>
+                        <p class="help is-danger">
+                            <span asp-validation-for="CaptchaCode"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link">Submit</button>
