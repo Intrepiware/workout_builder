@@ -32,6 +32,10 @@ namespace WorkoutBuilder
 
             builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
             builder.Services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
+
+            var aiOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            builder.Services.AddApplicationInsightsTelemetry(aiOptions);
+
             var app = builder.Build();
 
 
