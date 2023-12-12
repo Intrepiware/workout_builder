@@ -40,6 +40,8 @@ namespace WorkoutBuilder.IOC
             RegisterRepository<Exercise>(builder);
             RegisterRepository<Focus>(builder);
             RegisterRepository<Timing>(builder);
+            RegisterRepository<User>(builder);
+            RegisterRepository<UserPasswordResetRequest>(builder);
             
             // Controllers
             builder.RegisterType<HomeController>().PropertiesAutowired();
