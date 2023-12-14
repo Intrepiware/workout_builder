@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Autocomplete from "../Components/AutoComplete";
 import { Workout, getWorkout } from "../apis/workout";
 import React from "react";
+import "./HomeIndex.css";
 
 interface Timing {
   id: bigint;
@@ -223,10 +224,10 @@ function HomeIndex() {
               <div className="field">
                 <p className="control">
                   <a
-                    className="button is-primary"
+                    className="button is-primary pulse-button"
                     onClick={getCustomizedWorkout}
                   >
-                    Regenerate
+                    Generate!
                   </a>
                 </p>
               </div>
