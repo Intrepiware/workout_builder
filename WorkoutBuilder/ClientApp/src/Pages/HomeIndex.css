@@ -1,0 +1,22 @@
+.is-pulse {
+  animation: pulse 1.5s infinite;
+  border: 2px rgb(72, 199, 116) solid;
+
+  box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.5);
+}
+.is-pulse:hover {
+  -webkit-animation: none;
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(72, 199, 116, 0.4);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 10px rgba(72, 199, 116, 0.2);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 10px rgba(72, 199, 116, 0);
+  }
+}
