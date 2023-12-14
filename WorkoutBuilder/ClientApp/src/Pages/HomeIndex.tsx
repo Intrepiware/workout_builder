@@ -224,10 +224,10 @@ function HomeIndex() {
               <div className="field">
                 <p className="control">
                   <a
-                    className="button is-primary pulse-button"
+                    className={`button is-success ${!workout && "is-pulse"}`}
                     onClick={getCustomizedWorkout}
                   >
-                    Generate!
+                    {!!workout ? "Regenerate" : "Generate!"}
                   </a>
                 </p>
               </div>
