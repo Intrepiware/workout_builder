@@ -37,6 +37,6 @@ namespace WorkoutBuilder.Services.Impl
             return true;
         }
 
-        public void Complete(string publicId, string newPassword);
+        public void Complete(string publicId, string newPassword) { }
     }
 }

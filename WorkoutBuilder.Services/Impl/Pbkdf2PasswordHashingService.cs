@@ -22,7 +22,7 @@ namespace WorkoutBuilder.Services.Impl
 
         public bool Verify(string password, string hash)
         {
-
+            return false;
         }
     }
 }
