@@ -21,6 +21,8 @@ namespace WorkoutBuilder
             // Add services to the container.
             IConfiguration configuration = builder.Configuration;
             builder.Services.AddMvc().AddControllersAsServices();
+
+            // Register AutoFac
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacRegistrationModule(configuration)));
 
@@ -30,17 +32,18 @@ namespace WorkoutBuilder
                 options.Cookie.IsEssential = true;
             });
 
+            // This setting allows the CAPTCHA to generate images
             builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
             builder.Services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
 
+            // RegisterApplication Insights
             var aiOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
             builder.Services.AddApplicationInsightsTelemetry(aiOptions);
 
             var app = builder.Build();
 
-
             // Configure the HTTP request pipeline.
-            if(app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -62,12 +65,11 @@ namespace WorkoutBuilder
             app.UseSession();
             app.UseCaptcha(configuration);
 
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
+            // Automatically run migrations
             using (var scope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetRequiredService<WorkoutBuilderContext>().Database.Migrate();
