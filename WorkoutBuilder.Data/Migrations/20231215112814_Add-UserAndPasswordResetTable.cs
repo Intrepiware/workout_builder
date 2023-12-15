@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WorkoutBuilder.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateUserAndPasswordReset : Migration
+    public partial class AddUserAndPasswordResetTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,6 +18,8 @@ namespace WorkoutBuilder.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     EmailAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -39,6 +41,7 @@ namespace WorkoutBuilder.Data.Migrations
                     PublicId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CompleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>

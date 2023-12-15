@@ -12,8 +12,8 @@ using WorkoutBuilder.Data;
 namespace WorkoutBuilder.Data.Migrations
 {
     [DbContext(typeof(WorkoutBuilderContext))]
-    [Migration("20231210195533_Create-UserAndPasswordReset")]
-    partial class CreateUserAndPasswordReset
+    [Migration("20231215112814_Add-UserAndPasswordResetTable")]
+    partial class AddUserAndPasswordResetTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,6 +126,16 @@ namespace WorkoutBuilder.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<DateTime?>("LockDate")
                         .HasColumnType("datetime2");
 
@@ -158,6 +168,11 @@ namespace WorkoutBuilder.Data.Migrations
 
                     b.Property<DateTime>("ExpireDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PublicId")
                         .IsRequired()

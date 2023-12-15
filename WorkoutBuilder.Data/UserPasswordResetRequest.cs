@@ -17,6 +17,8 @@ namespace WorkoutBuilder.Data
         public DateTime CreateDate { get; set; }
         [Required]
         public DateTime ExpireDate { get; set; }
+        [Required, MaxLength(50)]
+        public string IpAddress { get; set; }
         public DateTime? CompleteDate { get; set; }
 
         public virtual User User { get; set; }
