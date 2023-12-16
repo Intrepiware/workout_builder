@@ -79,7 +79,7 @@ function HomeIndex() {
         setSelectedEquipment([
           "Bodyweight",
           "Cones",
-          "Room to Run",
+          "Space to Run",
           "Dumbbells",
         ]);
         break;
@@ -94,15 +94,14 @@ function HomeIndex() {
         ]);
         break;
       case "Just Weights":
-        setSelectedEquipment(["Dumbbells", "Olympic Barbell", "Small Barbell"]);
+        setSelectedEquipment(["Dumbbells", "Barbell"]);
         break;
       case "Odd Object Training":
         setSelectedEquipment([
           "Kettlebell",
           "Med Ball",
           "Sandbell",
-          "Sandbag - Lg (84.4 lb)",
-          "Sandbag - Sm (61.2 lb)",
+          "Sandbag",
           "Slamball",
           "Sledge Hammer",
           "Tire",
@@ -336,17 +335,18 @@ function HomeIndex() {
               ></EquipmentButton>
               <EquipmentButton
                 onClick={handleEquipmentToggle}
-                label="Room to Run"
+                label="Dumbbells"
                 selectedEquipment={selectedEquipment}
               ></EquipmentButton>
               <EquipmentButton
                 onClick={handleEquipmentToggle}
-                label="Dumbbells"
+                label="Space to Run"
                 selectedEquipment={selectedEquipment}
               ></EquipmentButton>
               {allEquipment
                 .filter(
-                  (x) => !["Bodyweight", "Room to Run", "Dumbbells"].includes(x)
+                  (x) =>
+                    !["Bodyweight", "Space to Run", "Dumbbells"].includes(x)
                 )
                 .map((x) => (
                   <EquipmentButton
