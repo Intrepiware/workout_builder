@@ -4,6 +4,7 @@ using WorkoutBuilder.Controllers;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl;
+using WorkoutBuilder.Services.Impl.Helpers;
 
 namespace WorkoutBuilder.IOC
 {
@@ -20,10 +21,12 @@ namespace WorkoutBuilder.IOC
         protected override void Load(ContainerBuilder builder)
         {
             // Services
+            builder.RegisterType<UrlBuilder>().As<IUrlBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
             builder.RegisterType<GeneralWorkoutGenerator>().As<IWorkoutGenerator>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutGeneratorFactory>().As<IWorkoutGeneratorFactory>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            builder.RegisterType<ResetPasswordHelper>().As<IResetPasswordHelper>().PropertiesAutowired().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {
