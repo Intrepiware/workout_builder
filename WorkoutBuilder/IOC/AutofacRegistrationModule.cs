@@ -28,12 +28,15 @@ namespace WorkoutBuilder.IOC
             if (Configuration["InjectionMode"] == "development")
             {
                 builder.RegisterType<FakeEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+                builder.RegisterType<DoNothingPasswordHashingService>().As<IPasswordHashingService>().InstancePerLifetimeScope();
             }
             else
             {
                 builder.RegisterType<SendgridEmailService>().As<IEmailService>().PropertiesAutowired().InstancePerLifetimeScope();
+                builder.RegisterType<Pbkdf2PasswordHashingService>().As<IPasswordHashingService>().PropertiesAutowired().InstancePerLifetimeScope();
             }
 
+            builder.RegisterType<UserResetPasswordService>().As<IUserResetPasswordService>().PropertiesAutowired().InstancePerLifetimeScope();
 
             // Repositories
             builder.RegisterType<WorkoutBuilderContext>().As<DbContext>().InstancePerLifetimeScope();

@@ -12,7 +12,7 @@ using WorkoutBuilder.Data;
 namespace WorkoutBuilder.Data.Migrations
 {
     [DbContext(typeof(WorkoutBuilderContext))]
-    [Migration("20231215112814_Add-UserAndPasswordResetTable")]
+    [Migration("20231216235325_Add-UserAndPasswordResetTable")]
     partial class AddUserAndPasswordResetTable
     {
         /// <inheritdoc />
@@ -143,6 +143,9 @@ namespace WorkoutBuilder.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("PasswordResetDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

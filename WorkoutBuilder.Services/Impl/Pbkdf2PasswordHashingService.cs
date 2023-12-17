@@ -2,7 +2,7 @@
 
 namespace WorkoutBuilder.Services.Impl
 {
-    public class Pbkdf2PasswordHashingService
+    public class Pbkdf2PasswordHashingService : IPasswordHashingService
     {
         public string Hash(string password) => new PasswordHasher().HashPassword(password);
 

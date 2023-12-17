@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WorkoutBuilder.Data;
+﻿using WorkoutBuilder.Data;
 
 namespace WorkoutBuilder.Services.Impl
 {
-    public class UserResetPasswordService
+    public class UserResetPasswordService : IUserResetPasswordService
     {
-        public IRepository<User> UserRepository { get; init; }
-        public IRepository<UserPasswordResetRequest> UserPasswordResetRequestRepository { get; init; }
+        public IRepository<User> UserRepository { init; protected get; }
+        public IRepository<UserPasswordResetRequest> UserPasswordResetRequestRepository { init; protected get; }
+        public IPasswordHashingService PasswordHashingService { init; protected get; }
         public async Task<string> Create(long userId)
         {
             if (UserRepository.GetById(userId) == null)
@@ -37,6 +33,17 @@ namespace WorkoutBuilder.Services.Impl
             return true;
         }
 
-        public void Complete(string publicId, string newPassword) { }
+        public async Task Complete(string publicId, string newPassword)
+        {
+            var request = UserPasswordResetRequestRepository.GetAll().Where(x => x.PublicId == publicId).SingleOrDefault();
+            if (request == null || DateTime.UtcNow < request.CreateDate || DateTime.UtcNow > request.ExpireDate || request.CompleteDate.HasValue)
+                throw new ArgumentException("Password reset request does not exist or has expired.");
+
+            var user = await UserRepository.GetById(request.UserId);
+            user.Password = PasswordHashingService.Hash(newPassword);
+            user.PasswordResetDate = DateTime.UtcNow;
+            user.LockDate = null;
+            await UserRepository.Update(user);
+        }
     }
 }

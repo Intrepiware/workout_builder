@@ -22,5 +22,6 @@ namespace WorkoutBuilder.Data
         [Required]
         public DateTime CreateDate { get; set; }
         public DateTime? LockDate { get; set; }
+        public DateTime? PasswordResetDate { get; set; }
     }
 }
