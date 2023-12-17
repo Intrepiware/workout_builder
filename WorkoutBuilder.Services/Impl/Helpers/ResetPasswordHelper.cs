@@ -1,4 +1,5 @@
-﻿using WorkoutBuilder.Data;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+using WorkoutBuilder.Data;
 
 namespace WorkoutBuilder.Services.Impl.Helpers
 {
@@ -13,6 +14,7 @@ namespace WorkoutBuilder.Services.Impl.Helpers
         public IUserResetPasswordService UserResetPasswordService { protected get; init; }
         public IEmailService EmailService { protected get; init; }
         public IUrlBuilder UrlBuilder { protected get; init; }
+        public IActionContextAccessor ActionContextAccessor { init; protected get; }
 
         public async Task<bool> Reset(string emailAddress)
         {
@@ -20,7 +22,7 @@ namespace WorkoutBuilder.Services.Impl.Helpers
             if (user == null)
                 return false;
 
-            var resetId = await UserResetPasswordService.Create(user.Id);
+            var resetId = await UserResetPasswordService.Create(user.Id, ActionContextAccessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString());
             if (string.IsNullOrEmpty(resetId))
                 return false;
 

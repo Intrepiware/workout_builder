@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using WorkoutBuilder.Controllers;
 using WorkoutBuilder.Data;
@@ -21,12 +22,13 @@ namespace WorkoutBuilder.IOC
         protected override void Load(ContainerBuilder builder)
         {
             // Services
-            builder.RegisterType<UrlBuilder>().As<IUrlBuilder>().InstancePerLifetimeScope();
+            builder.RegisterType<UrlBuilder>().As<IUrlBuilder>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<RandomizeService>().As<IRandomize>().InstancePerLifetimeScope();
             builder.RegisterType<GeneralWorkoutGenerator>().As<IWorkoutGenerator>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutGeneratorFactory>().As<IWorkoutGeneratorFactory>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ResetPasswordHelper>().As<IResetPasswordHelper>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {
@@ -51,6 +53,7 @@ namespace WorkoutBuilder.IOC
             
             // Controllers
             builder.RegisterType<HomeController>().PropertiesAutowired();
+            builder.RegisterType<UsersController>().PropertiesAutowired();
         }
 
         protected void RegisterRepository<TModel>(ContainerBuilder builder) where TModel : class

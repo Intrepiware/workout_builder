@@ -26,8 +26,8 @@ namespace WorkoutBuilder.Controllers
 
             ViewBag.Success = "If the provided email address belongs to an existing account, then a message has been sent to that address with further instructions.";
             ModelState.Clear();
-            MvcCaptcha.ResetCaptcha("ContactFormCaptcha");
-            return View(new HomeContactRequestModel());
+            MvcCaptcha.ResetCaptcha("ForgotPasswordCaptcha");
+            return View(new UserForgotPasswordModel());
 
         }
 

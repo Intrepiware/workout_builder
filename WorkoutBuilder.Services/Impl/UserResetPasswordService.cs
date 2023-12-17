@@ -7,7 +7,7 @@ namespace WorkoutBuilder.Services.Impl
         public IRepository<User> UserRepository { init; protected get; }
         public IRepository<UserPasswordResetRequest> UserPasswordResetRequestRepository { init; protected get; }
         public IPasswordHashingService PasswordHashingService { init; protected get; }
-        public async Task<string> Create(long userId)
+        public async Task<string> Create(long userId, string ipAddress)
         {
             if (UserRepository.GetById(userId) == null)
                 return null;
@@ -17,7 +17,8 @@ namespace WorkoutBuilder.Services.Impl
                 CreateDate = DateTime.UtcNow,
                 ExpireDate = DateTime.UtcNow.AddHours(2),
                 PublicId = Guid.NewGuid().ToString("n"),
-                UserId = userId
+                UserId = userId,
+                IpAddress = ipAddress
             };
 
             await UserPasswordResetRequestRepository.Add(request);
