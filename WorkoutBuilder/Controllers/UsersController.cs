@@ -1,6 +1,8 @@
 ﻿using BotDetect.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
+using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl.Helpers;
 
 namespace WorkoutBuilder.Controllers
@@ -8,6 +10,7 @@ namespace WorkoutBuilder.Controllers
     public class UsersController : Controller
     {
         public IResetPasswordHelper ResetPasswordHelper { protected get; init; }
+        public IRepository<UserPasswordResetRequest> PasswordResetRepository { protected get; init; }
 
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -16,6 +19,7 @@ namespace WorkoutBuilder.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [CaptchaValidationActionFilter("CaptchaCode", "ForgotPasswordCaptcha", "Incorrect Captcha, please try again.")]
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordModel data)
         {
@@ -29,6 +33,15 @@ namespace WorkoutBuilder.Controllers
             MvcCaptcha.ResetCaptcha("ForgotPasswordCaptcha");
             return View(new UserForgotPasswordModel());
 
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string id)
+        {
+            if (PasswordResetRepository.GetAll().Where(x => x.PublicId == id).Any())
+                return View();
+
+            return NotFound();
         }
 
     }
