@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
+using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Impl.Helpers;
 
 namespace WorkoutBuilder.Controllers
@@ -10,6 +11,7 @@ namespace WorkoutBuilder.Controllers
     public class UsersController : Controller
     {
         public IResetPasswordHelper ResetPasswordHelper { protected get; init; }
+        public IUserResetPasswordService ResetPasswordService { protected get; init; }
         public IRepository<UserPasswordResetRequest> PasswordResetRepository { protected get; init; }
 
         [HttpGet]
@@ -28,7 +30,7 @@ namespace WorkoutBuilder.Controllers
 
             await ResetPasswordHelper.Reset(data.EmailAddress);
 
-            ViewBag.Success = "If the provided email address belongs to an existing account, then a message has been sent to that address with further instructions.";
+            ViewBag.Success = "If the email address belongs to an account, a message has been sent with further instructions.";
             ModelState.Clear();
             MvcCaptcha.ResetCaptcha("ForgotPasswordCaptcha");
             return View(new UserForgotPasswordModel());
@@ -38,11 +40,24 @@ namespace WorkoutBuilder.Controllers
         [HttpGet]
         public IActionResult ResetPassword(string id)
         {
-            if (PasswordResetRepository.GetAll().Where(x => x.PublicId == id).Any())
-                return View();
+            if (ResetPasswordService.Retrieve(id))
+                return View(new UserResetPasswordModel { PublicId = id });
 
             return NotFound();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(UserResetPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            await ResetPasswordService.Complete(model.PublicId, model.Password);
+            ViewBag.Success = "If the email address belongs to an account, a message has been sent with further instructions.";
+
+            ModelState.Clear();
+            return View("ResetSuccess");
+        }
     }
 }

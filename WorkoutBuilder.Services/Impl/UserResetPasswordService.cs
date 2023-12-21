@@ -41,10 +41,14 @@ namespace WorkoutBuilder.Services.Impl
                 throw new ArgumentException("Password reset request does not exist or has expired.");
 
             var user = await UserRepository.GetById(request.UserId);
+            var now = DateTime.UtcNow;
             user.Password = PasswordHashingService.Hash(newPassword);
-            user.PasswordResetDate = DateTime.UtcNow;
+            user.PasswordResetDate = now;
             user.LockDate = null;
             await UserRepository.Update(user);
+
+            request.CompleteDate = now;
+            await UserPasswordResetRequestRepository.Update(request);
         }
     }
 }
