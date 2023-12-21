@@ -5,8 +5,8 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
 {
     public class ComboStationWorkoutGenerator : IWorkoutGenerator
     {
-        public IRandomize Randomizer { init; protected get; }
-        public IRepository<Exercise> ExerciseRepository { init; protected get; }
+        public IRandomize Randomizer { init; protected get; } = null!;
+        public IRepository<Exercise> ExerciseRepository { init; protected get; } = null!;
 
         public WorkoutGenerationResponseModel Generate(WorkoutGenerationRequestModel request)
         {

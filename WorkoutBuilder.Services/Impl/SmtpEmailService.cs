@@ -6,7 +6,7 @@ namespace WorkoutBuilder.Services.Impl
 {
     public class SmtpEmailService : IEmailService
     {
-        public IConfiguration Configuration { init; protected get; }
+        public IConfiguration Configuration { init; protected get; } = null!;
 
         public void Send(string toAddress, string subject, string body)
         {

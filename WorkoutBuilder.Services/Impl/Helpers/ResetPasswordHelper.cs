@@ -10,11 +10,11 @@ namespace WorkoutBuilder.Services.Impl.Helpers
 
     public class ResetPasswordHelper : IResetPasswordHelper
     {
-        public IRepository<User> UserRepository { protected get; init; }
-        public IUserResetPasswordService UserResetPasswordService { protected get; init; }
-        public IEmailService EmailService { protected get; init; }
-        public IUrlBuilder UrlBuilder { protected get; init; }
-        public IActionContextAccessor ActionContextAccessor { init; protected get; }
+        public IRepository<User> UserRepository { protected get; init; } = null!;
+        public IUserResetPasswordService UserResetPasswordService { protected get; init; } = null!;
+        public IEmailService EmailService { protected get; init; } = null!;
+        public IUrlBuilder UrlBuilder { protected get; init; } = null!;
+        public IActionContextAccessor ActionContextAccessor { init; protected get; } = null!;
 
         public async Task<bool> Reset(string emailAddress)
         {
