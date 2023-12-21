@@ -4,12 +4,12 @@ namespace WorkoutBuilder.Services.Impl
 {
     public class UserResetPasswordService : IUserResetPasswordService
     {
-        public IRepository<User> UserRepository { init; protected get; }
-        public IRepository<UserPasswordResetRequest> UserPasswordResetRequestRepository { init; protected get; }
-        public IPasswordHashingService PasswordHashingService { init; protected get; }
+        public IRepository<User> UserRepository { init; protected get; } = null!;
+        public IRepository<UserPasswordResetRequest> UserPasswordResetRequestRepository { init; protected get; } = null!;
+        public IPasswordHashingService PasswordHashingService { init; protected get; } = null!;
         public async Task<string> Create(long userId, string ipAddress)
         {
-            if (UserRepository.GetById(userId) == null)
+            if (await UserRepository.GetById(userId) == null)
                 return null;
 
             var request = new UserPasswordResetRequest

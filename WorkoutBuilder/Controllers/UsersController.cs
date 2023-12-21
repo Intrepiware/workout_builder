@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
-using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Impl.Helpers;
 
 namespace WorkoutBuilder.Controllers
 {
+
     public class UsersController : Controller
     {
-        public IResetPasswordHelper ResetPasswordHelper { protected get; init; }
-        public IUserResetPasswordService ResetPasswordService { protected get; init; }
-        public IRepository<UserPasswordResetRequest> PasswordResetRepository { protected get; init; }
+        public IResetPasswordHelper ResetPasswordHelper { protected get; init; } = null!;
+        public IUserResetPasswordService ResetPasswordService { protected get; init; } = null!;
+        public IRepository<UserPasswordResetRequest> PasswordResetRepository { protected get; init; } = null!;
 
         [HttpGet]
         public IActionResult ForgotPassword()
