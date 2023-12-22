@@ -1,5 +1,4 @@
-﻿using FakeItEasy;
-using WorkoutBuilder.Data;
+﻿using WorkoutBuilder.Data;
 using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Impl.Workout_Generators;
 

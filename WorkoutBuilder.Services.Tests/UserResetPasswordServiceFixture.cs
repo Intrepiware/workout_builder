@@ -1,10 +1,4 @@
-﻿using FakeItEasy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WorkoutBuilder.Data;
+﻿using WorkoutBuilder.Data;
 using WorkoutBuilder.Services.Impl;
 
 namespace WorkoutBuilder.Services.Tests
@@ -42,7 +36,7 @@ namespace WorkoutBuilder.Services.Tests
                 Assert.IsNotNull(result);
                 Assert.That(capturedRequest.PublicId, Is.EqualTo(result));
                 Assert.That(DateTime.UtcNow.AddMinutes(121), Is.GreaterThan(capturedRequest.ExpireDate));
-                Assert.That("1.2.3.4", Is.EqualTo(capturedRequest.IpAddress));
+                Assert.That(capturedRequest.IpAddress, Is.EqualTo("1.2.3.4"));
             }
 
             [Test]
