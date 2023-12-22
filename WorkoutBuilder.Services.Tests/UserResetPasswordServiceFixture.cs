@@ -126,5 +126,46 @@ namespace WorkoutBuilder.Services.Tests
 
             }
         }
+
+        [TestFixture]
+        public class When_Completing
+        {
+            [Test]
+            public async Task Should_Complete()
+            {
+                var now = DateTime.UtcNow;
+                UserPasswordResetRequest capturedRequest = null!;
+                User capturedUser = null!;
+
+                // Arrange
+                var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), UserId = 1 };
+                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
+                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments()
+                    .Invokes((UserPasswordResetRequest req) => capturedRequest = req);
+
+                var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
+                A.CallTo(() => userRepository.GetById(1L)).Returns(Task.FromResult(new User { LockDate = now }));
+                A.CallTo(() => userRepository.Update(null!)).WithAnyArguments()
+                    .Invokes((User usr) => capturedUser = usr);
+
+                var hashingService = A.Fake<IPasswordHashingService>();
+                A.CallTo(() => hashingService.Hash(null!)).WithAnyArguments()
+                    .Returns("hashed_password");
+
+                // Act
+                var service = new UserResetPasswordService { UserRepository = userRepository, UserPasswordResetRequestRepository = passwordRequestRepository, PasswordHashingService = hashingService };
+                await service.Complete("secret", "newPassword");
+
+                // Assert
+                Assert.IsNotNull(capturedUser);
+                Assert.IsNotNull(capturedRequest);
+                Assert.That(capturedUser.Password, Is.EqualTo("hashed_password"));
+                Assert.IsNull(capturedUser.LockDate);
+                Assert.That(now.AddMinutes(-1), Is.LessThan(capturedUser.PasswordResetDate));
+
+                Assert.That(now.AddMinutes(-1), Is.LessThan(capturedRequest.CompleteDate));
+            }
+        }
     }
 }
