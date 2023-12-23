@@ -40,13 +40,8 @@ namespace WorkoutBuilder.Services.Tests
             {
 
                 // Arrange
-                var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
-                var passwordResetRepository = A.Fake<IRepository<UserPasswordResetRequest>>();
-                UserPasswordResetRequest capturedRequest = null!;
-
-                A.CallTo(() => userRepository.GetById(2L)).Returns((User)null!);
-                A.CallTo(() => passwordResetRepository.Add(A<UserPasswordResetRequest>._))
-                    .Invokes((UserPasswordResetRequest req) => capturedRequest = req);
+                var userRepository = new TestRepo<User>();
+                var passwordResetRepository = new TestRepo<UserPasswordResetRequest>();
 
                 var resetPasswordService = new UserResetPasswordService
                 {
@@ -58,9 +53,8 @@ namespace WorkoutBuilder.Services.Tests
                 var result = await resetPasswordService.Create(2, "1.2.3.4");
 
                 // Assert
-                A.CallTo(() => userRepository.GetById(2L)).MustHaveHappened();
                 Assert.IsNull(result);
-                A.CallTo(() => passwordResetRepository.Add(A<UserPasswordResetRequest>._)).MustNotHaveHappened();
+                Assert.That(passwordResetRepository.AddedItems.Count, Is.EqualTo(0));
             }
         }
 
@@ -73,8 +67,7 @@ namespace WorkoutBuilder.Services.Tests
             {
                 var now = DateTime.UtcNow;
                 var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), UserId = 1 };
-                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>();
-                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                var passwordRequestRepository = new TestRepo<UserPasswordResetRequest>(new[] { request });
 
                 var service = new UserResetPasswordService { UserPasswordResetRequestRepository = passwordRequestRepository };
 
@@ -89,8 +82,7 @@ namespace WorkoutBuilder.Services.Tests
             {
                 var now = DateTime.UtcNow;
                 var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(-3), UserId = 1 };
-                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>();
-                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                var passwordRequestRepository = new TestRepo<UserPasswordResetRequest>(new[] { request });
 
                 var service = new UserResetPasswordService { UserPasswordResetRequestRepository = passwordRequestRepository };
 
@@ -105,8 +97,7 @@ namespace WorkoutBuilder.Services.Tests
             {
                 var now = DateTime.UtcNow;
                 var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), UserId = 1 };
-                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>();
-                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                var passwordRequestRepository = new TestRepo<UserPasswordResetRequest>(new[] { request });
 
                 var service = new UserResetPasswordService { UserPasswordResetRequestRepository = passwordRequestRepository };
 
@@ -124,20 +115,11 @@ namespace WorkoutBuilder.Services.Tests
             public async Task Should_Complete()
             {
                 var now = DateTime.UtcNow;
-                UserPasswordResetRequest capturedRequest = null!;
-                User capturedUser = null!;
 
                 // Arrange
                 var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), UserId = 1 };
-                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
-                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
-                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments()
-                    .Invokes((UserPasswordResetRequest req) => capturedRequest = req);
-
-                var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
-                A.CallTo(() => userRepository.GetById(1L)).Returns(Task.FromResult(new User { LockDate = now }));
-                A.CallTo(() => userRepository.Update(null!)).WithAnyArguments()
-                    .Invokes((User usr) => capturedUser = usr);
+                var passwordRequestRepository = new TestRepo<UserPasswordResetRequest>(new[] { request });
+                var userRepository = new TestRepo<User>(new[] { new User { Id = 1, LockDate = now } });
 
                 var hashingService = A.Fake<IPasswordHashingService>();
                 A.CallTo(() => hashingService.Hash(null!)).WithAnyArguments()
@@ -148,12 +130,13 @@ namespace WorkoutBuilder.Services.Tests
                 await service.Complete("secret", "newPassword");
 
                 // Assert
+                var capturedUser = userRepository.UpdatedItems.SingleOrDefault();
+                var capturedRequest = passwordRequestRepository.UpdatedItems.SingleOrDefault();
                 Assert.IsNotNull(capturedUser);
                 Assert.IsNotNull(capturedRequest);
                 Assert.That(capturedUser.Password, Is.EqualTo("hashed_password"));
                 Assert.IsNull(capturedUser.LockDate);
                 Assert.That(now.AddMinutes(-1), Is.LessThan(capturedUser.PasswordResetDate));
-
                 Assert.That(now.AddMinutes(-1), Is.LessThan(capturedRequest.CompleteDate));
             }
 
@@ -164,8 +147,7 @@ namespace WorkoutBuilder.Services.Tests
 
                 // Arrange
                 var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(-3), UserId = 1 };
-                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
-                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                var passwordRequestRepository = new TestRepo<UserPasswordResetRequest>(new[] { request });
                 
                 var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
 
@@ -176,7 +158,7 @@ namespace WorkoutBuilder.Services.Tests
 
                 var exception = Assert.ThrowsAsync<ArgumentException>(async () => await service.Complete("secret", "newPassword"));
                 StringAssert.Contains("expired", exception.Message);
-                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+                Assert.That(passwordRequestRepository.UpdatedItems.Count, Is.EqualTo(0));
                 A.CallTo(() => userRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
             }
 
@@ -188,8 +170,7 @@ namespace WorkoutBuilder.Services.Tests
 
                 // Arrange
                 var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), CompleteDate = now, UserId = 1 };
-                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
-                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                var passwordRequestRepository = new TestRepo<UserPasswordResetRequest>(new[] { request });
 
                 var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
                 var hashingService = A.Fake<IPasswordHashingService>();
@@ -198,7 +179,7 @@ namespace WorkoutBuilder.Services.Tests
                 // Act / Assert
 
                 var exception = Assert.ThrowsAsync<ArgumentException>(async () => await service.Complete("secret", "newPassword"));
-                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+                Assert.That(passwordRequestRepository.UpdatedItems.Count, Is.EqualTo(0));
                 A.CallTo(() => userRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
             }
 
@@ -209,8 +190,7 @@ namespace WorkoutBuilder.Services.Tests
 
                 // Arrange
                 var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), UserId = 1 };
-                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
-                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                var passwordRequestRepository = new TestRepo<UserPasswordResetRequest>(new[] { request });
 
                 var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
                 var hashingService = A.Fake<IPasswordHashingService>();
@@ -219,7 +199,7 @@ namespace WorkoutBuilder.Services.Tests
                 // Act / Assert
 
                 var exception = Assert.ThrowsAsync<ArgumentException>(async () => await service.Complete("bogus", "newPassword"));
-                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+                Assert.That(passwordRequestRepository.UpdatedItems.Count, Is.EqualTo(0));
                 A.CallTo(() => userRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
             }
         }
