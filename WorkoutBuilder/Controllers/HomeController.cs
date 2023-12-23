@@ -11,11 +11,11 @@ namespace WorkoutBuilder.Controllers
 {
     public class HomeController : Controller
     {
-        public IRepository<Exercise> ExerciseRepository { protected get; init; }
-        public IRepository<Timing> TimingRepository { protected get; init; }
-        public IWorkoutGeneratorFactory WorkoutGeneratorFactory { protected get; init; }
-        public IEmailService EmailService { protected get; init; }
-        public IConfiguration Configuration { protected get; init; }
+        public IRepository<Exercise> ExerciseRepository { protected get; init; } = null!;
+        public IRepository<Timing> TimingRepository { protected get; init; } = null!;
+        public IWorkoutGeneratorFactory WorkoutGeneratorFactory { protected get; init; } = null!;
+        public IEmailService EmailService { protected get; init; } = null!;
+        public IConfiguration Configuration { protected get; init; } = null!;
 
         public IActionResult Index()
         {

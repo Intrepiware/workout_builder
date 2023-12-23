@@ -5,9 +5,9 @@ namespace WorkoutBuilder.Services.Impl
 {
     public class WorkoutGeneratorFactory : IWorkoutGeneratorFactory
     {
-        public IRepository<Timing> TimingRepository { protected get; init; }
-        public IRandomize Randomizer { init; protected get; }
-        public IRepository<Exercise> ExerciseRepository { init; protected get; }
+        public IRepository<Timing> TimingRepository { protected get; init; } = null!;
+        public IRandomize Randomizer { init; protected get; } = null!;
+        public IRepository<Exercise> ExerciseRepository { init; protected get; } = null!;
 
         public Timing GetTiming(string timingName)
         {

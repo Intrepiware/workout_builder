@@ -1,5 +1,4 @@
-﻿using FakeItEasy;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using WorkoutBuilder.Services.Impl;
 
 namespace WorkoutBuilder.Services.Tests

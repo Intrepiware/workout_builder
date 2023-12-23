@@ -6,7 +6,7 @@
         {
             Directory.CreateDirectory(@"C:\temp");
             Directory.CreateDirectory(@"C:\temp\email");
-            var fileName = $"{DateTime.UtcNow:yyyy-MM-dd HH.mm.ss} - [{toAddress}] {subject}.txt";
+            var fileName = $"{DateTime.UtcNow:yyyy-MM-dd HH.mm.ss} - [{toAddress}] {subject}.html";
 
             foreach (var c in Path.GetInvalidFileNameChars())
             {
