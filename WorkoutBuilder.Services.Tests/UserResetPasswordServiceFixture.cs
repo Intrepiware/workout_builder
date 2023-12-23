@@ -160,6 +160,72 @@ namespace WorkoutBuilder.Services.Tests
 
                 Assert.That(now.AddMinutes(-1), Is.LessThan(capturedRequest.CompleteDate));
             }
+
+            [Test]
+            public void Should_Reject_Expired()
+            {
+                var now = DateTime.UtcNow;
+
+                // Arrange
+                var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(-3), UserId = 1 };
+                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
+                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+                
+                var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
+
+                var hashingService = A.Fake<IPasswordHashingService>();
+                var service = new UserResetPasswordService { UserRepository = userRepository, UserPasswordResetRequestRepository = passwordRequestRepository, PasswordHashingService = hashingService };
+
+                // Act / Assert
+
+                var exception = Assert.ThrowsAsync<ArgumentException>(async () => await service.Complete("secret", "newPassword"));
+                StringAssert.Contains("expired", exception.Message);
+                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+                A.CallTo(() => userRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+            }
+
+
+            [Test]
+            public void Should_Reject_Completed()
+            {
+                var now = DateTime.UtcNow;
+
+                // Arrange
+                var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), CompleteDate = now, UserId = 1 };
+                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
+                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+
+                var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
+                var hashingService = A.Fake<IPasswordHashingService>();
+                var service = new UserResetPasswordService { UserRepository = userRepository, UserPasswordResetRequestRepository = passwordRequestRepository, PasswordHashingService = hashingService };
+
+                // Act / Assert
+
+                var exception = Assert.ThrowsAsync<ArgumentException>(async () => await service.Complete("secret", "newPassword"));
+                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+                A.CallTo(() => userRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+            }
+
+            [Test]
+            public void Should_Reject_NotFound()
+            {
+                var now = DateTime.UtcNow;
+
+                // Arrange
+                var request = new UserPasswordResetRequest { PublicId = "secret", CreateDate = now.AddMinutes(-5), ExpireDate = now.AddMinutes(5), UserId = 1 };
+                var passwordRequestRepository = A.Fake<IRepository<UserPasswordResetRequest>>(opt => opt.Strict());
+                A.CallTo(() => passwordRequestRepository.GetAll()).Returns(new[] { request }.AsQueryable());
+
+                var userRepository = A.Fake<IRepository<User>>(opt => opt.Strict());
+                var hashingService = A.Fake<IPasswordHashingService>();
+                var service = new UserResetPasswordService { UserRepository = userRepository, UserPasswordResetRequestRepository = passwordRequestRepository, PasswordHashingService = hashingService };
+
+                // Act / Assert
+
+                var exception = Assert.ThrowsAsync<ArgumentException>(async () => await service.Complete("bogus", "newPassword"));
+                A.CallTo(() => passwordRequestRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+                A.CallTo(() => userRepository.Update(null!)).WithAnyArguments().MustNotHaveHappened();
+            }
         }
     }
 }
