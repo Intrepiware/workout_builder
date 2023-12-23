@@ -6,8 +6,8 @@ namespace WorkoutBuilder.Services.Impl
 {
     public class UrlBuilder : IUrlBuilder
     {
-        public IUrlHelperFactory UrlHelperFactory { init; protected get; }
-        public IActionContextAccessor ActionContextAccessor { init; protected get; }
+        public IUrlHelperFactory UrlHelperFactory { init; protected get; } = null!;
+        public IActionContextAccessor ActionContextAccessor { init; protected get; } = null!;
 
         public string Action(string action, string controller, object values)
         {

@@ -27,8 +27,8 @@ namespace WorkoutBuilder.Services.Impl.Helpers
                 return false;
 
             var resetLink = UrlBuilder.Action("ResetPassword", "Users", new { id = resetId });
-            var message = $"<p>Hello! Someone (hopefully you) has requested a password reset to workoutbuild.com. Please use the following link to reset your password:<br /><br /><a href=\"{resetLink}\">{resetLink}</a><br /><br />- The WorkoutBuild Team</a>";
-            EmailService.Send(emailAddress, "Workout Build - Reset Password Request", message);
+            var message = $"<p>Hello! Someone (hopefully you) has requested a password reset to workoutbuild.com. Please use the following link to reset your password:<br /><br /><a href=\"{resetLink}\">{resetLink}</a><br /><br />- The Workout Builder Team</a>";
+            EmailService.Send(emailAddress, "Workout Builder - Reset Password Request", message);
 
             return true;
         }
