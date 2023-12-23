@@ -1,5 +1,6 @@
 ﻿using WorkoutBuilder.Data;
 using WorkoutBuilder.Services.Impl;
+using WorkoutBuilder.Services.Tests.TestUtilities;
 
 namespace WorkoutBuilder.Services.Tests
 {
@@ -12,13 +13,8 @@ namespace WorkoutBuilder.Services.Tests
             public async Task Should_Create()
             {
                 // Arrange
-                var userRepository = A.Fake<IRepository<User>>();
-                var passwordResetRepository = A.Fake<IRepository<UserPasswordResetRequest>>();
-                UserPasswordResetRequest capturedRequest = null!;
-
-                A.CallTo(() => userRepository.GetById(1L)).Returns(new User { });
-                A.CallTo(() => passwordResetRepository.Add(A<UserPasswordResetRequest>._))
-                    .Invokes((UserPasswordResetRequest req) => capturedRequest = req);
+                var userRepository = new TestRepo<User>(new[] { new User { Id = 1 } });
+                var passwordResetRepository = new TestRepo<UserPasswordResetRequest>();
 
                 var resetPasswordService = new UserResetPasswordService
                 {
@@ -31,12 +27,12 @@ namespace WorkoutBuilder.Services.Tests
 
 
                 // Assert
-                A.CallTo(() => userRepository.GetById(1L)).MustHaveHappened();
-                Assert.IsNotNull(capturedRequest);
+                Assert.That(passwordResetRepository.AddedItems.Count, Is.EqualTo(1));
                 Assert.IsNotNull(result);
-                Assert.That(capturedRequest.PublicId, Is.EqualTo(result));
-                Assert.That(DateTime.UtcNow.AddMinutes(121), Is.GreaterThan(capturedRequest.ExpireDate));
-                Assert.That(capturedRequest.IpAddress, Is.EqualTo("1.2.3.4"));
+                var newRequest = passwordResetRepository.AddedItems.Single();
+                Assert.That(newRequest.PublicId, Is.EqualTo(result));
+                Assert.That(DateTime.UtcNow.AddMinutes(121), Is.GreaterThan(newRequest.ExpireDate));
+                Assert.That(newRequest.IpAddress, Is.EqualTo("1.2.3.4"));
             }
 
             [Test]

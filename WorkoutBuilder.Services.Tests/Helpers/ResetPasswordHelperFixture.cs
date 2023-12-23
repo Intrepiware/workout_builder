@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Net;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Services.Impl.Helpers;
+using WorkoutBuilder.Services.Tests.TestUtilities;
 
 namespace WorkoutBuilder.Services.Tests.Helpers
 {
@@ -17,8 +18,7 @@ namespace WorkoutBuilder.Services.Tests.Helpers
             {
                 // Arrange
                 var users = new[] { new User { EmailAddress = "user@example.com", Id = 100 } };
-                var userRepository = A.Fake<IRepository<User>>();
-                A.CallTo(() => userRepository.GetAll()).Returns(users.AsQueryable());
+                var userRepository = new TestRepo<User>(users);
 
                 var userResetService = A.Fake<IUserResetPasswordService>(opt => opt.Strict());
                 A.CallTo(() => userResetService.Create(100L, "1.1.1.1")).Returns("new-id");
@@ -55,8 +55,7 @@ namespace WorkoutBuilder.Services.Tests.Helpers
             {
                 // Arrange
                 var users = new[] { new User { EmailAddress = "user@example.com", Id = 100 } };
-                var userRepository = A.Fake<IRepository<User>>();
-                A.CallTo(() => userRepository.GetAll()).Returns(users.AsQueryable());
+                var userRepository = new TestRepo<User>(users);
 
                 var userResetService = A.Fake<IUserResetPasswordService>();
                 var emailService = A.Fake<IEmailService>();
