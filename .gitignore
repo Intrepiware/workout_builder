@@ -34,3 +34,4 @@ packages/
 /WorkoutBuilder/wwwroot/js/pages/*
 /WorkoutBuilder/Properties/PublishProfiles/*
 /WorkoutBuilder/Properties/ServiceDependencies/*
+/WorkoutBuilder/wwwroot/css/bulma/*

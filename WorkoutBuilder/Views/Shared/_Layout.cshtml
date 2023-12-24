@@ -18,61 +18,55 @@
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>@ViewData["Title"]</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    />
+    <link rel="stylesheet"
+          href="~/css/bulma/site.css" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="shortcut icon" type="image/png" href="~/img/favicon/browser.png" />
     @await RenderSectionAsync("header", required: false)
-  </head>
-  <body>
-    <section class="hero is-link">
-        <div class="hero-body">
-            <h1 class="title">@ViewData["Title"]</h1>
-        </div>
-    </section>
-    <nav class="navbar is-link is-spaced" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
+</head>
+<body>
+    <section class="section">
+        <nav class="navbar is-link is-fixed-top" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
 
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
                 <a class="navbar-item" asp-controller="Home" asp-action="Index">
-                    Home
+                    <img src="~/img/logo/nav.png" />
                 </a>
-                <a class="navbar-item" asp-controller="Timing" asp-action="Index">
-                    Timing Calc
-                </a>
-
-                <a class="navbar-item" asp-controller="Home" asp-action="Contact">
-                    Contact
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
                 </a>
             </div>
 
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary" onclick="alert('Coming soon!')">
-                            <strong>Sign up</strong>
-                        </a>
-                        <a class="button is-light" onclick="alert('Coming soon!')">
-                            Log in
-                        </a>
+            <div id="navbar" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item" asp-controller="Timing" asp-action="Index">
+                        Timing Calc
+                    </a>
+
+                    <a class="navbar-item" asp-controller="Home" asp-action="Contact">
+                        Contact
+                    </a>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary" onclick="alert('Coming soon!')">
+                                <strong>Sign up</strong>
+                            </a>
+                            <a class="button is-light" onclick="alert('Coming soon!')">
+                                Log in
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-
+        </nav>
+    </section>
 
     @RenderBody()
     <footer class="footer">

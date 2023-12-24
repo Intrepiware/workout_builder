@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config=config/webpack.config.js --mode=development",
+    "css-build": "node-sass --omit-source-map-url src/sass/site.scss -o ../wwwroot/css/bulma",
+    "css-watch": "npm run css-build -- --watch",
     "deploy": "webpack --config=config/webpack.config.js --mode=production",
     "watch": "webpack --config=config/webpack.config.js --mode=development --watch --progress"
   },
@@ -28,11 +30,13 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "bulma": "^0.9.4",
     "css-loader": "^6.8.1",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "html-webpack-plugin": "^5.5.3",
+    "node-sass": "^9.0.0",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.5.0",
     "typescript": "^5.0.2",
