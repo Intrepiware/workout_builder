@@ -30,6 +30,7 @@ jobs:
       - name: npm deploy
         run: |
           npm install
+          npm run css-build
           npm run deploy
         working-directory: WorkoutBuilder/ClientApp
 
