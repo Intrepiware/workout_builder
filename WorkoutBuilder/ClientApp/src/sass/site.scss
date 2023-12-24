@@ -16,3 +16,24 @@ $info: $pale-red;
 $success: #23d160; 
 
 @import "../../node_modules/bulma/bulma.sass";
+
+.navbar-brand .navbar-item {
+    padding: 4px 12px;
+}
+
+.navbar-item img {
+    max-height: 2.5rem;
+  } 
+
+a.navbar-item {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+body {
+    position: relative
+}
