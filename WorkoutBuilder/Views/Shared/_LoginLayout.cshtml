@@ -18,24 +18,26 @@
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>@ViewData["Title"]</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    />
+    <link rel="stylesheet"
+          href="~/css/bulma/site.css" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="shortcut icon" type="image/png" href="~/img/favicon/iPhone.png" />
     @await RenderSectionAsync("header", required: false)
-  </head>
-  <body>
+</head>
+<body>
     <section class="hero is-link is-fullheight">
         <div class="hero-body">
             <div class="container">
                 <div class="columns is-centered">
                     <div class="column is-6-widescreen is-6-desktop">
-                        @RenderBody()
+                        <section class="section">
+                            <div class="container is-max-desktop">
+                                <img src="~/img/logo/login.png" />
+                                @RenderBody()
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>

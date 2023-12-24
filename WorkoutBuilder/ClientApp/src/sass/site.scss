@@ -1,0 +1,39 @@
+@charset "utf-8";
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+
+$pale-red: #f33535;
+$faded-red: #f66565;
+$bold-red: #e70e0e;
+$pale-black: #29252c;
+$faded-black: #433c48;
+$bold-black: #0f0e10;
+
+$primary: $bold-red;
+$link: $pale-black;
+$info: $pale-red;
+$success: #23d160; 
+
+@import "../../node_modules/bulma/bulma.sass";
+
+.navbar-brand .navbar-item {
+    padding: 4px 12px;
+}
+
+.navbar-item img {
+    max-height: 2.5rem;
+  } 
+
+a.navbar-item {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+body {
+    position: relative
+}
