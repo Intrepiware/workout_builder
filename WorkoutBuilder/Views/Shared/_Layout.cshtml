@@ -30,43 +30,8 @@
     @await RenderSectionAsync("header", required: false)
   </head>
   <body>
-    <nav class="navbar is-link is-spaced" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" asp-controller="Home" asp-action="Index">
-                <img src="~/img/logo/nav.png">
-            </a>
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
 
-        <div id="navbar" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" asp-controller="Timing" asp-action="Index">
-                    Timing Calc
-                </a>
-
-                <a class="navbar-item" asp-controller="Home" asp-action="Contact">
-                    Contact
-                </a>
-            </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary" onclick="alert('Coming soon!')">
-                            <strong>Sign up</strong>
-                        </a>
-                        <a class="button is-light" asp-action="Login" asp-controller="Users">
-                            Log in
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    @await Component.InvokeAsync("TopMenu")
 
 
     @RenderBody()

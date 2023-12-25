@@ -20,7 +20,7 @@ namespace WorkoutBuilder
 
             // Add services to the container.
             IConfiguration configuration = builder.Configuration;
-            builder.Services.AddMvc().AddControllersAsServices();
+            builder.Services.AddMvc().AddControllersAsServices().AddViewComponentsAsServices();
 
             // Register AutoFac
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())

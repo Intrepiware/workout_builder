@@ -6,6 +6,7 @@ using WorkoutBuilder.Data;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Impl.Helpers;
+using WorkoutBuilder.ViewComponents;
 
 namespace WorkoutBuilder.IOC
 {
@@ -56,6 +57,9 @@ namespace WorkoutBuilder.IOC
             // Controllers
             builder.RegisterType<HomeController>().PropertiesAutowired();
             builder.RegisterType<UsersController>().PropertiesAutowired();
+
+            // View Components
+            builder.RegisterType<TopMenuViewComponent>().PropertiesAutowired();
         }
 
         protected void RegisterRepository<TModel>(ContainerBuilder builder) where TModel : class
