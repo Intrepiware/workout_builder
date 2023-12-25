@@ -16,6 +16,7 @@ namespace WorkoutBuilder.Controllers
         public IWorkoutGeneratorFactory WorkoutGeneratorFactory { protected get; init; } = null!;
         public IEmailService EmailService { protected get; init; } = null!;
         public IConfiguration Configuration { protected get; init; } = null!;
+        public IUserContext UserContext { protected get; init; } = null!;
 
         public IActionResult Index()
         {

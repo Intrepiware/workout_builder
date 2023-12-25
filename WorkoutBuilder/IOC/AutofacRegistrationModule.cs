@@ -29,6 +29,8 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ResetPasswordHelper>().As<IResetPasswordHelper>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
+            builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<ClaimsBasedUserContext>().As<IUserContext>().PropertiesAutowired().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {

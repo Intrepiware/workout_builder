@@ -32,6 +32,14 @@ namespace WorkoutBuilder
                 options.Cookie.IsEssential = true;
             });
 
+
+            builder.Services.AddAuthentication("CookieAuth")
+                    .AddCookie("CookieAuth", config =>
+                    {
+                        config.Cookie.Name = "WorkoutBuild";
+                        config.LoginPath = "/Users/Login";
+                    });
+
             // This setting allows the CAPTCHA to generate images
             builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
             builder.Services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
@@ -60,6 +68,7 @@ namespace WorkoutBuilder
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSession();

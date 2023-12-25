@@ -1,9 +1,11 @@
 ﻿using BotDetect.Web.Mvc;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl.Helpers;
+using IAuthenticationService = WorkoutBuilder.Services.IAuthenticationService;
 
 namespace WorkoutBuilder.Controllers
 {
@@ -13,6 +15,7 @@ namespace WorkoutBuilder.Controllers
         public IResetPasswordHelper ResetPasswordHelper { protected get; init; } = null!;
         public IUserResetPasswordService ResetPasswordService { protected get; init; } = null!;
         public IRepository<UserPasswordResetRequest> PasswordResetRepository { protected get; init; } = null!;
+        public IAuthenticationService AuthenticationService { protected get; init; } = null!;
 
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -35,6 +38,28 @@ namespace WorkoutBuilder.Controllers
             MvcCaptcha.ResetCaptcha("ForgotPasswordCaptcha");
             return View(new UserForgotPasswordModel());
 
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string Username, string Password)
+        {
+            if (await AuthenticationService.Login(Username, Password))
+                return RedirectToAction("Index", "Home");
+
+            ViewBag.Error = "Incorrect Username/Password.";
+            return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
