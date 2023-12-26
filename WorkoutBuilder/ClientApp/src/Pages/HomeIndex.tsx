@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Autocomplete from "../Components/AutoComplete";
-import { Workout, getWorkout } from "../apis/workout";
+import { Workout, WorkoutRootObject, getWorkout } from "../apis/workout";
 import React from "react";
 import "./HomeIndex.css";
 
@@ -143,11 +143,12 @@ function HomeIndex() {
     const focusParam: string = isFocusLocked ? focus : "";
     const equipmentParam: string = selectedEquipment.join("|");
     getWorkout(timingParam, focusParam, equipmentParam).then(
-      (result: Workout) => {
-        setWorkout(result);
-        localStorage.setItem("workout", JSON.stringify(result));
-        setTiming(result.name);
-        setFocus(result.focus);
+      (result: WorkoutRootObject) => {
+        setWorkout(result.workout);
+        const { workout } = result;
+        localStorage.setItem("workout", JSON.stringify(workout));
+        setTiming(workout.name);
+        setFocus(workout.focus);
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow

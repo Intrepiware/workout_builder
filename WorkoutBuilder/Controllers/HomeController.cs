@@ -50,8 +50,8 @@ namespace WorkoutBuilder.Controllers
                             .Generate(new WorkoutGenerationRequestModel { Timing = workoutTiming, Focus = requestedFocus, Equipment = equipment?.Split('|').ToList() });
             var publicId = await WorkoutService.Create(result);
 
-            Response.Headers["X-PublicId"] = publicId;
-            return Json(result);
+            var model = new HomeWorkoutModel { PublicId = publicId, Workout = result };
+            return Json(model);
         }
 
         public IActionResult TimingCalc()

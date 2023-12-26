@@ -1,3 +1,7 @@
+export interface WorkoutRootObject {
+  publicId: null | string;
+  workout: Workout;
+}
 export interface Workout {
   name: string;
   focus: string;
@@ -20,7 +24,7 @@ export function getWorkout(
   timing: null | string,
   focus: null | string,
   equipment: null | string
-): Promise<Workout> {
+): Promise<WorkoutRootObject> {
   timing = encodeURIComponent(timing || "");
   focus = encodeURIComponent(focus || "");
   return fetch(
