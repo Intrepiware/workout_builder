@@ -32,6 +32,7 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
             builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<ClaimsBasedUserContext>().As<IUserContext>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {
@@ -53,6 +54,7 @@ namespace WorkoutBuilder.IOC
             RegisterRepository<Timing>(builder);
             RegisterRepository<User>(builder);
             RegisterRepository<UserPasswordResetRequest>(builder);
+            RegisterRepository<Workout>(builder);
             
             // Controllers
             builder.RegisterType<HomeController>().PropertiesAutowired();

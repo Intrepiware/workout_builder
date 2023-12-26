@@ -18,6 +18,8 @@ namespace WorkoutBuilder.Controllers
         public IConfiguration Configuration { protected get; init; } = null!;
         public IUserContext UserContext { protected get; init; } = null!;
 
+        public IWorkoutService WorkoutService { protected get; init; } = null!;
+
         public IActionResult Index()
         {
             return View();
@@ -37,7 +39,7 @@ namespace WorkoutBuilder.Controllers
             return Json(equipment);
         }
 
-        public IActionResult Workout(string? timing, string? focus, string equipment)
+        public async Task<IActionResult> Workout(string? timing, string? focus, string equipment)
         {
             Services.Models.Focus? requestedFocus = null;
             if (Enum.TryParse<Services.Models.Focus>(focus, true, out var parsedFocus))
@@ -46,7 +48,9 @@ namespace WorkoutBuilder.Controllers
             var workoutTiming = WorkoutGeneratorFactory.GetTiming(timing);
             var result = WorkoutGeneratorFactory.GetGenerator(workoutTiming)
                             .Generate(new WorkoutGenerationRequestModel { Timing = workoutTiming, Focus = requestedFocus, Equipment = equipment?.Split('|').ToList() });
+            var publicId = await WorkoutService.Create(result);
 
+            Response.Headers["X-PublicId"] = publicId;
             return Json(result);
         }
 
