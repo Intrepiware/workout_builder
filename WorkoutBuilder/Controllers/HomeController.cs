@@ -16,9 +16,7 @@ namespace WorkoutBuilder.Controllers
         public IWorkoutGeneratorFactory WorkoutGeneratorFactory { protected get; init; } = null!;
         public IEmailService EmailService { protected get; init; } = null!;
         public IConfiguration Configuration { protected get; init; } = null!;
-        public IUserContext UserContext { protected get; init; } = null!;
-
-        public IWorkoutService WorkoutService { protected get; init; } = null!;
+        public IHomeWorkoutModelMapper HomeWorkoutModelMapper { protected get; init; } = null!;
 
         public IActionResult Index()
         {
@@ -48,9 +46,7 @@ namespace WorkoutBuilder.Controllers
             var workoutTiming = WorkoutGeneratorFactory.GetTiming(timing);
             var result = WorkoutGeneratorFactory.GetGenerator(workoutTiming)
                             .Generate(new WorkoutGenerationRequestModel { Timing = workoutTiming, Focus = requestedFocus, Equipment = equipment?.Split('|').ToList() });
-            var publicId = await WorkoutService.Create(result);
-
-            var model = new HomeWorkoutModel { PublicId = publicId, Workout = result };
+            var model = await HomeWorkoutModelMapper.Map(result);
             return Json(model);
         }
 

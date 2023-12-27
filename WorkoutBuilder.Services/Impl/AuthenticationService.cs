@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Services.Models;
+using ClaimTypes = WorkoutBuilder.Services.Models.WorkoutBuilderClaimTypes;
 
 namespace WorkoutBuilder.Services.Impl
 {
@@ -30,11 +31,20 @@ namespace WorkoutBuilder.Services.Impl
 
         private List<Claim> GetClaims(User user)
         {
-            return new List<Claim>
+            var output = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.EmailAddress),
-                new Claim(WorkoutBuilderClaimTypes.Id, user.Id.ToString())
+                new Claim(System.Security.Claims.ClaimTypes.Email, user.EmailAddress),
+                new Claim(ClaimTypes.Id, user.Id.ToString()),
+                new Claim($"{ClaimTypes.Users}/{user.Id}{ClaimTypes.Workouts}{ClaimTypes.Manage}", string.Empty),
+                new Claim($"{ClaimTypes.Users}/{user.Id}{ClaimTypes.Workouts}{ClaimTypes.Favorites}{ClaimTypes.Manage}", string.Empty)
             };
+
+            if(user.IsAdmin)
+            {
+                output.Add(new Claim($"{ClaimTypes.Users}/All{ClaimTypes.Workouts}{ClaimTypes.Manage}", string.Empty));
+            }
+
+            return output;
         }
     }
 }

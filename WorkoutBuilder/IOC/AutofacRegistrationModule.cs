@@ -33,6 +33,7 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<ClaimsBasedUserContext>().As<IUserContext>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<HomeWorkoutModelMapper>().As<IHomeWorkoutModelMapper>().PropertiesAutowired().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {
