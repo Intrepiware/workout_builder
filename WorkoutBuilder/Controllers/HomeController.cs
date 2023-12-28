@@ -13,6 +13,7 @@ namespace WorkoutBuilder.Controllers
     {
         public IRepository<Exercise> ExerciseRepository { protected get; init; } = null!;
         public IRepository<Timing> TimingRepository { protected get; init; } = null!;
+        public IRepository<Workout> WorkoutRepository { protected get; init; } = null!;
         public IWorkoutGeneratorFactory WorkoutGeneratorFactory { protected get; init; } = null!;
         public IEmailService EmailService { protected get; init; } = null!;
         public IConfiguration Configuration { protected get; init; } = null!;
@@ -37,8 +38,17 @@ namespace WorkoutBuilder.Controllers
             return Json(equipment);
         }
 
-        public async Task<IActionResult> Workout(string? timing, string? focus, string equipment)
+        public async Task<IActionResult> Workout(string? id, string? timing, string? focus, string equipment)
         {
+            if (id != null)
+            {
+                var savedWorkout = WorkoutRepository.GetAll().SingleOrDefault(x => x.PublicId == id);
+                if (savedWorkout == null)
+                    return NotFound();
+                var output = HomeWorkoutModelMapper.Map(savedWorkout, id);
+                return Json(output);
+            }
+
             Services.Models.Focus? requestedFocus = null;
             if (Enum.TryParse<Services.Models.Focus>(focus, true, out var parsedFocus))
                 requestedFocus = parsedFocus;

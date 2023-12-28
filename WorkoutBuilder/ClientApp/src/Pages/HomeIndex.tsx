@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import Autocomplete from "../Components/AutoComplete";
-import { Workout, WorkoutRootObject, getWorkout } from "../apis/workout";
+import {
+  Workout,
+  WorkoutRootObject,
+  getWorkout,
+  getWorkoutById,
+} from "../apis/workout";
 import React from "react";
+import "@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css";
 import "./HomeIndex.css";
 
 interface Timing {
@@ -19,12 +25,14 @@ function HomeIndex() {
   const [isFocusLocked, setIsFocusLocked] = useState(false);
   const [isTimingLocked, setIsTimingLocked] = useState(false);
   const [isAdvancedModalShown, setIsAdvancedModalShown] = useState(false);
+  const [lastClick, setLastClick] = useState("");
   const [timings, setTimings] = useState<string[]>([]);
   const [allEquipment, setAllEquipment] = useState<string[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const [equipmentPreset, setEquipmentPreset] = useState("All");
   const [, setError] = useState(null);
   const [workout, setWorkout] = useState<Workout | null>(null);
+  const [publicId, setPublicId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/Home/Timings")
@@ -53,14 +61,23 @@ function HomeIndex() {
   }, []);
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has("id")) {
+      getSavedWorkout(urlParams.get("id") || "");
+      return;
+    }
+
     try {
-      const savedWorkout: Workout = JSON.parse(
+      const savedWorkout: WorkoutRootObject = JSON.parse(
         localStorage.getItem("workout") || ""
       );
       if (savedWorkout.version === "v1") {
-        setWorkout(savedWorkout);
-        setTiming(savedWorkout.name);
-        setFocus(savedWorkout.focus);
+        const { workout } = savedWorkout;
+        setWorkout(workout);
+        setTiming(workout.name);
+        setFocus(workout.focus);
+        setPublicId(savedWorkout.publicId);
       }
     } catch (err) {
       console.error(
@@ -144,11 +161,31 @@ function HomeIndex() {
     const equipmentParam: string = selectedEquipment.join("|");
     getWorkout(timingParam, focusParam, equipmentParam).then(
       (result: WorkoutRootObject) => {
-        setWorkout(result.workout);
         const { workout } = result;
-        localStorage.setItem("workout", JSON.stringify(workout));
+        setWorkout(workout);
         setTiming(workout.name);
         setFocus(workout.focus);
+        setPublicId(result.publicId);
+        localStorage.setItem("workout", JSON.stringify(result));
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+        setError(error);
+      }
+    );
+  };
+
+  const getSavedWorkout = (id: string) => {
+    getWorkoutById(id).then(
+      (result: WorkoutRootObject) => {
+        const { workout } = result;
+        setWorkout(workout);
+        setTiming(workout.name);
+        setFocus(workout.focus);
+        setPublicId(result.publicId);
+        localStorage.setItem("workout", JSON.stringify(result));
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow
@@ -170,6 +207,23 @@ function HomeIndex() {
 
   const toggleAdvancedOptions = () => {
     setIsAdvancedModalShown((old) => !old);
+  };
+
+  const setFavorite = () => {
+    setLastClick("favorite");
+  };
+
+  const copyLink = () => {
+    navigator.clipboard
+      .writeText(`${window.location.origin}?id=${publicId}`)
+      .then(
+        () => {
+          setLastClick("copy");
+        },
+        () => {
+          console.error("Failed to copy");
+        }
+      );
   };
 
   return (
@@ -244,8 +298,43 @@ function HomeIndex() {
             {workout?.notes && (
               <p className="is-italic">Note: {workout.notes}</p>
             )}
-            <p className="is-size-7 has-text-right">
-              <a onClick={toggleAdvancedOptions}>Advanced Options</a>
+            <p className="buttons is-right">
+              {publicId && (
+                <>
+                  <a
+                    className="button"
+                    onClick={setFavorite}
+                    data-tooltip={
+                      lastClick == "favorite" ? "Favorited!" : "Add Favorite"
+                    }
+                    onMouseOut={() => setLastClick("")}
+                  >
+                    <span className="icon is-small">
+                      <span className="material-symbols-outlined">star</span>
+                    </span>
+                  </a>
+                  <a
+                    className="button"
+                    onClick={copyLink}
+                    title="Copy Link"
+                    data-tooltip={lastClick == "copy" ? "Copied!" : "Copy URL"}
+                    onMouseOut={() => setLastClick("")}
+                  >
+                    <span className="icon is-small">
+                      <span className="material-symbols-outlined">link</span>
+                    </span>
+                  </a>
+                </>
+              )}
+              <a
+                className="button"
+                onClick={toggleAdvancedOptions}
+                data-tooltip="Advanced Options"
+              >
+                <span className="icon is-small">
+                  <span className=" material-symbols-outlined">settings</span>
+                </span>
+              </a>
             </p>
           </div>
         </div>
