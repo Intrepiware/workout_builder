@@ -196,6 +196,16 @@ function HomeIndex() {
     );
   };
 
+  const setFavorite = () => {
+    fetch(`/Home/Favorite/${publicId}`, {
+      method: "POST",
+    }).then((res) => {
+      if (res.headers.has("Location"))
+        window.location.href = res.headers.get("Location") || "";
+      else return res.json();
+    });
+  };
+
   const equipment: string[] = [];
   function uniqueEquipment(item: string) {
     if (equipment.indexOf(item) == -1) {
@@ -209,11 +219,12 @@ function HomeIndex() {
     setIsAdvancedModalShown((old) => !old);
   };
 
-  const setFavorite = () => {
+  const handleFavoriteClick = () => {
+    setFavorite();
     setLastClick("favorite");
   };
 
-  const copyLink = () => {
+  const handleCopyClick = () => {
     navigator.clipboard
       .writeText(`${window.location.origin}?id=${publicId}`)
       .then(
@@ -303,7 +314,7 @@ function HomeIndex() {
                 <>
                   <a
                     className="button"
-                    onClick={setFavorite}
+                    onClick={handleFavoriteClick}
                     data-tooltip={
                       lastClick == "favorite" ? "Favorited!" : "Add Favorite"
                     }
@@ -315,7 +326,7 @@ function HomeIndex() {
                   </a>
                   <a
                     className="button"
-                    onClick={copyLink}
+                    onClick={handleCopyClick}
                     title="Copy Link"
                     data-tooltip={lastClick == "copy" ? "Copied!" : "Copy URL"}
                     onMouseOut={() => setLastClick("")}

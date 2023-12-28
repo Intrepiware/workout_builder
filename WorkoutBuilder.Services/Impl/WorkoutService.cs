@@ -49,5 +49,35 @@ namespace WorkoutBuilder.Services.Impl
             await WorkoutRepository.Add(workout);
             return workout.PublicId;
         }
+
+        public async Task<string> ToggleFavorite(string publicId)
+        {
+            var workout = WorkoutRepository.GetAll().SingleOrDefault(x => x.PublicId == publicId);
+            if (workout == null)
+                throw new ArgumentException("Cannot add favorite: unknown public id");
+
+            if (UserContext.GetUserId() == null)
+                throw new ArgumentException("Cannot add favorite: invalid user id");
+
+            if(UserContext.GetUserId().Value != workout.UserId)
+            {
+                var newWorkout = new Workout
+                {
+                    Body = workout.Body,
+                    CreateDate = DateTime.UtcNow,
+                    IsFavorite = true,
+                    PublicId = Guid.NewGuid().ToString("n"),
+                    UserId = UserContext.GetUserId()
+                };
+                await WorkoutRepository.Add(newWorkout);
+                return newWorkout.PublicId;
+            }
+            else
+            {
+                workout.IsFavorite = !workout.IsFavorite;
+                await WorkoutRepository.Update(workout);
+                return workout.PublicId;
+            }
+        }
     }
 }

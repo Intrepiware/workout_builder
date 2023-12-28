@@ -5,6 +5,7 @@ using System.Diagnostics;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
+using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Controllers
@@ -18,6 +19,8 @@ namespace WorkoutBuilder.Controllers
         public IEmailService EmailService { protected get; init; } = null!;
         public IConfiguration Configuration { protected get; init; } = null!;
         public IHomeWorkoutModelMapper HomeWorkoutModelMapper { protected get; init; } = null!;
+        public IWorkoutService WorkoutService { protected get; init; } = null!;
+        public IUrlBuilder UrlBuilder { protected get; init; } = null!;
 
         public IActionResult Index()
         {
@@ -88,6 +91,15 @@ Message: {data.Message}";
             ModelState.Clear();
             MvcCaptcha.ResetCaptcha("ContactFormCaptcha");
             return View(new HomeContactRequestModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Favorite(string id)
+        {
+            var newId = await WorkoutService.ToggleFavorite(id);
+            if (newId != id)
+                Response.Headers.Add("Location", UrlBuilder.Action("Index", "Home", new { id = newId }));
+            return Json(new { success = true });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
