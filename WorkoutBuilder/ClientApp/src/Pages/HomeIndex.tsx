@@ -33,6 +33,7 @@ function HomeIndex() {
   const [, setError] = useState(null);
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [publicId, setPublicId] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     fetch("/Home/Timings")
@@ -199,10 +200,14 @@ function HomeIndex() {
   const setFavorite = () => {
     fetch(`/Home/Favorite/${publicId}`, {
       method: "POST",
+      credentials: "include",
     }).then((res) => {
       if (res.headers.has("Location"))
         window.location.href = res.headers.get("Location") || "";
-      else return res.json();
+      else {
+        setIsFavorite(!isFavorite);
+        return res.json();
+      }
     });
   };
 
@@ -321,7 +326,13 @@ function HomeIndex() {
                     onMouseOut={() => setLastClick("")}
                   >
                     <span className="icon is-small">
-                      <span className="material-symbols-outlined">star</span>
+                      <span
+                        className={`material-symbols-outlined ${
+                          isFavorite ? "filled-star" : ""
+                        }`}
+                      >
+                        star
+                      </span>
                     </span>
                   </a>
                   <a
