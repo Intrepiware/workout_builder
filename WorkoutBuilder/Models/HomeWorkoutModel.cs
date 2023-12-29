@@ -6,6 +6,6 @@ namespace WorkoutBuilder.Models
     {
         public string? PublicId { get; set; }
         public WorkoutGenerationResponseModel Workout { get; set; }
-        public List<string> Permissions { get; set; }
+        public bool IsFavorite { get; set; }
     }
 }

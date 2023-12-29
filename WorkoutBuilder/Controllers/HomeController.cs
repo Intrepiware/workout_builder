@@ -96,10 +96,10 @@ Message: {data.Message}";
         [HttpPost]
         public async Task<IActionResult> Favorite(string id)
         {
-            var newId = await WorkoutService.ToggleFavorite(id);
-            if (newId != id)
-                Response.Headers.Add("Location", UrlBuilder.Action("Index", "Home", new { id = newId }));
-            return Json(new { success = true });
+            var workout = await WorkoutService.ToggleFavorite(id);
+            if (workout != null && workout.PublicId != id)
+                Response.Headers.Add("Location", UrlBuilder.Action("Index", "Home", new { id = workout.PublicId }));
+            return Json(new { success = true, workout.IsFavorite });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

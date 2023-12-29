@@ -186,6 +186,7 @@ function HomeIndex() {
         setTiming(workout.name);
         setFocus(workout.focus);
         setPublicId(result.publicId);
+        setIsFavorite(result.isFavorite);
         localStorage.setItem("workout", JSON.stringify(result));
       },
       // Note: it's important to handle errors here
@@ -201,14 +202,17 @@ function HomeIndex() {
     fetch(`/Home/Favorite/${publicId}`, {
       method: "POST",
       credentials: "include",
-    }).then((res) => {
-      if (res.headers.has("Location"))
-        window.location.href = res.headers.get("Location") || "";
-      else {
-        setIsFavorite(!isFavorite);
-        return res.json();
-      }
-    });
+    })
+      .then((res) => {
+        if (res.headers.has("Location"))
+          window.location.href = res.headers.get("Location") || "";
+        else {
+          return res.json();
+        }
+      })
+      .then((json) => {
+        setIsFavorite(json.isFavorite);
+      });
   };
 
   const equipment: string[] = [];

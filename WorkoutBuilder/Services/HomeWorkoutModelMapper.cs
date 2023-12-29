@@ -21,12 +21,8 @@ namespace WorkoutBuilder.Services
             var model = new HomeWorkoutModel
             {
                 PublicId = publicId,
-                Workout = data,
-                Permissions = new List<string>()
+                Workout = data
             };
-
-            if (UserContext.GetUserId().HasValue)
-                model.Permissions.Add("favorite");
 
             return model;
         }
@@ -37,10 +33,9 @@ namespace WorkoutBuilder.Services
             {
                 Workout = JsonConvert.DeserializeObject<WorkoutGenerationResponseModel>(workout.Body),
                 PublicId = publicId,
-                Permissions = new List<string>()
+                IsFavorite = UserContext.GetUserId() == workout.UserId && workout.IsFavorite
             };
-            if (UserContext.GetUserId().HasValue)
-                output.Permissions.Add("favorite");
+
             return output;
         }
     }

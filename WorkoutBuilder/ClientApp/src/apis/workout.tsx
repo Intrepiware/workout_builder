@@ -2,6 +2,7 @@ export interface WorkoutRootObject {
   publicId: null | string;
   workout: Workout;
   version: string;
+  isFavorite: boolean;
 }
 export interface Workout {
   name: string;

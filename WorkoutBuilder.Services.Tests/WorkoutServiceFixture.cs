@@ -8,7 +8,7 @@ namespace WorkoutBuilder.Services.Tests
     public class WorkoutServiceFixture
     {
         [TestFixture]
-        public class When_Creating
+        public class When_Creating_Workout
         {
             [Test]
             public async Task Should_Save()
