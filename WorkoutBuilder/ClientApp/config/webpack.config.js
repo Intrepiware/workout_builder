@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     "home-index": "./src/home-index.tsx",
     "timing-index": "./src/timing-index.tsx",
+    "workouts-index": "./src/workouts-index.tsx",
     site: "./src/site.ts",
   },
   output: {

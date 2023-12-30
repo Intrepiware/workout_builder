@@ -8,6 +8,7 @@
         public MenuItemModel? Logout { get; set; }
         public MenuItemModel? Login { get; set; }
         public MenuItemModel? SignUp { get; set; }
+        public MenuItemModel? Workouts { get; set; }
     }
 
     public class MenuItemModel

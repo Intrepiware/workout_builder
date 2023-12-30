@@ -21,6 +21,12 @@
             <a class="navbar-item" href="@Model.Contact.Url">
                 @Model.Contact.DisplayName
             </a>
+            @if(Model.Workouts != null)
+            {
+                <a class="navbar-item" href="@Model.Workouts.Url">
+                    @Model.Workouts.DisplayName
+                </a>                
+            }
         </div>
 
         <div class="navbar-end">

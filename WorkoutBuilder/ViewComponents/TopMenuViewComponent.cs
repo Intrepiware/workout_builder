@@ -16,7 +16,10 @@ namespace WorkoutBuilder.ViewComponents
             model.Contact = new MenuItemModel { DisplayName = "Contact", Url = UrlBuilder.Action("Contact", "Home", null) };
             model.TimingCalc = new MenuItemModel { DisplayName = "Timing Calc", Url = UrlBuilder.Action("Index", "Timing", null) };
             if (UserContext.GetUserId() != null)
+            {
                 model.Logout = new MenuItemModel { DisplayName = "Logout", Url = UrlBuilder.Action("Logout", "Users", null) };
+                model.Workouts = new MenuItemModel { DisplayName = "Workouts", Url = UrlBuilder.Action("Index", "Workouts", null) };
+            }
             else
                 model.Login = new MenuItemModel { DisplayName = "Login", Url = UrlBuilder.Action("Login", "Users", null) };
 

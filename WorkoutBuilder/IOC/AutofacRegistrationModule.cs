@@ -60,6 +60,7 @@ namespace WorkoutBuilder.IOC
             // Controllers
             builder.RegisterType<HomeController>().PropertiesAutowired();
             builder.RegisterType<UsersController>().PropertiesAutowired();
+            builder.RegisterType<WorkoutsController>().PropertiesAutowired();
 
             // View Components
             builder.RegisterType<TopMenuViewComponent>().PropertiesAutowired();
