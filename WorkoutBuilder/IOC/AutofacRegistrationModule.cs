@@ -6,6 +6,7 @@ using WorkoutBuilder.Data;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Impl.Helpers;
+using WorkoutBuilder.ViewComponents;
 
 namespace WorkoutBuilder.IOC
 {
@@ -29,6 +30,10 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ResetPasswordHelper>().As<IResetPasswordHelper>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
+            builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<ClaimsBasedUserContext>().As<IUserContext>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<HomeWorkoutModelMapper>().As<IHomeWorkoutModelMapper>().PropertiesAutowired().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {
@@ -50,10 +55,14 @@ namespace WorkoutBuilder.IOC
             RegisterRepository<Timing>(builder);
             RegisterRepository<User>(builder);
             RegisterRepository<UserPasswordResetRequest>(builder);
+            RegisterRepository<Workout>(builder);
             
             // Controllers
             builder.RegisterType<HomeController>().PropertiesAutowired();
             builder.RegisterType<UsersController>().PropertiesAutowired();
+
+            // View Components
+            builder.RegisterType<TopMenuViewComponent>().PropertiesAutowired();
         }
 
         protected void RegisterRepository<TModel>(ContainerBuilder builder) where TModel : class

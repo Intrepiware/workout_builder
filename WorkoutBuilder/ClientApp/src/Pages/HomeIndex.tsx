@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Autocomplete from "../Components/AutoComplete";
-import { Workout, getWorkout } from "../apis/workout";
+import { WorkoutRootObject, getWorkout, getWorkoutById } from "../apis/workout";
 import React from "react";
+import "@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css";
 import "./HomeIndex.css";
 
 interface Timing {
@@ -13,18 +14,34 @@ interface Timing {
   customGenerator: string | null;
 }
 
+interface UiElements {
+  isFocusLocked: boolean;
+  isTimingLocked: boolean;
+  isAdvancedModalShown: boolean;
+  isFavorite: boolean;
+  lastClick: string;
+  timing: string;
+  focus: string;
+  selectedEquipment: string[];
+  equipmentPreset: string;
+}
+
 function HomeIndex() {
-  const [timing, setTiming] = useState("");
-  const [focus, setFocus] = useState("Hybrid");
-  const [isFocusLocked, setIsFocusLocked] = useState(false);
-  const [isTimingLocked, setIsTimingLocked] = useState(false);
-  const [isAdvancedModalShown, setIsAdvancedModalShown] = useState(false);
+  const [uiElements, setUiElements] = useState<UiElements>({
+    isAdvancedModalShown: false,
+    isFavorite: false,
+    isFocusLocked: false,
+    isTimingLocked: false,
+    lastClick: "",
+    timing: "",
+    focus: "Hybrid",
+    selectedEquipment: [],
+    equipmentPreset: "All",
+  });
   const [timings, setTimings] = useState<string[]>([]);
   const [allEquipment, setAllEquipment] = useState<string[]>([]);
-  const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
-  const [equipmentPreset, setEquipmentPreset] = useState("All");
   const [, setError] = useState(null);
-  const [workout, setWorkout] = useState<Workout | null>(null);
+  const [workout, setWorkout] = useState<WorkoutRootObject | null>(null);
 
   useEffect(() => {
     fetch("/Home/Timings")
@@ -48,19 +65,30 @@ function HomeIndex() {
       .then((res) => res.json())
       .then((result: string[]) => {
         setAllEquipment(result);
-        setSelectedEquipment(result);
+        setUiElements((x) => ({ ...x, selectedEquipment: result }));
       });
   }, []);
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has("id")) {
+      getSavedWorkout(urlParams.get("id") || "");
+      return;
+    }
+
     try {
-      const savedWorkout: Workout = JSON.parse(
+      const savedWorkout: WorkoutRootObject = JSON.parse(
         localStorage.getItem("workout") || ""
       );
       if (savedWorkout.version === "v1") {
+        const { workout } = savedWorkout;
         setWorkout(savedWorkout);
-        setTiming(savedWorkout.name);
-        setFocus(savedWorkout.focus);
+        setUiElements((x) => ({
+          ...x,
+          timing: workout.name,
+          focus: workout.focus,
+        }));
       }
     } catch (err) {
       console.error(
@@ -71,7 +99,10 @@ function HomeIndex() {
   }, []);
 
   useEffect(() => {
-    switch (equipmentPreset) {
+    const setSelectedEquipment = (data: string[]) => {
+      setUiElements((x) => ({ ...x, selectedEquipment: data }));
+    };
+    switch (uiElements.equipmentPreset) {
       case "None":
         setSelectedEquipment([]);
         break;
@@ -114,40 +145,49 @@ function HomeIndex() {
         setSelectedEquipment(allEquipment);
         break;
     }
-  }, [equipmentPreset]);
+  }, [uiElements.equipmentPreset]);
 
   const handleTimingChange = (item: string) => {
     setWorkout(null);
-    setTiming(item);
-    setIsTimingLocked(true);
+    setUiElements((x) => ({ ...x, isTimingLocked: true, timing: item }));
   };
 
   const handleFocusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setWorkout(null);
-    setFocus(e.target.value);
-    setIsFocusLocked(true);
+    setUiElements((x) => ({
+      ...x,
+      isFocusLocked: true,
+      focus: e.target.value,
+    }));
   };
 
   const handleEquipmentToggle = (label: string): void => {
-    const selected: string[] = [...selectedEquipment];
+    const selected: string[] = [...uiElements.selectedEquipment];
     if (selected.includes(label)) {
       selected.splice(selected.indexOf(label), 1);
     } else {
       selected.push(label);
     }
-    setSelectedEquipment(selected);
+    setUiElements((x) => ({ ...x, selectedEquipment: selected }));
   };
 
   const getCustomizedWorkout = () => {
-    const timingParam: string = isTimingLocked ? timing : "";
-    const focusParam: string = isFocusLocked ? focus : "";
-    const equipmentParam: string = selectedEquipment.join("|");
+    const timingParam: string = uiElements.isTimingLocked
+      ? uiElements.timing
+      : "";
+    const focusParam: string = uiElements.isFocusLocked ? uiElements.focus : "";
+    const equipmentParam: string = uiElements.selectedEquipment.join("|");
     getWorkout(timingParam, focusParam, equipmentParam).then(
-      (result: Workout) => {
+      (result: WorkoutRootObject) => {
+        const { workout } = result;
         setWorkout(result);
+        setUiElements((x) => ({
+          ...x,
+          timing: workout.name,
+          focus: workout.focus,
+          isFavorite: result.isFavorite,
+        }));
         localStorage.setItem("workout", JSON.stringify(result));
-        setTiming(result.name);
-        setFocus(result.focus);
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow
@@ -156,6 +196,47 @@ function HomeIndex() {
         setError(error);
       }
     );
+  };
+
+  const getSavedWorkout = (id: string) => {
+    getWorkoutById(id).then(
+      (result: WorkoutRootObject) => {
+        const { workout } = result;
+        setWorkout(result);
+        setUiElements((x) => ({
+          ...x,
+          isFavorite: result.isFavorite,
+          timing: workout.name,
+          focus: workout.focus,
+        }));
+        localStorage.setItem("workout", JSON.stringify(result));
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+        setError(error);
+      }
+    );
+  };
+
+  const setFavorite = () => {
+    if (!!workout) {
+      fetch(`/Home/Favorite/${workout.publicId}`, {
+        method: "POST",
+        credentials: "include",
+      })
+        .then((res) => {
+          if (res.headers.has("Location"))
+            window.location.href = res.headers.get("Location") || "";
+          else {
+            return res.json();
+          }
+        })
+        .then((json) => {
+          setUiElements((x) => ({ ...x, isFavorite: json.isFavorite }));
+        });
+    }
   };
 
   const equipment: string[] = [];
@@ -168,7 +249,28 @@ function HomeIndex() {
   }
 
   const toggleAdvancedOptions = () => {
-    setIsAdvancedModalShown((old) => !old);
+    setUiElements((x) => ({
+      ...x,
+      isAdvancedModalShown: !x.isAdvancedModalShown,
+    }));
+  };
+
+  const handleFavoriteClick = () => {
+    setFavorite();
+    setUiElements((x) => ({ ...x, lastClick: "favorite" }));
+  };
+
+  const handleCopyClick = () => {
+    if (workout && workout.publicId) {
+      navigator.clipboard
+        .writeText(`${window.location.origin}?id=${workout.publicId}`)
+        .then(
+          () => setUiElements((x) => ({ ...x, lastClick: "copy" })),
+          () => {
+            console.error("Failed to copy");
+          }
+        );
+    }
   };
 
   return (
@@ -181,17 +283,24 @@ function HomeIndex() {
               <div className="field has-addons">
                 <span className="control">
                   <a
-                    className={`button ${isTimingLocked ? "is-success" : ""}`}
-                    onClick={() => setIsTimingLocked(!isTimingLocked)}
+                    className={`button ${
+                      uiElements.isTimingLocked ? "is-success" : ""
+                    }`}
+                    onClick={() =>
+                      setUiElements((x) => ({
+                        ...x,
+                        isTimingLocked: !x.isTimingLocked,
+                      }))
+                    }
                   >
                     <span className="material-symbols-outlined">lock</span>
                   </a>
                 </span>
                 <Autocomplete
-                  key={timing}
+                  key={uiElements.timing}
                   placeholder="Search for timing"
                   data={timings.sort()}
-                  value={timing}
+                  value={uiElements.timing}
                   onSelect={handleTimingChange}
                   controlClassName="is-expanded"
                 />
@@ -202,15 +311,25 @@ function HomeIndex() {
               <div className="field has-addons">
                 <span className="control">
                   <a
-                    className={`button ${isFocusLocked ? "is-success" : ""}`}
-                    onClick={() => setIsFocusLocked(!isFocusLocked)}
+                    className={`button ${
+                      uiElements.isFocusLocked ? "is-success" : ""
+                    }`}
+                    onClick={() =>
+                      setUiElements((x) => ({
+                        ...x,
+                        isFocusLocked: !x.isFocusLocked,
+                      }))
+                    }
                   >
                     <span className="material-symbols-outlined">lock</span>
                   </a>
                 </span>
                 <div className="control">
                   <div className="select">
-                    <select value={focus} onChange={handleFocusChange}>
+                    <select
+                      value={uiElements.focus}
+                      onChange={handleFocusChange}
+                    >
                       <option>Cardio</option>
                       <option>Strength</option>
                       <option>Hybrid</option>
@@ -235,16 +354,67 @@ function HomeIndex() {
           <div className="content">
             {workout && (
               <p>
-                <strong>Name:</strong> {workout.name} &middot;{" "}
-                <strong>Stations:</strong> {workout.stations} &middot;{" "}
-                <strong>Timing:</strong> {workout.timing}
+                <strong>Name:</strong> {workout.workout.name} &middot;{" "}
+                <strong>Stations:</strong> {workout.workout.stations} &middot;{" "}
+                <strong>Timing:</strong> {workout.workout.timing}
               </p>
             )}
-            {workout?.notes && (
-              <p className="is-italic">Note: {workout.notes}</p>
+            {workout?.workout?.notes && (
+              <p className="is-italic">Note: {workout.workout.notes}</p>
             )}
-            <p className="is-size-7 has-text-right">
-              <a onClick={toggleAdvancedOptions}>Advanced Options</a>
+            <p className="buttons is-right">
+              {workout?.publicId && (
+                <>
+                  <a
+                    className="button"
+                    onClick={handleFavoriteClick}
+                    data-tooltip={
+                      uiElements.lastClick == "favorite"
+                        ? uiElements.isFavorite
+                          ? "Favorited!"
+                          : "Unfavorited!"
+                        : "Add Favorite"
+                    }
+                    onMouseOut={() =>
+                      setUiElements((x) => ({ ...x, lastClick: "" }))
+                    }
+                  >
+                    <span className="icon is-small">
+                      <span
+                        className={`material-symbols-outlined ${
+                          uiElements.isFavorite ? "filled-star" : ""
+                        }`}
+                      >
+                        star
+                      </span>
+                    </span>
+                  </a>
+                  <a
+                    className="button"
+                    onClick={handleCopyClick}
+                    title="Copy Link"
+                    data-tooltip={
+                      uiElements.lastClick == "copy" ? "Copied!" : "Copy URL"
+                    }
+                    onMouseOut={() =>
+                      setUiElements((x) => ({ ...x, lastClick: "" }))
+                    }
+                  >
+                    <span className="icon is-small">
+                      <span className="material-symbols-outlined">link</span>
+                    </span>
+                  </a>
+                </>
+              )}
+              <a
+                className="button"
+                onClick={toggleAdvancedOptions}
+                data-tooltip="Advanced Options"
+              >
+                <span className="icon is-small">
+                  <span className=" material-symbols-outlined">settings</span>
+                </span>
+              </a>
             </p>
           </div>
         </div>
@@ -261,30 +431,31 @@ function HomeIndex() {
               </tr>
             </thead>
             <tbody>
-              {workout &&
-                workout.exercises.map((row) => (
-                  <tr key={row.station}>
-                    <td>{row.station}</td>
-                    <td>{row.exercise}</td>
-                    <td>{row.focus}</td>
-                    <td
-                      className={
-                        uniqueEquipment(row.equipment)
-                          ? "has-background-warning"
-                          : ""
-                      }
-                    >
-                      {row.equipment}
-                    </td>
-                  </tr>
-                ))}
+              {workout?.workout.exercises.map((row) => (
+                <tr key={row.station}>
+                  <td>{row.station}</td>
+                  <td>{row.exercise}</td>
+                  <td>{row.focus}</td>
+                  <td
+                    className={
+                      uniqueEquipment(row.equipment)
+                        ? "has-background-warning"
+                        : ""
+                    }
+                  >
+                    {row.equipment}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </section>
 
       <div
-        className={`modal ${isAdvancedModalShown ? "is-active" : ""}`}
+        className={`modal ${
+          uiElements.isAdvancedModalShown ? "is-active" : ""
+        }`}
         id="advanced-options"
       >
         <div className="modal-background"></div>
@@ -313,8 +484,13 @@ function HomeIndex() {
               <div className="control">
                 <div className="select">
                   <select
-                    value={equipmentPreset}
-                    onChange={(e) => setEquipmentPreset(e.target.value)}
+                    value={uiElements.equipmentPreset}
+                    onChange={(e) =>
+                      setUiElements((x) => ({
+                        ...x,
+                        equipmentPreset: e.target.value,
+                      }))
+                    }
                   >
                     <option>All</option>
                     <option>None</option>
@@ -331,17 +507,17 @@ function HomeIndex() {
               <EquipmentButton
                 onClick={handleEquipmentToggle}
                 label="Bodyweight"
-                selectedEquipment={selectedEquipment}
+                selectedEquipment={uiElements.selectedEquipment}
               ></EquipmentButton>
               <EquipmentButton
                 onClick={handleEquipmentToggle}
                 label="Dumbbells"
-                selectedEquipment={selectedEquipment}
+                selectedEquipment={uiElements.selectedEquipment}
               ></EquipmentButton>
               <EquipmentButton
                 onClick={handleEquipmentToggle}
                 label="Space to Run"
-                selectedEquipment={selectedEquipment}
+                selectedEquipment={uiElements.selectedEquipment}
               ></EquipmentButton>
               {allEquipment
                 .filter(
@@ -353,7 +529,7 @@ function HomeIndex() {
                     key={x}
                     onClick={handleEquipmentToggle}
                     label={x}
-                    selectedEquipment={selectedEquipment}
+                    selectedEquipment={uiElements.selectedEquipment}
                   ></EquipmentButton>
                 ))}
             </div>

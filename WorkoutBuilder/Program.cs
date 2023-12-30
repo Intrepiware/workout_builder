@@ -20,7 +20,7 @@ namespace WorkoutBuilder
 
             // Add services to the container.
             IConfiguration configuration = builder.Configuration;
-            builder.Services.AddMvc().AddControllersAsServices();
+            builder.Services.AddMvc().AddControllersAsServices().AddViewComponentsAsServices();
 
             // Register AutoFac
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -31,6 +31,14 @@ namespace WorkoutBuilder
                 options.IdleTimeout = TimeSpan.FromMinutes(20);
                 options.Cookie.IsEssential = true;
             });
+
+
+            builder.Services.AddAuthentication("CookieAuth")
+                    .AddCookie("CookieAuth", config =>
+                    {
+                        config.Cookie.Name = "WorkoutBuild";
+                        config.LoginPath = "/Users/Login";
+                    });
 
             // This setting allows the CAPTCHA to generate images
             builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
@@ -60,6 +68,7 @@ namespace WorkoutBuilder
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSession();

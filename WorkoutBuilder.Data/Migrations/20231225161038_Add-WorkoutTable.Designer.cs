@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkoutBuilder.Data;
 
@@ -11,9 +12,11 @@ using WorkoutBuilder.Data;
 namespace WorkoutBuilder.Data.Migrations
 {
     [DbContext(typeof(WorkoutBuilderContext))]
-    partial class WorkoutBuilderContextModelSnapshot : ModelSnapshot
+    [Migration("20231225161038_Add-WorkoutTable")]
+    partial class AddWorkoutTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,9 +130,6 @@ namespace WorkoutBuilder.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()

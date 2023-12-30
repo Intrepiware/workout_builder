@@ -5,6 +5,7 @@ using System.Diagnostics;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
+using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Controllers
@@ -13,9 +14,13 @@ namespace WorkoutBuilder.Controllers
     {
         public IRepository<Exercise> ExerciseRepository { protected get; init; } = null!;
         public IRepository<Timing> TimingRepository { protected get; init; } = null!;
+        public IRepository<Workout> WorkoutRepository { protected get; init; } = null!;
         public IWorkoutGeneratorFactory WorkoutGeneratorFactory { protected get; init; } = null!;
         public IEmailService EmailService { protected get; init; } = null!;
         public IConfiguration Configuration { protected get; init; } = null!;
+        public IHomeWorkoutModelMapper HomeWorkoutModelMapper { protected get; init; } = null!;
+        public IWorkoutService WorkoutService { protected get; init; } = null!;
+        public IUrlBuilder UrlBuilder { protected get; init; } = null!;
 
         public IActionResult Index()
         {
@@ -36,8 +41,17 @@ namespace WorkoutBuilder.Controllers
             return Json(equipment);
         }
 
-        public IActionResult Workout(string? timing, string? focus, string equipment)
+        public async Task<IActionResult> Workout(string? id, string? timing, string? focus, string equipment)
         {
+            if (id != null)
+            {
+                var savedWorkout = WorkoutRepository.GetAll().SingleOrDefault(x => x.PublicId == id);
+                if (savedWorkout == null)
+                    return NotFound();
+                var output = HomeWorkoutModelMapper.Map(savedWorkout, id);
+                return Json(output);
+            }
+
             Services.Models.Focus? requestedFocus = null;
             if (Enum.TryParse<Services.Models.Focus>(focus, true, out var parsedFocus))
                 requestedFocus = parsedFocus;
@@ -45,8 +59,8 @@ namespace WorkoutBuilder.Controllers
             var workoutTiming = WorkoutGeneratorFactory.GetTiming(timing);
             var result = WorkoutGeneratorFactory.GetGenerator(workoutTiming)
                             .Generate(new WorkoutGenerationRequestModel { Timing = workoutTiming, Focus = requestedFocus, Equipment = equipment?.Split('|').ToList() });
-
-            return Json(result);
+            var model = await HomeWorkoutModelMapper.Map(result);
+            return Json(model);
         }
 
         public IActionResult TimingCalc()
@@ -77,6 +91,15 @@ Message: {data.Message}";
             ModelState.Clear();
             MvcCaptcha.ResetCaptcha("ContactFormCaptcha");
             return View(new HomeContactRequestModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Favorite(string id)
+        {
+            var workout = await WorkoutService.ToggleFavorite(id);
+            if (workout != null && workout.PublicId != id)
+                Response.Headers.Add("Location", UrlBuilder.Action("Index", "Home", new { id = workout.PublicId }));
+            return Json(new { success = true, workout.IsFavorite });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

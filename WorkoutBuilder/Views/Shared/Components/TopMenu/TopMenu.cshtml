@@ -1,0 +1,50 @@
+﻿@model TopMenuModel;
+
+<nav class="navbar is-link is-spaced" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="@Model.Home.Url">
+            <img src="~/img/logo/nav.png">
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbar" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="@Model.TimingCalc.Url">
+                @Model.TimingCalc.DisplayName
+            </a>
+
+            <a class="navbar-item" href="@Model.Contact.Url">
+                @Model.Contact.DisplayName
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    @if(Model.Logout != null)
+                    {
+                        <a class="button is-primary" href="@Model.Logout.Url">
+                            <strong>@Model.Logout.DisplayName</strong>
+                        </a>
+
+                    }
+                    else
+                    {
+                        <a class="button is-primary" onclick="alert('Coming soon!')">
+                            <strong>Sign Up</strong>
+                        </a>
+                        <a class="button is-light" href="@Model.Login.Url">
+                            @Model.Login.DisplayName
+                        </a>
+                        
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -23,5 +23,6 @@ namespace WorkoutBuilder.Data
         public DateTime CreateDate { get; set; }
         public DateTime? LockDate { get; set; }
         public DateTime? PasswordResetDate { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }
