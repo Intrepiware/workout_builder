@@ -9,7 +9,7 @@ namespace WorkoutBuilder.ViewComponents
         public IUserContext UserContext { init; protected get; } = null!;
         public IUrlBuilder UrlBuilder { init; protected get; } = null!;
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public Task<IViewComponentResult> InvokeAsync()
         {
             var model = new TopMenuModel();
             model.Home = new MenuItemModel { DisplayName = "Home", Url = UrlBuilder.Action("Index", "Home", null) };
@@ -18,12 +18,10 @@ namespace WorkoutBuilder.ViewComponents
             if (UserContext.GetUserId() != null)
                 model.Logout = new MenuItemModel { DisplayName = "Logout", Url = UrlBuilder.Action("Logout", "Users", null) };
             else
-            {
                 model.Login = new MenuItemModel { DisplayName = "Login", Url = UrlBuilder.Action("Login", "Users", null) };
-            }
 
-            await Task.CompletedTask;
-            return View("TopMenu", model);
+            IViewComponentResult result = View("TopMenu", model);
+            return Task.FromResult(result);
         }
     }
 }
