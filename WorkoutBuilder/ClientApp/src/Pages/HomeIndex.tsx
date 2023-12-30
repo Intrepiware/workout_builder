@@ -222,7 +222,7 @@ function HomeIndex() {
 
   const setFavorite = () => {
     if (!!workout) {
-      fetch(`/Home/Favorite/${workout.publicId}`, {
+      fetch(`/Workouts/Favorite/${workout.publicId}`, {
         method: "POST",
         credentials: "include",
       })

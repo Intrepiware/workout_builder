@@ -19,8 +19,6 @@ namespace WorkoutBuilder.Controllers
         public IEmailService EmailService { protected get; init; } = null!;
         public IConfiguration Configuration { protected get; init; } = null!;
         public IHomeWorkoutModelMapper HomeWorkoutModelMapper { protected get; init; } = null!;
-        public IWorkoutService WorkoutService { protected get; init; } = null!;
-        public IUrlBuilder UrlBuilder { protected get; init; } = null!;
 
         public IActionResult Index()
         {
@@ -91,15 +89,6 @@ Message: {data.Message}";
             ModelState.Clear();
             MvcCaptcha.ResetCaptcha("ContactFormCaptcha");
             return View(new HomeContactRequestModel());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Favorite(string id)
-        {
-            var workout = await WorkoutService.ToggleFavorite(id);
-            if (workout != null && workout.PublicId != id)
-                Response.Headers.Add("Location", UrlBuilder.Action("Index", "Home", new { id = workout.PublicId }));
-            return Json(new { success = true, workout.IsFavorite });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
