@@ -18,7 +18,11 @@ namespace WorkoutBuilder.ViewComponents
             if (UserContext.GetUserId() != null)
             {
                 model.Logout = new MenuItemModel { DisplayName = "Logout", Url = UrlBuilder.Action("Logout", "Users", null) };
-                model.Workouts = new MenuItemModel { DisplayName = "Workouts", Url = UrlBuilder.Action("Index", "Workouts", null) };
+                model.Workouts = new MenuItemModel { DisplayName = "History", Url = UrlBuilder.Action("Index", "Workouts", null) };
+                if (UserContext.CanReadAllExercises())
+                {
+                    model.Exercises = new MenuItemModel { DisplayName = "Exercises", Url = UrlBuilder.Action("Index", "Exercises", null) };
+                }
             }
             else
                 model.Login = new MenuItemModel { DisplayName = "Login", Url = UrlBuilder.Action("Login", "Users", null) };

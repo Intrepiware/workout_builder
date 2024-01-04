@@ -6,5 +6,7 @@
         string? GetEmailAddress();
         bool CanManageWorkout(long? userId);
         bool CanManageWorkoutFavorite(long? userId);
+        bool CanReadAllExercises();
+        bool CanManageAllExercises();
     }
 }

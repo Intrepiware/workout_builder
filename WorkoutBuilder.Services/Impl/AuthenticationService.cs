@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using WorkoutBuilder.Data;
-using WorkoutBuilder.Services.Models;
 using ClaimTypes = WorkoutBuilder.Services.Models.WorkoutBuilderClaimTypes;
 
 namespace WorkoutBuilder.Services.Impl
@@ -22,7 +21,8 @@ namespace WorkoutBuilder.Services.Impl
                 var claims = GetClaims(user);
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
-                await HttpContextAccessor.HttpContext.SignInAsync(principal);
+                await HttpContextAccessor.HttpContext.SignInAsync(principal, 
+                    new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(365) });
                 return true;
             }
 
@@ -36,12 +36,14 @@ namespace WorkoutBuilder.Services.Impl
                 new Claim(System.Security.Claims.ClaimTypes.Email, user.EmailAddress),
                 new Claim(ClaimTypes.Id, user.Id.ToString()),
                 new Claim($"{ClaimTypes.Users}/{user.Id}{ClaimTypes.Workouts}{ClaimTypes.Manage}", string.Empty),
-                new Claim($"{ClaimTypes.Users}/{user.Id}{ClaimTypes.Workouts}{ClaimTypes.Favorites}{ClaimTypes.Manage}", string.Empty)
+                new Claim($"{ClaimTypes.Users}/{user.Id}{ClaimTypes.Workouts}{ClaimTypes.Favorites}{ClaimTypes.Manage}", string.Empty),
+                new Claim($"{ClaimTypes.Exercises}{ClaimTypes.All}{ClaimTypes.Read}", string.Empty)
             };
 
-            if(user.IsAdmin)
+            if (user.IsAdmin)
             {
                 output.Add(new Claim($"{ClaimTypes.Users}/All{ClaimTypes.Workouts}{ClaimTypes.Manage}", string.Empty));
+                output.Add(new Claim($"{ClaimTypes.Exercises}{ClaimTypes.All}{ClaimTypes.Manage}", string.Empty));
             }
 
             return output;
