@@ -22,7 +22,8 @@ namespace WorkoutBuilder.Services.Impl
                 var claims = GetClaims(user);
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
-                await HttpContextAccessor.HttpContext.SignInAsync(principal);
+                await HttpContextAccessor.HttpContext.SignInAsync(principal, 
+                    new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(365) });
                 return true;
             }
 
