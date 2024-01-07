@@ -107,14 +107,20 @@ function WorkoutsIndex() {
           <button
             className="button is-info"
             disabled={query.skip == 0}
-            onClick={() => setQuery((x) => ({ ...x, skip: x.skip - 25 }))}
+            onClick={() => {
+              setQuery((x) => ({ ...x, skip: x.skip - 25 }));
+              window.scrollTo(0, 0);
+            }}
           >
             Prev
           </button>
           <button
             className="button is-info"
             disabled={workouts.length < 26}
-            onClick={() => setQuery((x) => ({ ...x, skip: x.skip + 25 }))}
+            onClick={() => {
+              setQuery((x) => ({ ...x, skip: x.skip + 25 }));
+              window.scrollTo(0, 0);
+            }}
           >
             Next
           </button>

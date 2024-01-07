@@ -33,7 +33,9 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<ClaimsBasedUserContext>().As<IUserContext>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<WorkoutService>().As<IWorkoutService>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<ExerciseService>().As<IExerciseService>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<HomeWorkoutModelMapper>().As<IHomeWorkoutModelMapper>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<ExerciseModelMapper>().As<IExerciseModelMapper>().PropertiesAutowired().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {
@@ -61,6 +63,7 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<HomeController>().PropertiesAutowired();
             builder.RegisterType<UsersController>().PropertiesAutowired();
             builder.RegisterType<WorkoutsController>().PropertiesAutowired();
+            builder.RegisterType<ExercisesController>().PropertiesAutowired();
 
             // View Components
             builder.RegisterType<TopMenuViewComponent>().PropertiesAutowired();

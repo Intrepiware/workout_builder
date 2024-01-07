@@ -1,6 +1,8 @@
 export interface ExerciseListItem {
   id: number;
   name: string;
+  focus: string;
+  editUrl: string | null;
 }
 
 export function getExercises(
@@ -16,7 +18,7 @@ export function getExercises(
   const focusParam = !!focus ? `&focus=${focus}` : "";
   const equipmentParam = !!equipment ? `equipment=${equipment}` : "";
   return fetch(
-    `/Exercises?${takeParam}${skipParam}${nameParam}${focusParam}${equipmentParam}`,
+    `/Exercises${takeParam}${skipParam}${nameParam}${focusParam}${equipmentParam}`,
     {
       credentials: "include",
       headers: { "X-Requested-With": "XMLHttpRequest" },
