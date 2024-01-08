@@ -16,7 +16,7 @@ export function getExercises(
   const skipParam = skip > 0 ? `&skip=${skip}` : "";
   const nameParam = !!name ? `&name=${name}` : "";
   const focusParam = !!focus ? `&focus=${focus}` : "";
-  const equipmentParam = !!equipment ? `equipment=${equipment}` : "";
+  const equipmentParam = !!equipment ? `&equipment=${equipment}` : "";
   return fetch(
     `/Exercises${takeParam}${skipParam}${nameParam}${focusParam}${equipmentParam}`,
     {
