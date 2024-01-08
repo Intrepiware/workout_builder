@@ -19,15 +19,15 @@ namespace WorkoutBuilder.Services
         public IUserContext UserContext { init; protected get; } = null!;
         public IUrlBuilder UrlBuilder { init; protected get; } = null!;
 
-        public ExercisesDetailsModel Map(Exercise exercise)
+        public ExercisesDetailsModel Map(Exercise? exercise)
         {
             return new ExercisesDetailsModel
             {
-                Equipment = exercise.Equipment,
-                FocusId = exercise.FocusId,
-                Id = exercise.Id,
-                Name = exercise.Name,
-                Notes = exercise.Notes,
+                Equipment = exercise?.Equipment ?? string.Empty,
+                FocusId = exercise?.FocusId ?? (long)(Enum.GetValues<FocusEnum>().First()),
+                Id = exercise?.Id ?? 0,
+                Name = exercise?.Name ?? string.Empty,
+                Notes = exercise?.Notes,
                 FocusOptions = Enum.GetValues<FocusEnum>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((byte)x).ToString() }).ToList(),
                 EquipmentOptions = ExerciseRepository.GetAll().Select(x => x.Equipment).Distinct().OrderBy(x => x)
                                             .Select(x => new SelectListItem { Value = x, Text = x }).ToList()

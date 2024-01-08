@@ -120,19 +120,13 @@ function ExercisesIndex() {
           </div>
         </div>
         <p className="buttons is-right">
-          <a className="button" data-tooltip="Add Favorite">
+          <a
+            className="button"
+            data-tooltip="Add Favorite"
+            href={`${location.href}/New`}
+          >
             <span className="icon is-small">
-              <span className="material-symbols-outlined ">star</span>
-            </span>
-          </a>
-          <a className="button" title="Copy Link" data-tooltip="Copy URL">
-            <span className="icon is-small">
-              <span className="material-symbols-outlined">link</span>
-            </span>
-          </a>
-          <a className="button" data-tooltip="Advanced Options">
-            <span className="icon is-small">
-              <span className=" material-symbols-outlined">settings</span>
+              <span className="material-symbols-outlined">add</span>
             </span>
           </a>
         </p>

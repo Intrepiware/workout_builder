@@ -69,7 +69,38 @@ namespace WorkoutBuilder.Controllers
             exercise.Equipment = model.Equipment;
             await ExerciseService.Update(exercise);
             return RedirectToAction("Index");
+        }
 
+        [HttpGet]
+        public IActionResult New()
+        {
+            if (!UserContext.CanManageAllExercises())
+                throw new SecurityException();
+            var model = ExerciseModelMapper.Map(null!);
+            return View("Details", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> New(ExercisesDetailsModel model)
+        {
+            if (!UserContext.CanManageAllExercises())
+                throw new SecurityException();
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var exercise = new Exercise
+            {
+                Equipment = model.Equipment,
+                FocusId = model.FocusId,
+                Name = model.Name,
+                Notes = model.Notes
+            };
+
+            await ExerciseService.Add(exercise);
+
+            return RedirectToAction("Index");
         }
     }
 }
