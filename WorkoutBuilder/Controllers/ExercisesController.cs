@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security;
 using WorkoutBuilder.Data;
+using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.ExtensionMethods;
 
@@ -34,8 +35,8 @@ namespace WorkoutBuilder.Controllers
         }
 
 
-        [Route("[controller]/[action]/{id}")]
-        public async Task<IActionResult> Index(long id)
+        [HttpGet]
+        public async Task<IActionResult> Details(long id)
         {
             if (!UserContext.CanManageAllExercises())
                 throw new SecurityException();
@@ -46,6 +47,29 @@ namespace WorkoutBuilder.Controllers
 
             var model = ExerciseModelMapper.Map(exercise);
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(ExercisesDetailsModel model)
+        {
+            if (!UserContext.CanManageAllExercises())
+                throw new SecurityException();
+
+            var exercise = await ExerciseRepository.GetById(model.Id);
+            if (exercise == null)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            exercise.Name = model.Name;
+            exercise.Notes = model.Notes;
+            exercise.FocusId = model.FocusId;
+            exercise.Equipment = model.Equipment;
+            await ExerciseService.Update(exercise);
+            return RedirectToAction("Index");
+
         }
     }
 }

@@ -1,0 +1,72 @@
+﻿@model ExercisesDetailsModel
+@{
+    ViewData["Title"] = $"Exercise: {Model.Name}";
+}
+
+<section class="section">
+    <div class="container is-max-desktop">
+        @if (ViewBag.Success != null)
+        {
+            <p class="notification is-success is-light">
+                @ViewBag.Success
+            </p>
+        }
+        @using (Html.BeginForm(FormMethod.Post))
+        {
+            <input type="hidden" asp-for="Id">
+            @Html.AntiForgeryToken()
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" name="name" type="text" placeholder="Exercise Name" required asp-for="Name">
+                </div>
+            </div>
+            <p class="help is-danger">
+                <span asp-validation-for="Name"></span>
+            </p>
+
+            <div class="field">
+                <label class="label">Focus</label>
+                <div class="control">
+                    <div class="select">
+                        <select asp-for="FocusId" asp-items="Model.FocusOptions"></select>
+                    </div>
+                </div>
+            </div>
+            <p class="help is-danger">
+                <span asp-validation-for="FocusId"></span>
+            </p>
+
+            <div class="field">
+                <label class="label">Equipment</label>
+                <div class="control">
+                    <div class="select">
+                        <select asp-for="Equipment" asp-items="Model.EquipmentOptions"></select>
+                    </div>
+                </div>
+            </div>
+            <p class="help is-danger">
+                <span asp-validation-for="Equipment"></span>
+            </p>
+
+            <div class="field">
+                <label class="label">Notes</label>
+                <div class="control">
+                    <textarea class="textarea" placeholder="Exercise Notes" asp-for="Notes"></textarea>
+                </div>
+            </div>
+            <p class="help is-danger">
+                <span asp-validation-for="Notes"></span>
+            </p>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-info">Submit</button>
+                </div>
+                <div class="control">
+                    <a href="@Url.Action("Index")" class="button is-link is-light">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
