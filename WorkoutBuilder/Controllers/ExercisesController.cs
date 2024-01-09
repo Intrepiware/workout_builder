@@ -19,9 +19,9 @@ namespace WorkoutBuilder.Controllers
         public IActionResult Index(int take, int skip, string? name = null, string? focus = null, string? equipment = null)
         {
             if (!UserContext.CanReadAllExercises())
-                throw new SecurityException();
+                return Unauthorized();
 
-            if(Request.IsAjaxRequest())
+            if (Request.IsAjaxRequest())
             {
                 var canManageExercises = UserContext.CanManageAllExercises();
                 var output = ExerciseService.Search(take, skip, name, focus, equipment)
@@ -39,7 +39,7 @@ namespace WorkoutBuilder.Controllers
         public async Task<IActionResult> Details(long id)
         {
             if (!UserContext.CanManageAllExercises())
-                throw new SecurityException();
+                return Unauthorized();
 
             var exercise = await ExerciseRepository.GetById(id);
             if (exercise == null)
@@ -54,7 +54,7 @@ namespace WorkoutBuilder.Controllers
         public async Task<IActionResult> Details(ExercisesDetailsModel model)
         {
             if (!UserContext.CanManageAllExercises())
-                throw new SecurityException();
+                return Unauthorized();
 
             var exercise = await ExerciseRepository.GetById(model.Id);
             if (exercise == null)
@@ -75,7 +75,7 @@ namespace WorkoutBuilder.Controllers
         public IActionResult New()
         {
             if (!UserContext.CanManageAllExercises())
-                throw new SecurityException();
+                return Unauthorized();
             var model = ExerciseModelMapper.Map(null!);
             return View("Details", model);
         }
@@ -85,7 +85,7 @@ namespace WorkoutBuilder.Controllers
         public async Task<IActionResult> New(ExercisesDetailsModel model)
         {
             if (!UserContext.CanManageAllExercises())
-                throw new SecurityException();
+                return Unauthorized();
 
             if (!ModelState.IsValid)
                 return View(model);

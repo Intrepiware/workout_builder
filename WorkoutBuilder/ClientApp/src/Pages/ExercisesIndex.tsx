@@ -1,23 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, KeyboardEvent } from "react";
 import { ExerciseListItem, getExercises } from "../apis/exerciseListItem";
 
 interface UiElements {
-  name?: string;
-  focus?: string;
-  equipment?: string;
+  name: string;
+  focus: string;
+  equipment: string;
 }
 
 interface QueryCriteria {
-  name?: string;
-  focus?: string;
-  equipment?: string;
+  name: string;
+  focus: string;
+  equipment: string;
   take: number;
   skip: number;
 }
 
 function ExercisesIndex() {
-  const [uiElements, setUiElements] = useState<UiElements>({});
-  const [query, setQuery] = useState<QueryCriteria>({ take: 26, skip: 0 });
+  const [uiElements, setUiElements] = useState<UiElements>({
+    name: "",
+    focus: "",
+    equipment: "",
+  });
+  const [query, setQuery] = useState<QueryCriteria>({
+    take: 26,
+    skip: 0,
+    name: "",
+    equipment: "",
+    focus: "",
+  });
   const [exercises, setExercises] = useState<ExerciseListItem[]>([]);
   const [equipment, setEquipment] = useState<string[]>([]);
 
@@ -43,10 +53,16 @@ function ExercisesIndex() {
     setQuery({
       skip: 0,
       take: 26,
-      focus: uiElements.focus,
-      equipment: uiElements.equipment,
-      name: uiElements.name,
+      focus: uiElements.focus || "",
+      equipment: uiElements.equipment || "",
+      name: uiElements.name || "",
     });
+  };
+
+  const handleQueryKeyDown = (
+    event: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
+  ): void => {
+    if (event.key == "Enter") handleSearchClick();
   };
 
   return (
@@ -62,6 +78,7 @@ function ExercisesIndex() {
                   placeholder="Workout Name"
                   className="input"
                   value={uiElements.name}
+                  onKeyDown={handleQueryKeyDown}
                   onChange={(e) =>
                     setUiElements((x) => ({ ...x, name: e.target.value }))
                   }
@@ -75,6 +92,7 @@ function ExercisesIndex() {
               <p className="select is-fullwidth">
                 <select
                   value={uiElements.focus}
+                  onKeyDown={handleQueryKeyDown}
                   onChange={(e) =>
                     setUiElements((x) => ({ ...x, focus: e.target.value }))
                   }
@@ -94,6 +112,7 @@ function ExercisesIndex() {
               <p className="select is-fullwidth">
                 <select
                   value={uiElements.equipment}
+                  onKeyDown={handleQueryKeyDown}
                   onChange={(e) =>
                     setUiElements((x) => ({ ...x, equipment: e.target.value }))
                   }
