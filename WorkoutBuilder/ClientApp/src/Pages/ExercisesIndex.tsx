@@ -15,7 +15,7 @@ interface QueryCriteria {
   skip: number;
 }
 
-function ExercisesIndex() {
+function ExercisesIndex(props: any) {
   const [uiElements, setUiElements] = useState<UiElements>({
     name: "",
     focus: "",
@@ -139,15 +139,17 @@ function ExercisesIndex() {
           </div>
         </div>
         <p className="buttons is-right">
-          <a
-            className="button"
-            data-tooltip="Add Favorite"
-            href={`${location.href}/New`}
-          >
-            <span className="icon is-small">
-              <span className="material-symbols-outlined">add</span>
-            </span>
-          </a>
+          {props.canmanageallexercises == "True" && (
+            <a
+              className="button"
+              data-tooltip="Add Favorite"
+              href={`${location.href}/New`}
+            >
+              <span className="icon is-small">
+                <span className="material-symbols-outlined">add</span>
+              </span>
+            </a>
+          )}
         </p>
         <div className="table-container">
           <table className="table is-fullwidth">

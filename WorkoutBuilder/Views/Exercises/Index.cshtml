@@ -1,8 +1,10 @@
-﻿@{
+﻿@using WorkoutBuilder.Services;
+@inject IUserContext UserContext
+@{
     ViewData["Title"] = "Workout Builder";
 }
 
-<div id="root"></div>
+<div id="root" data-canmanageallexercises="@UserContext.CanManageAllExercises()"></div>
 
 @section Scripts
 {
