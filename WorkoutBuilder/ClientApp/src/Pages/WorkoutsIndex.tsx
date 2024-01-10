@@ -11,7 +11,7 @@ function WorkoutsIndex() {
   const [query, setQuery] = useState<QueryCriteria>({
     skip: 0,
     take: 26,
-    favorites: false,
+    favorites: true,
   });
   const [workouts, setWorkouts] = useState<WorkoutListItem[]>([]);
 
