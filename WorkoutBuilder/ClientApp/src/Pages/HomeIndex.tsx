@@ -26,7 +26,7 @@ interface UiElements {
   equipmentPreset: string;
 }
 
-function HomeIndex() {
+function HomeIndex(props: any) {
   const [uiElements, setUiElements] = useState<UiElements>({
     isAdvancedModalShown: false,
     isFavorite: false,
@@ -363,7 +363,7 @@ function HomeIndex() {
               <p className="is-italic">Note: {workout.workout.notes}</p>
             )}
             <p className="buttons is-right">
-              {workout?.publicId && (
+              {workout?.publicId && props.userid > 0 && (
                 <>
                   <a
                     className="button"

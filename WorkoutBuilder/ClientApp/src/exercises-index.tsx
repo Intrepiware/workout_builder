@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import HomeIndex from "./Pages/HomeIndex";
+import ExercisesIndex from "./Pages/ExercisesIndex";
 
 const root = document.getElementById("root");
 ReactDOM.createRoot(root!).render(
   <React.StrictMode>
-    <HomeIndex {...root?.dataset} />
+    <ExercisesIndex {...root?.dataset} />
   </React.StrictMode>
 );

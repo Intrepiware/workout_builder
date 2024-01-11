@@ -23,9 +23,24 @@
             </a>
             @if(Model.Workouts != null)
             {
-                <a class="navbar-item" href="@Model.Workouts.Url">
-                    @Model.Workouts.DisplayName
-                </a>                
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="@Model.Workouts.Url">
+                            @Model.Workouts.DisplayName
+                        </a>
+                        @if (Model.Exercises != null)
+                        {
+                            <a class="navbar-item" href="@Model.Exercises.Url">
+                                @Model.Exercises.DisplayName
+                            </a>
+                        }
+                    </div>
+                </div>
             }
         </div>
 

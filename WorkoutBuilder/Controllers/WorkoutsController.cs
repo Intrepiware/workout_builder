@@ -5,7 +5,6 @@ using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.ExtensionMethods;
-using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Models;
 
 namespace WorkoutBuilder.Controllers

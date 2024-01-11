@@ -29,7 +29,7 @@ namespace WorkoutBuilder
 
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(20);
+                options.IdleTimeout = TimeSpan.FromDays(7);
                 options.Cookie.IsEssential = true;
             });
 

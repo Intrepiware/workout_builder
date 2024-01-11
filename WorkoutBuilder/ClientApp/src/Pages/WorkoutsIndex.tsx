@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { WorkoutListItem, getUserWorkouts } from "../apis/workoutListItem";
 
 interface QueryCriteria {
@@ -11,9 +11,10 @@ function WorkoutsIndex() {
   const [query, setQuery] = useState<QueryCriteria>({
     skip: 0,
     take: 26,
-    favorites: false,
+    favorites: true,
   });
   const [workouts, setWorkouts] = useState<WorkoutListItem[]>([]);
+  const tableHead = useRef<HTMLTableCellElement>(null);
 
   useEffect(() => {
     getUserWorkouts(query.skip, query.take, query.favorites).then(
@@ -67,7 +68,7 @@ function WorkoutsIndex() {
           <table className="table is-fullwidth">
             <thead>
               <tr>
-                <th>Name</th>
+                <th ref={tableHead}>Name</th>
                 <th>Created</th>
                 <th className="has-text-centered">Favorite</th>
               </tr>
@@ -107,14 +108,20 @@ function WorkoutsIndex() {
           <button
             className="button is-info"
             disabled={query.skip == 0}
-            onClick={() => setQuery((x) => ({ ...x, skip: x.skip - 25 }))}
+            onClick={() => {
+              setQuery((x) => ({ ...x, skip: x.skip - 25 }));
+              tableHead.current?.scrollIntoView({ behavior: "smooth" });
+            }}
           >
             Prev
           </button>
           <button
             className="button is-info"
             disabled={workouts.length < 26}
-            onClick={() => setQuery((x) => ({ ...x, skip: x.skip + 25 }))}
+            onClick={() => {
+              setQuery((x) => ({ ...x, skip: x.skip + 25 }));
+              tableHead.current?.scrollIntoView({ behavior: "smooth" });
+            }}
           >
             Next
           </button>

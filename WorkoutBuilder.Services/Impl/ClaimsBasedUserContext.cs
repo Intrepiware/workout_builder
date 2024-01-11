@@ -52,6 +52,22 @@ namespace WorkoutBuilder.Services.Impl
             return false;
         }
 
+        public bool CanReadAllExercises()
+        {
+            if (User == null)
+                return false;
+
+            return User.HasClaim(x => x.Type == $"{ClaimTypes.Exercises}{ClaimTypes.All}{ClaimTypes.Read}");
+        }
+
+        public bool CanManageAllExercises()
+        {
+            if (User == null)
+                return false;
+
+            return User.HasClaim(x => x.Type == $"{ClaimTypes.Exercises}{ClaimTypes.All}{ClaimTypes.Manage}");
+        }
+
         protected ClaimsPrincipal? User => HttpContextAccessor.HttpContext.User;
     }
 }
