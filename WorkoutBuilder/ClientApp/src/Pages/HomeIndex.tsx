@@ -26,7 +26,7 @@ interface UiElements {
   equipmentPreset: string;
 }
 
-function HomeIndex({ ...props }) {
+function HomeIndex(props: any) {
   const [uiElements, setUiElements] = useState<UiElements>({
     isAdvancedModalShown: false,
     isFavorite: false,

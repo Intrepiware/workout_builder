@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { WorkoutListItem, getUserWorkouts } from "../apis/workoutListItem";
 
 interface QueryCriteria {
@@ -14,6 +14,7 @@ function WorkoutsIndex() {
     favorites: true,
   });
   const [workouts, setWorkouts] = useState<WorkoutListItem[]>([]);
+  const tableHead = useRef<HTMLTableCellElement>(null);
 
   useEffect(() => {
     getUserWorkouts(query.skip, query.take, query.favorites).then(
@@ -67,7 +68,7 @@ function WorkoutsIndex() {
           <table className="table is-fullwidth">
             <thead>
               <tr>
-                <th>Name</th>
+                <th ref={tableHead}>Name</th>
                 <th>Created</th>
                 <th className="has-text-centered">Favorite</th>
               </tr>
@@ -109,7 +110,7 @@ function WorkoutsIndex() {
             disabled={query.skip == 0}
             onClick={() => {
               setQuery((x) => ({ ...x, skip: x.skip - 25 }));
-              window.scrollTo(0, 0);
+              tableHead.current?.scrollIntoView({ behavior: "smooth" });
             }}
           >
             Prev
@@ -119,7 +120,7 @@ function WorkoutsIndex() {
             disabled={workouts.length < 26}
             onClick={() => {
               setQuery((x) => ({ ...x, skip: x.skip + 25 }));
-              window.scrollTo(0, 0);
+              tableHead.current?.scrollIntoView({ behavior: "smooth" });
             }}
           >
             Next

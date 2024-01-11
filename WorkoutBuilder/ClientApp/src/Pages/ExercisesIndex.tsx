@@ -1,4 +1,4 @@
-import { useEffect, useState, KeyboardEvent } from "react";
+import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import { ExerciseListItem, getExercises } from "../apis/exerciseListItem";
 
 interface UiElements {
@@ -30,6 +30,7 @@ function ExercisesIndex(props: any) {
   });
   const [exercises, setExercises] = useState<ExerciseListItem[]>([]);
   const [equipment, setEquipment] = useState<string[]>([]);
+  const tableHead = useRef<HTMLTableCellElement>(null);
 
   useEffect(() => {
     getExercises(
@@ -155,7 +156,7 @@ function ExercisesIndex(props: any) {
           <table className="table is-fullwidth">
             <thead>
               <tr>
-                <th>Name</th>
+                <th ref={tableHead}>Name</th>
                 <th>Focus</th>
               </tr>
             </thead>
@@ -178,7 +179,7 @@ function ExercisesIndex(props: any) {
             disabled={query.skip == 0}
             onClick={() => {
               setQuery((x) => ({ ...x, skip: x.skip - 25 }));
-              window.scrollTo(0, 0);
+              tableHead.current?.scrollIntoView({ behavior: "smooth" });
             }}
           >
             Prev
@@ -188,7 +189,7 @@ function ExercisesIndex(props: any) {
             disabled={exercises.length < 26}
             onClick={() => {
               setQuery((x) => ({ ...x, skip: x.skip + 25 }));
-              window.scrollTo(0, 0);
+              tableHead.current?.scrollIntoView({ behavior: "smooth" });
             }}
           >
             Next
