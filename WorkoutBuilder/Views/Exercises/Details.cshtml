@@ -58,15 +58,46 @@
             <p class="help is-danger">
                 <span asp-validation-for="Notes"></span>
             </p>
-
-            <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-info">Submit</button>
+            <nav class="level">
+                <!-- Left side -->
+                <div class="level-left">
+                    <div class="level-item">
+                        <div class="control">
+                            <button class="button is-info">Submit</button>
+                        </div>
+                    </div>
+                    <div class="level-item">
+                        <div class="control">
+                            <a href="@Url.Action("Index")" class="button is-link is-light">Cancel</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="control">
-                    <a href="@Url.Action("Index")" class="button is-link is-light">Cancel</a>
+                <div class="level-right">
+                    <div class="level-item">
+                        <div class="control">
+                            <button class="button is-info is-outlined js-modal-trigger" data-target="modal-confirm">Delete</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </nav>
         }
+    </div>
+
+    @* Modal Window *@
+    <div class="modal" id="modal-confirm">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Confirm Delete</p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                Are you sure you want to delete @Model.Name?
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-info">Confirm</button>
+                <button class="button is-link is-light">Cancel</button>
+            </footer>
+        </div>
     </div>
 </section>

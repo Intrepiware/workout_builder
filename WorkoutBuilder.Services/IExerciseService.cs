@@ -7,5 +7,6 @@ namespace WorkoutBuilder.Services
         List<Exercise> Search(int take, int skip, string? name = null, string? focus = null, string? equipment = null);
         Task<long> Add(Exercise exercise);
         Task Update(Exercise exercise);
+        Task Delete(long id);
     }
 }
