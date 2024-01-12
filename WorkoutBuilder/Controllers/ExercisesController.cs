@@ -102,5 +102,16 @@ namespace WorkoutBuilder.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(long exerciseId)
+        {
+            if (!UserContext.CanManageAllExercises())
+                return Unauthorized();
+
+            await ExerciseService.Delete(exerciseId);
+            return RedirectToAction("Index");
+        }
     }
 }

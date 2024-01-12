@@ -72,13 +72,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="level-right">
-                    <div class="level-item">
+                @if (Model.Id > 0)
+                {
+                    <div class="level-right">
+                        <div class="level-item">
                         <div class="control">
                             <button class="button is-info is-outlined js-modal-trigger" data-target="modal-confirm">Delete</button>
                         </div>
                     </div>
                 </div>
+                }
             </nav>
         }
     </div>
@@ -94,8 +97,12 @@
             <section class="modal-card-body">
                 Are you sure you want to delete @Model.Name?
             </section>
-            <footer class="modal-card-foot">
-                <button class="button is-info">Confirm</button>
+            <footer class="modal-card-foot is-justify-content-flex-end">
+                <form method="post" asp-action="Delete">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="exerciseId" asp-for="@Model.Id" />
+                    <button class="button is-info">Confirm</button>
+                </form>
                 <button class="button is-link is-light">Cancel</button>
             </footer>
         </div>
