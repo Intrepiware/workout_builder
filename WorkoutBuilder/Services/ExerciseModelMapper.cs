@@ -41,6 +41,7 @@ namespace WorkoutBuilder.Services
                 EditUrl = UserContext.CanManageAllExercises() ? UrlBuilder.Action("Details", "Exercises", new { id = exercise.Id }) : null,
                 Id = exercise.Id,
                 Name = exercise.Name,
+                Equipment = exercise.Equipment,
                 Focus = ((FocusEnum)exercise.FocusId).ToString()
             };
         }
