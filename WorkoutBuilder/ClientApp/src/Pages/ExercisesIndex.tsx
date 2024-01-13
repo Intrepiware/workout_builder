@@ -157,7 +157,8 @@ function ExercisesIndex(props: any) {
             <thead>
               <tr>
                 <th ref={tableHead}>Name</th>
-                <th>Focus</th>
+                <th>Equipment</th>
+                <th className="is-hidden-touch">Focus</th>
               </tr>
             </thead>
             <tbody>
@@ -167,7 +168,8 @@ function ExercisesIndex(props: any) {
                     {x.editUrl && <a href={x.editUrl}>{x.name}</a>}
                     {!x.editUrl && x.name}
                   </td>
-                  <td>{x.focus}</td>
+                  <td>{x.equipment}</td>
+                  <td className="is-hidden-touch">{x.focus}</td>
                 </tr>
               ))}
             </tbody>

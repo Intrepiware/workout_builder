@@ -2,6 +2,7 @@ export interface ExerciseListItem {
   id: number;
   name: string;
   focus: string;
+  equipment: string;
   editUrl: string | null;
 }
 
