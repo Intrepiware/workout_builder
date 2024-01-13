@@ -22,6 +22,18 @@ namespace WorkoutBuilder.Services.Impl
             return exercise.Id;
         }
 
+        public async Task Delete(long id)
+        {
+            if (!UserContext.CanManageAllExercises())
+                throw new SecurityException();
+
+            var exercise = await ExerciseRepository.GetById(id);
+
+            if (exercise != null)
+                await ExerciseRepository.Delete(exercise);
+
+        }
+
         public List<Exercise> Search(int take, int skip, string? name = null, string? focus = null, string? equipment = null)
         {
             if (!UserContext.CanReadAllExercises())
