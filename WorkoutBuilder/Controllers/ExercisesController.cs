@@ -67,6 +67,7 @@ namespace WorkoutBuilder.Controllers
             exercise.Notes = model.Notes;
             exercise.FocusId = model.FocusId;
             exercise.Equipment = model.Equipment;
+            exercise.YoutubeUrl = model.YoutubeUrl;
             await ExerciseService.Update(exercise);
             return RedirectToAction("Index");
         }

@@ -162,7 +162,7 @@ function ExercisesIndex(props: any) {
               </tr>
             </thead>
             <tbody>
-              {exercises.map((x) => (
+              {exercises.slice(0, 25).map((x) => (
                 <tr key={x.id}>
                   <td>
                     {x.editUrl && <a href={x.editUrl}>{x.name}</a>}

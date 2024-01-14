@@ -69,6 +69,7 @@ namespace WorkoutBuilder.Services.Impl
                     {
                         Equipment = exercise.Equipment,
                         Exercise = exercise.Name,
+                        YoutubeUrl = exercise.YoutubeUrl,
                         Focus = exerciseFocus.ToString(),
                         Notes = exercise.Notes,
                         Station = $"{output.Exercises.Count + 1}"

@@ -4,6 +4,8 @@ import { WorkoutRootObject, getWorkout, getWorkoutById } from "../apis/workout";
 import React from "react";
 import "@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css";
 import "./HomeIndex.css";
+import { AdvancedOptionsDialog } from "../Components/HomeIndex/AdvancedOptionsDialog";
+import { ExerciseHelpDialog } from "../Components/HomeIndex/ExerciseHelpDialog";
 
 interface Timing {
   id: bigint;
@@ -19,6 +21,7 @@ interface UiElements {
   isTimingLocked: boolean;
   isAdvancedModalShown: boolean;
   isFavorite: boolean;
+  youtubeUrl: null | string;
   lastClick: string;
   timing: string;
   focus: string;
@@ -37,6 +40,7 @@ function HomeIndex(props: any) {
     focus: "Hybrid",
     selectedEquipment: [],
     equipmentPreset: "All",
+    youtubeUrl: null,
   });
   const [timings, setTimings] = useState<string[]>([]);
   const [allEquipment, setAllEquipment] = useState<string[]>([]);
@@ -98,55 +102,6 @@ function HomeIndex(props: any) {
     }
   }, []);
 
-  useEffect(() => {
-    const setSelectedEquipment = (data: string[]) => {
-      setUiElements((x) => ({ ...x, selectedEquipment: data }));
-    };
-    switch (uiElements.equipmentPreset) {
-      case "None":
-        setSelectedEquipment([]);
-        break;
-      case "Bootcamp":
-        setSelectedEquipment([
-          "Bodyweight",
-          "Cones",
-          "Space to Run",
-          "Dumbbells",
-        ]);
-        break;
-      case "Calisthenics":
-        setSelectedEquipment([
-          "Bodyweight",
-          "Dip Bars",
-          "Plyo Box",
-          "Pull Up Bar",
-          "Step Riser",
-          "TRX",
-        ]);
-        break;
-      case "Just Weights":
-        setSelectedEquipment(["Dumbbells", "Barbell"]);
-        break;
-      case "Odd Object Training":
-        setSelectedEquipment([
-          "Kettlebell",
-          "Med Ball",
-          "Sandbell",
-          "Sandbag",
-          "Slamball",
-          "Sledge Hammer",
-          "Tire",
-          "Small Plates",
-          "Large Plates",
-        ]);
-        break;
-      case "All":
-      default:
-        setSelectedEquipment(allEquipment);
-        break;
-    }
-  }, [uiElements.equipmentPreset]);
-
   const handleTimingChange = (item: string) => {
     setWorkout(null);
     setUiElements((x) => ({ ...x, isTimingLocked: true, timing: item }));
@@ -159,16 +114,6 @@ function HomeIndex(props: any) {
       isFocusLocked: true,
       focus: e.target.value,
     }));
-  };
-
-  const handleEquipmentToggle = (label: string): void => {
-    const selected: string[] = [...uiElements.selectedEquipment];
-    if (selected.includes(label)) {
-      selected.splice(selected.indexOf(label), 1);
-    } else {
-      selected.push(label);
-    }
-    setUiElements((x) => ({ ...x, selectedEquipment: selected }));
   };
 
   const getCustomizedWorkout = () => {
@@ -275,6 +220,24 @@ function HomeIndex(props: any) {
 
   return (
     <>
+      <AdvancedOptionsDialog
+        allEquipment={allEquipment}
+        onClose={() =>
+          setUiElements((x) => ({ ...x, isAdvancedModalShown: false }))
+        }
+        onSelectedChange={(eqp) =>
+          setUiElements((x) => ({ ...x, selectedEquipment: eqp }))
+        }
+        selectedEquipment={uiElements.selectedEquipment}
+        visible={uiElements.isAdvancedModalShown}
+      />
+      {uiElements.youtubeUrl && (
+        <ExerciseHelpDialog
+          onClose={() => setUiElements((x) => ({ ...x, youtubeUrl: "" }))}
+          youtubeUrl={uiElements.youtubeUrl}
+          key={uiElements.youtubeUrl}
+        />
+      )}
       <section className="section">
         <div className="container is-max-desktop">
           <div className="columns">
@@ -434,7 +397,22 @@ function HomeIndex(props: any) {
               {workout?.workout.exercises.map((row) => (
                 <tr key={row.station}>
                   <td>{row.station}</td>
-                  <td>{row.exercise}</td>
+                  <td>
+                    {row.exercise}
+                    {row.youtubeUrl && (
+                      <span
+                        className="material-symbols-sharp filled-help"
+                        onClick={() =>
+                          setUiElements((x) => ({
+                            ...x,
+                            youtubeUrl: row.youtubeUrl,
+                          }))
+                        }
+                      >
+                        help
+                      </span>
+                    )}
+                  </td>
                   <td>{row.focus}</td>
                   <td
                     className={
@@ -451,118 +429,7 @@ function HomeIndex(props: any) {
           </table>
         </div>
       </section>
-
-      <div
-        className={`modal ${
-          uiElements.isAdvancedModalShown ? "is-active" : ""
-        }`}
-        id="advanced-options"
-      >
-        <div className="modal-background"></div>
-        <div className="modal-content">
-          <div className="box">
-            <h3 className="title is-4 is-spaced">Advanced Options</h3>
-            <label className="label">Randomization</label>
-            <div className="field has-addons">
-              <p className="control">
-                <button className="button" disabled>
-                  <span className="icon is-small">
-                    <span className="material-symbols-outlined">exercise</span>
-                  </span>
-                  <span>By Equipment</span>
-                </button>
-              </p>
-              <p className="control">
-                <button className="button is-primary is-selected">
-                  <span className="material-symbols-outlined"> sprint </span>
-                  <span>&nbsp;By Exercise</span>
-                </button>
-              </p>
-            </div>
-            <div className="field">
-              <label className="label">Equipment Presets</label>
-              <div className="control">
-                <div className="select">
-                  <select
-                    value={uiElements.equipmentPreset}
-                    onChange={(e) =>
-                      setUiElements((x) => ({
-                        ...x,
-                        equipmentPreset: e.target.value,
-                      }))
-                    }
-                  >
-                    <option>All</option>
-                    <option>None</option>
-                    <option>Bootcamp</option>
-                    <option>Calisthenics</option>
-                    <option>Just Weights</option>
-                    <option>Odd Object Training</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <label className="label">Available Equipment</label>
-            <div className="buttons">
-              <EquipmentButton
-                onClick={handleEquipmentToggle}
-                label="Bodyweight"
-                selectedEquipment={uiElements.selectedEquipment}
-              ></EquipmentButton>
-              <EquipmentButton
-                onClick={handleEquipmentToggle}
-                label="Dumbbells"
-                selectedEquipment={uiElements.selectedEquipment}
-              ></EquipmentButton>
-              <EquipmentButton
-                onClick={handleEquipmentToggle}
-                label="Space to Run"
-                selectedEquipment={uiElements.selectedEquipment}
-              ></EquipmentButton>
-              {allEquipment
-                .filter(
-                  (x) =>
-                    !["Bodyweight", "Space to Run", "Dumbbells"].includes(x)
-                )
-                .map((x) => (
-                  <EquipmentButton
-                    key={x}
-                    onClick={handleEquipmentToggle}
-                    label={x}
-                    selectedEquipment={uiElements.selectedEquipment}
-                  ></EquipmentButton>
-                ))}
-            </div>
-          </div>
-        </div>
-        <button
-          className="modal-close is-large"
-          aria-label="close"
-          onClick={toggleAdvancedOptions}
-        ></button>
-      </div>
     </>
-  );
-}
-
-function EquipmentButton({
-  label,
-  selectedEquipment,
-  onClick,
-}: {
-  label: string;
-  selectedEquipment: string[];
-  onClick: (label: string) => void;
-}) {
-  return (
-    <button
-      className={`button ${
-        selectedEquipment.includes(label) ? "is-primary" : ""
-      }`}
-      onClick={() => onClick(label)}
-    >
-      {label}
-    </button>
   );
 }
 
