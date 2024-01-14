@@ -14,7 +14,7 @@ namespace WorkoutBuilder.Data
         public string Equipment { get; set; }
         public long FocusId { get; set; }
         public string? Notes { get; set; }
-        [Required, MaxLength(255)]
+        [MaxLength(255)]
         public string? YoutubeUrl { get; set; }
 
         public virtual Focus Focus { get; set; }
