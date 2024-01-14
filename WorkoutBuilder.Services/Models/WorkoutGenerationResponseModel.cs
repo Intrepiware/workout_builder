@@ -18,6 +18,7 @@
         public string Focus { get; set; }
         public string Equipment { get; set; }
         public string? Notes { get; set; }
+        public string? YoutubeUrl { get; set; }
     }
 
 }

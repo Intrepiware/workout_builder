@@ -19,6 +19,7 @@ interface UiElements {
   isTimingLocked: boolean;
   isAdvancedModalShown: boolean;
   isFavorite: boolean;
+  youtubeUrl: null | string;
   lastClick: string;
   timing: string;
   focus: string;
@@ -37,6 +38,7 @@ function HomeIndex(props: any) {
     focus: "Hybrid",
     selectedEquipment: [],
     equipmentPreset: "All",
+    youtubeUrl: null,
   });
   const [timings, setTimings] = useState<string[]>([]);
   const [allEquipment, setAllEquipment] = useState<string[]>([]);
@@ -434,7 +436,14 @@ function HomeIndex(props: any) {
               {workout?.workout.exercises.map((row) => (
                 <tr key={row.station}>
                   <td>{row.station}</td>
-                  <td>{row.exercise}</td>
+                  <td>
+                    {row.exercise}
+                    {row.youtubeUrl && (
+                      <span className="material-symbols-sharp filled-help">
+                        help
+                      </span>
+                    )}
+                  </td>
                   <td>{row.focus}</td>
                   <td
                     className={

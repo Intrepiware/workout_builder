@@ -71,6 +71,7 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
             {
                 Equipment = x.Equipment,
                 Exercise = x.Name,
+                YoutubeUrl = x.YoutubeUrl,
                 Focus = ((Models.Focus)x.FocusId).ToString(),
                 Notes = x.Notes,
                 Station = $"{i + 1}"

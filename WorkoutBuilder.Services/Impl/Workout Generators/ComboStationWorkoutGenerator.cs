@@ -72,6 +72,7 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
                     {
                         Equipment = exercise1.Equipment,
                         Exercise = exercise1.Name,
+                        YoutubeUrl = exercise1.YoutubeUrl,
                         Focus = ((Models.Focus)exercise1.FocusId).ToString(),
                         Notes = exercise1.Notes,
                         Station = $"{station}A"
@@ -82,6 +83,7 @@ namespace WorkoutBuilder.Services.Impl.Workout_Generators
                     {
                         Equipment = exercise2.Equipment,
                         Exercise = exercise2.Name,
+                        YoutubeUrl = exercise2.YoutubeUrl,
                         Focus = ((Models.Focus)exercise2.FocusId).ToString(),
                         Notes = exercise2.Notes,
                         Station = $"{station}B"

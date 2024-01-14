@@ -19,6 +19,7 @@ export interface Exercise {
   focus: string;
   equipment: string;
   notes: null | string;
+  youtubeUrl: null | string;
 }
 
 export function getWorkout(
