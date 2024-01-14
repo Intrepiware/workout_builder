@@ -28,6 +28,7 @@ namespace WorkoutBuilder.Services
                 Id = exercise?.Id ?? 0,
                 Name = exercise?.Name ?? string.Empty,
                 Notes = exercise?.Notes,
+                YoutubeUrl = exercise?.YoutubeUrl,
                 FocusOptions = Enum.GetValues<FocusEnum>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((byte)x).ToString() }).ToList(),
                 EquipmentOptions = ExerciseRepository.GetAll().Select(x => x.Equipment).Distinct().OrderBy(x => x)
                                             .Select(x => new SelectListItem { Value = x, Text = x }).ToList()

@@ -15,6 +15,7 @@ namespace WorkoutBuilder.Models
         [Required]
         [Range(1, int.MaxValue)]
         public long FocusId { get; set; }
+        public string? YoutubeUrl { get; set; }
         public List<SelectListItem>? EquipmentOptions { get; set; } = null!;
         public List<SelectListItem>? FocusOptions { get; set; } = null!;
     }
