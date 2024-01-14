@@ -25,7 +25,7 @@ export function ExerciseHelpDialog({
     onClose();
   };
 
-  const getEmbedCode = (text: string) => {
+  const getEmbedUrl = (text: string) => {
     const url = new URL(text);
     let videoId = "";
     let time = 0;
@@ -50,7 +50,7 @@ export function ExerciseHelpDialog({
           id="ytplayer"
           width="480"
           height="270"
-          src={getEmbedCode(youtubeUrl)}
+          src={getEmbedUrl(youtubeUrl)}
           frameBorder="0"
           allowFullScreen
         />
