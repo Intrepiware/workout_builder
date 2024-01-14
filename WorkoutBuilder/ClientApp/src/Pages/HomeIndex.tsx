@@ -5,6 +5,7 @@ import React from "react";
 import "@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css";
 import "./HomeIndex.css";
 import { AdvancedOptionsDialog } from "../Components/HomeIndex/AdvancedOptionsDialog";
+import { ExerciseHelpDialog } from "../Components/HomeIndex/ExerciseHelpDialog";
 
 interface Timing {
   id: bigint;
@@ -230,6 +231,13 @@ function HomeIndex(props: any) {
         selectedEquipment={uiElements.selectedEquipment}
         visible={uiElements.isAdvancedModalShown}
       />
+      {uiElements.youtubeUrl && (
+        <ExerciseHelpDialog
+          onClose={() => setUiElements((x) => ({ ...x, youtubeUrl: "" }))}
+          youtubeUrl={uiElements.youtubeUrl}
+          key={uiElements.youtubeUrl}
+        />
+      )}
       <section className="section">
         <div className="container is-max-desktop">
           <div className="columns">
@@ -392,7 +400,15 @@ function HomeIndex(props: any) {
                   <td>
                     {row.exercise}
                     {row.youtubeUrl && (
-                      <span className="material-symbols-sharp filled-help">
+                      <span
+                        className="material-symbols-sharp filled-help"
+                        onClick={() =>
+                          setUiElements((x) => ({
+                            ...x,
+                            youtubeUrl: row.youtubeUrl,
+                          }))
+                        }
+                      >
                         help
                       </span>
                     )}
