@@ -96,6 +96,7 @@ namespace WorkoutBuilder.Controllers
                 Equipment = model.Equipment,
                 FocusId = model.FocusId,
                 Name = model.Name,
+                YoutubeUrl = model.YoutubeUrl,
                 Notes = model.Notes
             };
 
