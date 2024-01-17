@@ -1,9 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BotDetect.Web;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.IOC;
 using WorkoutBuilder.Middleware;
@@ -18,6 +18,12 @@ namespace WorkoutBuilder
 
             builder.Services.AddDbContext<WorkoutBuilderContext>(opt => opt.UseLazyLoadingProxies()
             .UseSqlServer(builder.Configuration.GetConnectionString("WorkoutBuilderConnection")));
+
+
+            // Add Persistent Encryption Keys
+            builder.Services.AddDbContext<WorkoutBuilderKeysContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WorkoutBuilderConnection")));
+            builder.Services.AddDataProtection()
+                .PersistKeysToDbContext<WorkoutBuilderKeysContext>();
 
             // Add services to the container.
             IConfiguration configuration = builder.Configuration;
@@ -38,7 +44,7 @@ namespace WorkoutBuilder
                     .AddCookie("CookieAuth", config =>
                     {
                         config.Cookie.Name = "WorkoutBuild";
-                        config.LoginPath = "/Users/Login"; 
+                        config.LoginPath = "/Users/Login";
                         config.Cookie.HttpOnly = true;
                         config.Cookie.IsEssential = true;
                         config.Cookie.SameSite = SameSiteMode.Strict;
