@@ -1,8 +1,5 @@
 ﻿@using WorkoutBuilder.Services;
 @inject IUserContext UserContext
-@{
-    ViewData["Title"] = "Workout Builder";
-}
 
 <div id="root" data-userid="@UserContext.GetUserId()"></div>
 
