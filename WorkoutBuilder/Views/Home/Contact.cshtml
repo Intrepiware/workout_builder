@@ -1,14 +1,9 @@
 ﻿@model HomeContactRequestModel;
-@addTagHelper "BotDetect.Web.Mvc.CaptchaTagHelper, BotDetect.Web.Mvc"
-
+@inject IConfiguration Configuration;
 @{
     ViewData["Title"] = "Contact";
 }
 
-@section header {
-    <link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl"
-          rel="stylesheet" type="text/css" />
-}
 
 <section class="section">
     <div class="container is-max-desktop">
@@ -39,7 +34,7 @@
                     <input class="input" name="location" type="text" placeholder="Anywhereville, TX" required asp-for="Location">
                 </div>
             </div>
-            <p class="help is-danger">
+            <p class="help is-danger" >
                 <span asp-validation-for="Location"></span>
             </p>
 
@@ -76,12 +71,7 @@
             <div class="columns is-desktop">
                 <div class="column is-half">
                     <div class="field">
-                        <label class="label" asp-for="CaptchaCode">Retype the code from the picture:</label>
-                        <captcha id="ContactFormCaptcha" user-input-id="CaptchaCode" />
-
-                        <div class="control">
-                            <input asp-for="CaptchaCode" class="input" required />
-                        </div>
+                        <div class="g-recaptcha" data-sitekey="@Configuration["GoogleRecaptchaSiteKey"]"></div>
                         <p class="help is-danger">
                             <span asp-validation-for="CaptchaCode"></span>
                         </p>
@@ -99,3 +89,7 @@
         }
     </div>
 </section>
+
+@section Scripts {
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+}

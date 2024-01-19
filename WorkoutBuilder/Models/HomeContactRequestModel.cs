@@ -14,7 +14,6 @@ namespace WorkoutBuilder.Models
         public string Subject { get; set; }
         [Required]
         public string Message { get; set; }
-        [Required]
-        public string CaptchaCode { get; set; }
+        public string? CaptchaCode { get; set; }
     }
 }

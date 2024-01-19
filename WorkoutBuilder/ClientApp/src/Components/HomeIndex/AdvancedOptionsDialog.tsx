@@ -1,27 +1,28 @@
-import { useEffect, useState } from "react";
-
 interface AdvancedOptionsDialogProps {
   onSelectedChange: (data: string[]) => void;
+  onPresetChange: (preset: string) => void;
   onClose: () => void;
   allEquipment: string[];
   selectedEquipment: string[];
   visible: boolean;
+  equipmentPreset: string;
 }
 
 export function AdvancedOptionsDialog({
   onSelectedChange,
+  onPresetChange,
   onClose,
   allEquipment,
   selectedEquipment,
   visible,
+  equipmentPreset,
 }: AdvancedOptionsDialogProps) {
-  const [equipmentPreset, setEquipmentPreset] = useState("All");
-
-  useEffect(() => {
+  const handlePresetChange = (preset) => {
     const setSelectedEquipment = (data: string[]) => {
       onSelectedChange(data);
+      onPresetChange(preset);
     };
-    switch (equipmentPreset) {
+    switch (preset) {
       case "None":
         setSelectedEquipment([]);
         break;
@@ -60,11 +61,13 @@ export function AdvancedOptionsDialog({
         ]);
         break;
       case "All":
-      default:
         setSelectedEquipment(allEquipment);
         break;
+      default:
+        break;
     }
-  }, [equipmentPreset]);
+  };
+
   const handleEquipmentToggle = (label: string): void => {
     const selected: string[] = [...selectedEquipment];
     if (selected.includes(label)) {
@@ -72,8 +75,8 @@ export function AdvancedOptionsDialog({
     } else {
       selected.push(label);
     }
-    // setUiElements((x) => ({ ...x, selectedEquipment: selected }));
     onSelectedChange(selected);
+    onPresetChange("Custom");
   };
 
   return (
@@ -108,7 +111,7 @@ export function AdvancedOptionsDialog({
               <div className="select">
                 <select
                   value={equipmentPreset}
-                  onChange={(e) => setEquipmentPreset(e.target.value)}
+                  onChange={(e) => handlePresetChange(e.target.value)}
                 >
                   <option>All</option>
                   <option>None</option>
@@ -116,6 +119,7 @@ export function AdvancedOptionsDialog({
                   <option>Calisthenics</option>
                   <option>Just Weights</option>
                   <option>Odd Object Training</option>
+                  <option>Custom</option>
                 </select>
               </div>
             </div>

@@ -67,9 +67,22 @@ function HomeIndex(props: any) {
   useEffect(() => {
     fetch("/Home/Equipment")
       .then((res) => res.json())
-      .then((result: string[]) => {
-        setAllEquipment(result);
-        setUiElements((x) => ({ ...x, selectedEquipment: result }));
+      .then((fetchedEquipment: string[]) => {
+        setAllEquipment(fetchedEquipment);
+        let selectedEquipment = fetchedEquipment;
+        let equipmentPreset = "All";
+
+        try {
+          selectedEquipment = JSON.parse(
+            localStorage.getItem("equipment") || ""
+          );
+          equipmentPreset = "Custom";
+        } catch (err) {}
+        setUiElements((x) => ({
+          ...x,
+          selectedEquipment: selectedEquipment,
+          equipmentPreset: equipmentPreset,
+        }));
       });
   }, []);
 
@@ -133,6 +146,10 @@ function HomeIndex(props: any) {
           isFavorite: result.isFavorite,
         }));
         localStorage.setItem("workout", JSON.stringify(result));
+        localStorage.setItem(
+          "equipment",
+          JSON.stringify(uiElements.selectedEquipment)
+        );
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow
@@ -228,8 +245,12 @@ function HomeIndex(props: any) {
         onSelectedChange={(eqp) =>
           setUiElements((x) => ({ ...x, selectedEquipment: eqp }))
         }
+        onPresetChange={(preset) =>
+          setUiElements((x) => ({ ...x, equipmentPreset: preset }))
+        }
         selectedEquipment={uiElements.selectedEquipment}
         visible={uiElements.isAdvancedModalShown}
+        equipmentPreset={uiElements.equipmentPreset}
       />
       {uiElements.youtubeUrl && (
         <ExerciseHelpDialog

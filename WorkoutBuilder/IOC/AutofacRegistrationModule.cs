@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using WorkoutBuilder.Controllers;
 using WorkoutBuilder.Data;
+using WorkoutBuilder.Middleware;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl;
 using WorkoutBuilder.Services.Impl.Helpers;
@@ -36,6 +37,7 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<ExerciseService>().As<IExerciseService>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<HomeWorkoutModelMapper>().As<IHomeWorkoutModelMapper>().PropertiesAutowired().InstancePerLifetimeScope();
             builder.RegisterType<ExerciseModelMapper>().As<IExerciseModelMapper>().PropertiesAutowired().InstancePerLifetimeScope();
+            builder.RegisterType<ValidateRecaptchaServiceFilter>().PropertiesAutowired().InstancePerLifetimeScope();
 
             if (Configuration["InjectionMode"] == "development")
             {

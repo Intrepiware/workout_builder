@@ -1,7 +1,7 @@
-﻿using BotDetect.Web.Mvc;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutBuilder.Data;
+using WorkoutBuilder.Middleware;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl.Helpers;
@@ -25,7 +25,7 @@ namespace WorkoutBuilder.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CaptchaValidationActionFilter("CaptchaCode", "ForgotPasswordCaptcha", "Incorrect Captcha, please try again.")]
+        [ServiceFilter(typeof(ValidateRecaptchaServiceFilter))]
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordModel data)
         {
             if (!ModelState.IsValid)
@@ -35,7 +35,6 @@ namespace WorkoutBuilder.Controllers
 
             ViewBag.Success = "If the email address belongs to an account, a message has been sent with further instructions.";
             ModelState.Clear();
-            MvcCaptcha.ResetCaptcha("ForgotPasswordCaptcha");
             return View(new UserForgotPasswordModel());
 
         }
