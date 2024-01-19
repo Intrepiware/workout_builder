@@ -1,5 +1,4 @@
-﻿using BotDetect.Web.Mvc;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Middleware;
@@ -36,7 +35,6 @@ namespace WorkoutBuilder.Controllers
 
             ViewBag.Success = "If the email address belongs to an account, a message has been sent with further instructions.";
             ModelState.Clear();
-            MvcCaptcha.ResetCaptcha("ForgotPasswordCaptcha");
             return View(new UserForgotPasswordModel());
 
         }
