@@ -17,7 +17,7 @@ export function AdvancedOptionsDialog({
   visible,
   equipmentPreset,
 }: AdvancedOptionsDialogProps) {
-  const handlePresetChange = (preset) => {
+  const handlePresetChange = (preset: string) => {
     const setSelectedEquipment = (data: string[]) => {
       onSelectedChange(data);
       onPresetChange(preset);
