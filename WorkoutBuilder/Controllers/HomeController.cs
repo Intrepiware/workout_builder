@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using System.Diagnostics;
 using WorkoutBuilder.Data;
+using WorkoutBuilder.Middleware;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl;
@@ -72,7 +73,7 @@ namespace WorkoutBuilder.Controllers
         }
 
         [HttpPost]
-        [CaptchaValidationActionFilter("CaptchaCode", "ContactFormCaptcha", "Incorrect Captcha, please try again.")]
+        [ServiceFilter(typeof(ValidateRecaptchaServiceFilter))]
         public IActionResult Contact(HomeContactRequestModel data)
         {
             if (!ModelState.IsValid)

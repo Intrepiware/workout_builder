@@ -1,6 +1,4 @@
 ﻿@model HomeContactRequestModel;
-@addTagHelper "BotDetect.Web.Mvc.CaptchaTagHelper, BotDetect.Web.Mvc"
-
 @{
     ViewData["Title"] = "Contact";
 }
@@ -76,12 +74,7 @@
             <div class="columns is-desktop">
                 <div class="column is-half">
                     <div class="field">
-                        <label class="label" asp-for="CaptchaCode">Retype the code from the picture:</label>
-                        <captcha id="ContactFormCaptcha" user-input-id="CaptchaCode" />
-
-                        <div class="control">
-                            <input asp-for="CaptchaCode" class="input" required />
-                        </div>
+                        <div class="g-recaptcha" data-sitekey="6Ld71FQpAAAAAGZPjdLlT3yTA47aEhgNUsnTaYfx"></div>
                         <p class="help is-danger">
                             <span asp-validation-for="CaptchaCode"></span>
                         </p>
@@ -99,3 +92,7 @@
         }
     </div>
 </section>
+
+@section Scripts {
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+}

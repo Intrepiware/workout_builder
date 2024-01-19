@@ -6,8 +6,7 @@ namespace WorkoutBuilder.Models
     {
         [EmailAddress, Required]
         public string EmailAddress { get; set; }
-        [Required]
-        public string CaptchaCode { get; set; }
+        public string? CaptchaCode { get; set; }
 
     }
 }

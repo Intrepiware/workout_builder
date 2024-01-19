@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutBuilder.Data;
+using WorkoutBuilder.Middleware;
 using WorkoutBuilder.Models;
 using WorkoutBuilder.Services;
 using WorkoutBuilder.Services.Impl.Helpers;
@@ -25,7 +26,7 @@ namespace WorkoutBuilder.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CaptchaValidationActionFilter("CaptchaCode", "ForgotPasswordCaptcha", "Incorrect Captcha, please try again.")]
+        [ServiceFilter(typeof(ValidateRecaptchaServiceFilter))]
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordModel data)
         {
             if (!ModelState.IsValid)
