@@ -3,10 +3,6 @@
     ViewData["Title"] = "Contact";
 }
 
-@section header {
-    <link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl"
-          rel="stylesheet" type="text/css" />
-}
 
 <section class="section">
     <div class="container is-max-desktop">
@@ -37,7 +33,7 @@
                     <input class="input" name="location" type="text" placeholder="Anywhereville, TX" required asp-for="Location">
                 </div>
             </div>
-            <p class="help is-danger">
+            <p class="help is-danger" >
                 <span asp-validation-for="Location"></span>
             </p>
 

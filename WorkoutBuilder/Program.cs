@@ -1,8 +1,5 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using BotDetect.Web;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.IOC;
@@ -51,9 +48,6 @@ namespace WorkoutBuilder
                         config.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     });
 
-            // This setting allows the CAPTCHA to generate images
-            builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
-            builder.Services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
 
             // RegisterApplication Insights
             var aiOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
@@ -83,7 +77,6 @@ namespace WorkoutBuilder
             app.UseAuthorization();
 
             app.UseSession();
-            app.UseCaptcha(configuration);
 
             app.MapControllerRoute(
                 name: "default",
