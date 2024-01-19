@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace WorkoutBuilder.Middleware
 {
@@ -31,7 +30,7 @@ namespace WorkoutBuilder.Middleware
             if (!solved)
             {
                 context.ModelState.AddModelError("CaptchaCode", "Invalid Captcha Code. Please try again.");
-                context.Result = new ViewResult() { ViewName = "Contact" };
+                context.Result = new ViewResult();
             }
             else
                 await next();
@@ -44,6 +43,5 @@ namespace WorkoutBuilder.Middleware
             public string Hostname { get; set; }
             public string[] ErrorCodes { get; set; }
         }
-
     }
 }
