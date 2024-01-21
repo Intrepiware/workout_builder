@@ -17,6 +17,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    @if(ViewData["MetaDescription"] != null)
+    {
+    <meta name="description" content="@ViewData["MetaDescription"]" />
+    }
+    else
+    {
+    <meta name="description" content="Workout Builder provides an easy way to generate HIIT workouts, based on the equipment you have available. Click the Advanced Options button to select your available equipment, then &quot;Generate&quot; to create the workout" />
+    }
     <title>
         @($"Workout Builder{(ViewData["Title"] != null ? $": {ViewData["Title"]}" : "")}")
     </title>
@@ -53,7 +61,7 @@
             </p>
         </div>
         <div class="content">
-            <p class="is-size-7 is-italic">By accessing and using the workout routines posted on this website, you acknowledge and agree that you are doing so at your own risk. The owner of this website, its contributors, and anyone associated with it shall not be held liable for any injuries, damages, or deaths that may occur as a result of following these workouts. It is your responsibility to consult with a qualified professional before attempting any exercise routine and to ensure that you are physically capable of performing the exercises safely. By using this website, you waive any claims against the owner and hold them harmless from any and all liabilities.</p>
+            <p class="is-size-7 is-italic">By accessing and using the workout routines posted on this website, you acknowledge and agree that you are doing so at your own risk. The owner of this website, its contributors, and anyone associated with it shall not be held liable for any losses, liabilities, injuries, damages, or deaths that may occur as a result of following these workouts. It is your responsibility to consult with a qualified professional before attempting any exercise routine and to ensure that you are physically capable of performing the exercises safely. By using this website, you waive any claims against the owner and hold them harmless from any and all liabilities.</p>
         </div>
     </footer>
     <script src="~/js/pages/site.js"></script>

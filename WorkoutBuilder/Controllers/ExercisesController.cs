@@ -23,7 +23,6 @@ namespace WorkoutBuilder.Controllers
 
             if (Request.IsAjaxRequest())
             {
-                var canManageExercises = UserContext.CanManageAllExercises();
                 var output = ExerciseService.Search(take, skip, name, focus, equipment)
                                 .Select(ExerciseModelMapper.MapList)
                                 .ToList();

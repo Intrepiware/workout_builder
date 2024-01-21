@@ -41,8 +41,10 @@ namespace WorkoutBuilder
             builder.Services.AddAuthentication("CookieAuth")
                     .AddCookie("CookieAuth", config =>
                     {
-                        config.Cookie.Name = "WorkoutBuild";
                         config.LoginPath = "/Users/Login";
+                        config.SlidingExpiration = true;
+                        config.ExpireTimeSpan = TimeSpan.FromDays(7);
+                        config.Cookie.Name = "WorkoutBuild";
                         config.Cookie.HttpOnly = true;
                         config.Cookie.IsEssential = true;
                         config.Cookie.SameSite = SameSiteMode.Strict;
