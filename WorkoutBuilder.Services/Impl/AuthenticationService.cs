@@ -22,7 +22,7 @@ namespace WorkoutBuilder.Services.Impl
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContextAccessor.HttpContext.SignInAsync(principal, 
-                    new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(365) });
+                    new AuthenticationProperties { IsPersistent = true });
                 return true;
             }
 

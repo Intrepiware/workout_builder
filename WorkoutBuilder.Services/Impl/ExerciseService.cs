@@ -42,7 +42,10 @@ namespace WorkoutBuilder.Services.Impl
             var canManageExercises = UserContext.CanManageAllExercises();
             var query = ExerciseRepository.GetAll();
             if (!string.IsNullOrEmpty(name))
-                query = query.Where(x => x.Name.Contains(name));
+            {
+                foreach (var word in name.Split(' '))
+                    query = query.Where(x => x.Name.Contains(word));
+            }
             if (!string.IsNullOrEmpty(focus) && Enum.TryParse<FocusEnum>(focus, out var focusParam))
                 query = query.Where(x => x.FocusId == (byte)focusParam);
             if (!string.IsNullOrWhiteSpace(equipment))
