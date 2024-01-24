@@ -95,5 +95,9 @@ Message: {data.Message}";
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("/robots.txt")]
+        public IActionResult Robots() => Content(@"User-agent: *
+Allow: /", "text/plain");
     }
 }
