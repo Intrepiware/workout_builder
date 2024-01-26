@@ -58,6 +58,11 @@
             <p class="help is-danger">
                 <span asp-validation-for="YoutubeUrl"></span>
             </p>
+            <div id="focus-and-activation-group"
+                data-focusId="1"
+                data-activationIds="2,3,4"
+                data-parts="1:traps:true;2:biceps:true;3:triceps:true;4:wrists:false"
+            ></div>
 
             <div class="field">
                 <label class="label">Notes</label>
@@ -118,3 +123,8 @@
         </div>
     </div>
 </section>
+
+@section Scripts
+{
+    <script src="~/js/pages/exercise-details.js"></script>    
+}

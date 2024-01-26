@@ -11,8 +11,11 @@ namespace WorkoutBuilder.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("workouts");
+
             modelBuilder.Entity<Exercise>()
                 .HasOne(x => x.Focus);
+            modelBuilder.Entity<Exercise>()
+                .HasOne(x => x.FocusPart);
 
             modelBuilder.Entity<User>(x => x.HasIndex(t => t.EmailAddress).IsUnique());
 

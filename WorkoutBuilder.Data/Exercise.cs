@@ -16,7 +16,10 @@ namespace WorkoutBuilder.Data
         public string? Notes { get; set; }
         [MaxLength(255)]
         public string? YoutubeUrl { get; set; }
+        public long? FocusPartId { get; set; }
 
         public virtual Focus Focus { get; set; }
+        public virtual Part FocusPart { get; set; }
+        public virtual List<ExercisePart> ExerciseParts { get; set; }
     }
 }
