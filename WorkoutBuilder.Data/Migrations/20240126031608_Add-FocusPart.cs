@@ -99,6 +99,8 @@ insert into workouts.[Part] (Id, Name, IsMuscle) values (14,'Wrists',0);
 insert into workouts.[Part] (Id, Name, IsMuscle) values (15,'Knees',0);
 insert into workouts.[Part] (Id, Name, IsMuscle) values (16,'Elbows',0);
 insert into workouts.[Part] (Id, Name, IsMuscle) values (17,'Ankles',0);
+insert into workouts.[Part] (Id, Name, IsMuscle) values (18,'Shoulders',0);
+
 set identity_insert workouts.Part off");
         }
 

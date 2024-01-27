@@ -9,8 +9,9 @@ namespace WorkoutBuilder.Services
     public interface IExerciseModelMapper
     {
         ExercisesDetailsModel Map(Exercise exercise);
+        Exercise Map(ExercisesDetailsModel model, Exercise exercise);
 
-        ExerciseListItemModel MapList(Exercise exercise);
+        ExerciseListItemModel MapList(Exercise? exercise);
     }
 
     public class ExerciseModelMapper : IExerciseModelMapper
@@ -49,6 +50,20 @@ namespace WorkoutBuilder.Services
                 Equipment = exercise.Equipment,
                 Focus = ((FocusEnum)exercise.FocusId).ToString()
             };
+        }
+
+        public Exercise Map(ExercisesDetailsModel model, Exercise? exercise)
+        {
+            exercise ??= new Exercise();
+
+            exercise.Name = model.Name;
+            exercise.Notes = model.Notes;
+            exercise.FocusId = model.FocusId;
+            exercise.Equipment = model.Equipment;
+            exercise.YoutubeUrl = model.YoutubeUrl;
+            exercise.FocusPartId = model.FocusPartId;
+            exercise.ExerciseParts = model.ActivationParts?.Select(x => new ExercisePart { PartId = x }).ToList();
+            return exercise;
         }
     }
 }

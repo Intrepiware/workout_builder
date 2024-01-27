@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import { PartButton } from "./PartButton";
 
 interface Part {
   id: number;
@@ -26,11 +27,15 @@ export function FocusAndActivationGroup(props: any) {
     setData({ focusPartId, activationIds });
   }
 
-  function handleActivationChange(event: ChangeEvent<HTMLSelectElement>): void {
-    const activationIds = Array.from(event.target.selectedOptions).map((x) =>
-      parseFloat(x.value)
-    );
-    setData((x) => ({ ...x, activationIds }));
+  function handleActivationChange(id: number): void {
+    const selected = [...data.activationIds];
+    if (selected.indexOf(id) == -1) {
+      selected.push(id);
+    } else {
+      selected.splice(selected.indexOf(id), 1);
+    }
+
+    setData((x) => ({ ...x, activationIds: selected }));
   }
 
   return (
@@ -56,24 +61,23 @@ export function FocusAndActivationGroup(props: any) {
       </div>
       <div className="field">
         <label className="label">Activation Parts</label>
-        <div className="control">
-          <div className="select is-multiple">
-            <select
-              multiple
-              size={8}
-              name="activationParts"
-              onChange={handleActivationChange}
-              value={data.activationIds.map((x) => x.toString())}
-            >
-              {partOptions
-                .filter((x) => x.id != data.focusPartId)
-                .map((x) => (
-                  <option value={x.id} key={x.id}>
-                    {x.name}
-                  </option>
-                ))}
-            </select>
-          </div>
+        <div className="buttons">
+          {partOptions.map((x) => (
+            <PartButton
+              name="ActivationParts"
+              state={
+                x.id == data.focusPartId
+                  ? "disabled"
+                  : data.activationIds.indexOf(x.id) > -1
+                  ? "selected"
+                  : "enabled"
+              }
+              label={x.name}
+              value={x.id}
+              onClick={handleActivationChange}
+              key={x.id}
+            />
+          ))}
         </div>
       </div>
     </>
@@ -90,8 +94,8 @@ const parseProps: (props: any) => [number, number[], Part[]] = (props) => {
     };
   });
 
-  const focusId = parseInt(props.focusId || 0, 10);
+  const focusId = parseInt(props.focusid || 0, 10);
   const activationids: number[] =
-    props.activationIds?.split(",").map((x: string) => parseInt(x, 10)) || [];
+    props.activationids?.split(",").map((x: string) => parseInt(x, 10)) || [];
   return [focusId, activationids, parts];
 };
