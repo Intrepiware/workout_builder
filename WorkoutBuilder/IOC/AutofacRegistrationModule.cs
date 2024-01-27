@@ -56,6 +56,7 @@ namespace WorkoutBuilder.IOC
             builder.RegisterType<WorkoutBuilderContext>().As<DbContext>().InstancePerLifetimeScope();
             RegisterRepository<Exercise>(builder);
             RegisterRepository<Focus>(builder);
+            RegisterRepository<Part>(builder);
             RegisterRepository<Timing>(builder);
             RegisterRepository<User>(builder);
             RegisterRepository<UserPasswordResetRequest>(builder);

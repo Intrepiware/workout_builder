@@ -16,6 +16,7 @@ namespace WorkoutBuilder.Services
     public class ExerciseModelMapper : IExerciseModelMapper
     {
         public IRepository<Exercise> ExerciseRepository { init; protected get; } = null!;
+        public IRepository<Part> PartsRepository { init; protected get; } = null!;
         public IUserContext UserContext { init; protected get; } = null!;
         public IUrlBuilder UrlBuilder { init; protected get; } = null!;
 
@@ -29,9 +30,12 @@ namespace WorkoutBuilder.Services
                 Name = exercise?.Name ?? string.Empty,
                 Notes = exercise?.Notes,
                 YoutubeUrl = exercise?.YoutubeUrl,
+                FocusPartId = exercise?.FocusPartId,
+                ActivationParts = exercise?.ExerciseParts?.Select(x => x.PartId).ToList() ?? new List<long>(),
                 FocusOptions = Enum.GetValues<FocusEnum>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((byte)x).ToString() }).ToList(),
                 EquipmentOptions = ExerciseRepository.GetAll().Select(x => x.Equipment).Distinct().OrderBy(x => x)
-                                            .Select(x => new SelectListItem { Value = x, Text = x }).ToList()
+                                            .Select(x => new SelectListItem { Value = x, Text = x }).ToList(),
+                Parts = PartsRepository.GetAll().Select(x => new PartListItem { Id=  x.Id, Name = x.Name, IsMuscle = x.IsMuscle}).ToList()
             };
         }
 
