@@ -10,12 +10,15 @@ namespace WorkoutBuilder.Services
     {
         ExercisesDetailsModel Map(Exercise exercise);
 
-        ExerciseListItemModel MapList(Exercise exercise);
+        Exercise Map(ExercisesDetailsModel model, Exercise exercise);
+
+        ExerciseListItemModel MapList(Exercise? exercise);
     }
 
     public class ExerciseModelMapper : IExerciseModelMapper
     {
         public IRepository<Exercise> ExerciseRepository { init; protected get; } = null!;
+        public IRepository<Part> PartsRepository { init; protected get; } = null!;
         public IUserContext UserContext { init; protected get; } = null!;
         public IUrlBuilder UrlBuilder { init; protected get; } = null!;
 
@@ -29,9 +32,12 @@ namespace WorkoutBuilder.Services
                 Name = exercise?.Name ?? string.Empty,
                 Notes = exercise?.Notes,
                 YoutubeUrl = exercise?.YoutubeUrl,
+                FocusPartId = exercise?.FocusPartId,
+                ActivationParts = exercise?.ExerciseParts?.Select(x => x.PartId).ToList() ?? new List<long>(),
                 FocusOptions = Enum.GetValues<FocusEnum>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((byte)x).ToString() }).ToList(),
                 EquipmentOptions = ExerciseRepository.GetAll().Select(x => x.Equipment).Distinct().OrderBy(x => x)
-                                            .Select(x => new SelectListItem { Value = x, Text = x }).ToList()
+                                            .Select(x => new SelectListItem { Value = x, Text = x }).ToList(),
+                Parts = PartsRepository.GetAll().Select(x => new PartListItem { Id = x.Id, Name = x.Name, IsMuscle = x.IsMuscle }).ToList()
             };
         }
 
@@ -45,6 +51,20 @@ namespace WorkoutBuilder.Services
                 Equipment = exercise.Equipment,
                 Focus = ((FocusEnum)exercise.FocusId).ToString()
             };
+        }
+
+        public Exercise Map(ExercisesDetailsModel model, Exercise? exercise)
+        {
+            exercise ??= new Exercise();
+
+            exercise.Name = model.Name;
+            exercise.Notes = model.Notes;
+            exercise.FocusId = model.FocusId;
+            exercise.Equipment = model.Equipment;
+            exercise.YoutubeUrl = model.YoutubeUrl;
+            exercise.FocusPartId = model.FocusPartId;
+            exercise.ExerciseParts = model.ActivationParts?.Select(x => new ExercisePart { PartId = x }).ToList();
+            return exercise;
         }
     }
 }

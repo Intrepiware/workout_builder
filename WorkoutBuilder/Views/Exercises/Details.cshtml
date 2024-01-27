@@ -1,6 +1,8 @@
 ﻿@model ExercisesDetailsModel
 @{
     ViewData["Title"] = $"{Model.Name} Details";
+    var parts = string.Join(";", Model.Parts.Select(x => $"{x.Id}:{x.Name}:{x.IsMuscle}"));
+    var activationIds = string.Join(",", Model.ActivationParts);
 }
 
 <section class="section">
@@ -58,6 +60,11 @@
             <p class="help is-danger">
                 <span asp-validation-for="YoutubeUrl"></span>
             </p>
+            <div id="focus-and-activation-group"
+                data-focusId="@Model.FocusPartId"
+                data-activationIds="@activationIds"
+                data-parts="@parts"
+            ></div>
 
             <div class="field">
                 <label class="label">Notes</label>
@@ -118,3 +125,8 @@
         </div>
     </div>
 </section>
+
+@section Scripts
+{
+    <script src="~/js/pages/exercise-details.js"></script>    
+}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security;
 using WorkoutBuilder.Data;
 using WorkoutBuilder.Models;
@@ -55,18 +56,14 @@ namespace WorkoutBuilder.Controllers
             if (!UserContext.CanManageAllExercises())
                 return Unauthorized();
 
-            var exercise = await ExerciseRepository.GetById(model.Id);
+            var exercise = ExerciseRepository.GetAll().Include(x => x.ExerciseParts).SingleOrDefault(x => x.Id == model.Id);
             if (exercise == null)
                 return NotFound();
 
             if (!ModelState.IsValid)
                 return View(model);
 
-            exercise.Name = model.Name;
-            exercise.Notes = model.Notes;
-            exercise.FocusId = model.FocusId;
-            exercise.Equipment = model.Equipment;
-            exercise.YoutubeUrl = model.YoutubeUrl;
+            exercise = ExerciseModelMapper.Map(model, exercise);
             await ExerciseService.Update(exercise);
             return RedirectToAction("Index");
         }
@@ -90,14 +87,7 @@ namespace WorkoutBuilder.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var exercise = new Exercise
-            {
-                Equipment = model.Equipment,
-                FocusId = model.FocusId,
-                Name = model.Name,
-                YoutubeUrl = model.YoutubeUrl,
-                Notes = model.Notes
-            };
+            var exercise = ExerciseModelMapper.Map(model, null!);
 
             await ExerciseService.Add(exercise);
 
