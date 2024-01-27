@@ -9,6 +9,7 @@ namespace WorkoutBuilder.Services
     public interface IExerciseModelMapper
     {
         ExercisesDetailsModel Map(Exercise exercise);
+
         Exercise Map(ExercisesDetailsModel model, Exercise exercise);
 
         ExerciseListItemModel MapList(Exercise? exercise);
@@ -36,7 +37,7 @@ namespace WorkoutBuilder.Services
                 FocusOptions = Enum.GetValues<FocusEnum>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((byte)x).ToString() }).ToList(),
                 EquipmentOptions = ExerciseRepository.GetAll().Select(x => x.Equipment).Distinct().OrderBy(x => x)
                                             .Select(x => new SelectListItem { Value = x, Text = x }).ToList(),
-                Parts = PartsRepository.GetAll().Select(x => new PartListItem { Id=  x.Id, Name = x.Name, IsMuscle = x.IsMuscle}).ToList()
+                Parts = PartsRepository.GetAll().Select(x => new PartListItem { Id = x.Id, Name = x.Name, IsMuscle = x.IsMuscle }).ToList()
             };
         }
 
