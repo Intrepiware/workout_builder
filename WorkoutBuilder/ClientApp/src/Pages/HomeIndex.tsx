@@ -100,12 +100,14 @@ function HomeIndex(props: any) {
       );
       if (savedWorkout.version === "v1") {
         const { workout } = savedWorkout;
-        setWorkout(savedWorkout);
-        setUiElements((x) => ({
-          ...x,
-          timing: workout.name,
-          focus: workout.focus,
-        }));
+        if (workout) {
+          setWorkout(savedWorkout);
+          setUiElements((x) => ({
+            ...x,
+            timing: workout.name,
+            focus: workout.focus,
+          }));
+        }
       }
     } catch (err) {
       console.error(
