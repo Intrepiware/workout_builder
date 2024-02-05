@@ -1,5 +1,6 @@
 ﻿using WorkoutBuilder.Data;
 using WorkoutBuilder.Services.Impl.Workout_Generators;
+using WorkoutBuilder.Services.Tests.TestUtilities;
 
 namespace WorkoutBuilder.Services.Tests
 {
@@ -11,7 +12,6 @@ namespace WorkoutBuilder.Services.Tests
             [Test]
             public void Should_Generate()
             {
-                var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var randomizer = A.Fake<IRandomize>();
                 var exercises = new[]
                     {
@@ -21,7 +21,7 @@ namespace WorkoutBuilder.Services.Tests
                         new Exercise { Id = 4, Equipment = "Equipment 2", Name = "Exercise 4" }
                     };
 
-                A.CallTo(() => exerciseRepository.GetAll()).Returns(exercises.AsQueryable());
+                var exerciseRepository = new TestRepo<Exercise>(exercises);
                 A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
                 A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
                     .ReturnsNextFromSequence(exercises);
@@ -44,7 +44,6 @@ namespace WorkoutBuilder.Services.Tests
             [Test]
             public void Should_Not_Repeat_Exercise()
             {
-                var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var randomizer = A.Fake<IRandomize>();
                 var exercises = new[]
                     {
@@ -69,7 +68,7 @@ namespace WorkoutBuilder.Services.Tests
                         new Exercise { Id = 7, Equipment = "Equipment 1", Name = "Exercise 7" }
                     };
 
-                A.CallTo(() => exerciseRepository.GetAll()).Returns(exercises.AsQueryable());
+                var exerciseRepository = new TestRepo<Exercise>(exercises);
 
                 A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
                 A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments()
@@ -97,10 +96,9 @@ namespace WorkoutBuilder.Services.Tests
             [Test]
             public void Should_Generate()
             {
-                var exerciseRepository = A.Fake<IRepository<Exercise>>();
                 var randomizer = A.Fake<IRandomize>();
 
-                A.CallTo(() => exerciseRepository.GetAll()).Returns(new List<Exercise>().AsQueryable());
+                var exerciseRepository = new TestRepo<Exercise>();
 
                 A.CallTo(() => randomizer.GetRandomItem<Models.Focus>(null)).WithAnyArguments().Returns(Models.Focus.Cardio);
                 A.CallTo(() => randomizer.GetRandomItem<Exercise>(null)).WithAnyArguments().Returns(null);
